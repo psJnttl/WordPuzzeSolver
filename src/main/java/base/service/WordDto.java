@@ -50,5 +50,11 @@ public class WordDto {
         else if (!value.equals(other.value)) return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "WordDto [id=" + id + ", value=" + value + "]";
+    }
+
     
 }

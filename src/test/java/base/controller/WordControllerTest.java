@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -168,4 +169,48 @@ public class WordControllerTest {
                 delete(PATH + "/" + WRONG_ID))
                 .andExpect(status().isNotFound());
     }
+    
+    @Test
+    public void modifyWordOKandReturnsChangedContent() throws Exception {
+        WordMod wordMod = new WordMod(w2.getId(), WORD3);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(wordMod);
+        MvcResult result = mockMvc
+                .perform(
+                        put(PATH + "/" + w2.getId())
+                                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                                .content(content))
+                .andExpect(status().isOk())
+                .andReturn();
+        WordDto dto = mapper.readValue(result.getResponse().getContentAsString(), WordDto.class);
+        assertTrue("id not correct", dto.getId() == w2.getId());
+        assertTrue("value not correct", dto.getValue().equals(WORD3));
+    }
+    
+    @Test
+    public void modifyingWordWithWrongIdFails() throws Exception {
+        WordMod wordMod = new WordMod(w2.getId(), WORD3);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(wordMod);
+        mockMvc
+                .perform(
+                        put(PATH + "/" + WRONG_ID)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(content))
+                .andExpect(status().isNotFound());
+    }
+    
+    @Test
+    public void modifyingWordWithEmptyContentsFails() throws Exception {
+        WordMod wordMod = new WordMod(w2.getId(), EMPTY_STRING);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(wordMod);
+        mockMvc
+                .perform(
+                        put(PATH + "/" + w2.getId())
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(content))
+                .andExpect(status().isBadRequest());
+    }
+    
 }

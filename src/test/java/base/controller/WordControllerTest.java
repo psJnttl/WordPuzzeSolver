@@ -68,6 +68,10 @@ public class WordControllerTest {
     public void tearDown() throws Exception {
         wordRepository.delete(w1);
         wordRepository.delete(w2);
+        Word w3 = wordRepository.findByValue(WORD3);
+        if ( null != w3) {
+            wordRepository.delete(w3);
+        }
     }
 
     @Test

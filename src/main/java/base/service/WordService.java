@@ -5,7 +5,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import base.controller.WordAdd;
 import base.domain.Word;
 import base.repository.WordRepository;
 
@@ -22,5 +24,20 @@ public class WordService {
     
     private WordDto createDto(Word word) {
         return new WordDto(word.getId(), word.getValue());
+    }
+
+    public boolean doesWordExistInDb(WordAdd word) {
+        List<Word> wordList = wordRepository.findByValueIgnoreCase(word.getValue());
+        if (wordList.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
+    @Transactional
+    public WordDto addWord(WordAdd word) {
+        Word newWord = new Word(word.getValue());
+        newWord = wordRepository.save(newWord);
+        return createDto(newWord);
     }
 }

@@ -1,8 +1,11 @@
 package base.controller;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
@@ -21,6 +24,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -36,6 +40,8 @@ public class WordControllerTest {
     private static final String PATH = "/api/words";
     private static final String WORD1 = "inuyweycweio";
     private static final String WORD2 = "nhnhngignecw";
+    private static final String WORD3 = "pokipkiojNdw";
+    private static final String EMPTY_STRING = "";
     
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -84,4 +90,46 @@ public class WordControllerTest {
                             .count());
     }
 
+    @Test
+    public void addingWordReturnsLocationHeaderAndDto() throws Exception {
+        WordAdd word = new WordAdd(WORD3);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(word);
+        MvcResult result = mockMvc
+                .perform(
+                        post(PATH)
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .content(content))
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Location", containsString(PATH + "/")))
+                .andReturn();
+        WordDto dto = mapper.readValue(result.getResponse().getContentAsString(), WordDto.class);
+        assertTrue("Didn't return correct word", dto.getValue().equals(WORD3));
+    }
+    
+    @Test
+    public void addingWordWithoutContentsFails() throws Exception {
+        WordAdd word = new WordAdd(EMPTY_STRING);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(word);
+        mockMvc
+                .perform(
+                        post(PATH)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(content))
+                .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    public void addingWordThatExistsFails() throws Exception {
+        WordAdd word = new WordAdd(WORD1);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(word);
+        mockMvc
+                .perform(
+                        post(PATH)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(content))
+                .andExpect(status().isLocked());
+    }
 }

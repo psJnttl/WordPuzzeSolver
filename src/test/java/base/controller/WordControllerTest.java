@@ -2,6 +2,7 @@ package base.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -151,6 +152,20 @@ public class WordControllerTest {
     public void fetchSingleWordWithWrongIdFails() throws Exception {
         mockMvc
                 .perform(get(PATH + "/" + WRONG_ID))
+                .andExpect(status().isNotFound());
+    }
+    
+    @Test
+    public void deleteWordOK() throws Exception {
+        mockMvc.perform(
+                delete(PATH + "/" + w2.getId()))
+                .andExpect(status().isOk());
+    }
+    
+    @Test
+    public void deleteWordWithWrongIdFails() throws Exception {
+        mockMvc.perform(
+                delete(PATH + "/" + WRONG_ID))
                 .andExpect(status().isNotFound());
     }
 }

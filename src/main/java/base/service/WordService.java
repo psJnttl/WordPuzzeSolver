@@ -49,4 +49,9 @@ public class WordService {
         }
         return Optional.of(createDto(word));
     }
+
+    @Transactional
+    public void deleteWord(long id) {
+        wordRepository.delete(id);        
+    }
 }

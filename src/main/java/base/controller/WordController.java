@@ -51,4 +51,13 @@ public class WordController {
         }
         return new ResponseEntity<>(oWdto.get(), HttpStatus.OK);
     }
+    
+    @RequestMapping(value = "/api/words/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<WordDto> deleteWord(@PathVariable long id) {
+        if (!wordService.findWord(id).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        wordService.deleteWord(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

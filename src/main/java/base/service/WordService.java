@@ -1,6 +1,7 @@
 package base.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,13 @@ public class WordService {
         Word newWord = new Word(word.getValue());
         newWord = wordRepository.save(newWord);
         return createDto(newWord);
+    }
+
+    public Optional<WordDto> findWord(long id) {
+        Word word = wordRepository.findOne(id);
+        if (null == word) {
+            return Optional.empty();
+        }
+        return Optional.of(createDto(word));
     }
 }

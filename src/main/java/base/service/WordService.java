@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import base.controller.WordAdd;
+import base.controller.WordMod;
 import base.domain.Word;
 import base.repository.WordRepository;
 
@@ -53,5 +54,13 @@ public class WordService {
     @Transactional
     public void deleteWord(long id) {
         wordRepository.delete(id);        
+    }
+
+    @Transactional
+    public WordDto modifyWord(long id, WordMod word) {
+        Word word2mod = wordRepository.findOne(id);
+        word2mod.setValue(word.getValue());
+        word2mod = wordRepository.saveAndFlush(word2mod);
+        return createDto(word2mod);
     }
 }

@@ -60,4 +60,16 @@ public class WordController {
         wordService.deleteWord(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    
+    @RequestMapping(value = "/api/words/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<WordDto> modifyWord(@PathVariable long id, @RequestBody WordMod word) {
+        if (!wordService.findWord(id).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (null == word || word.getValue().isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        WordDto dto = wordService.modifyWord(id, word);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
 }

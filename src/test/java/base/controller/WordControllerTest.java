@@ -42,6 +42,7 @@ public class WordControllerTest {
     private static final String WORD2 = "nhnhngignecw";
     private static final String WORD3 = "pokipkiojNdw";
     private static final String EMPTY_STRING = "";
+    private static final long WRONG_ID = Long.MAX_VALUE;
     
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -131,5 +132,25 @@ public class WordControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(content))
                 .andExpect(status().isLocked());
+    }
+    
+    @Test
+    public void fetchSingleWord() throws Exception {
+        MvcResult result = mockMvc
+                .perform(get(PATH + "/" + w1.getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn();
+        assertFalse("Contents cannot be empty!", result.getResponse().getContentAsString().isEmpty());
+        ObjectMapper mapper = new ObjectMapper();
+        WordDto dto = mapper.readValue(result.getResponse().getContentAsString(), WordDto.class);
+        assertTrue(dto.getValue().equals(WORD1));
+    }
+    
+    @Test
+    public void fetchSingleWordWithWrongIdFails() throws Exception {
+        mockMvc
+                .perform(get(PATH + "/" + WRONG_ID))
+                .andExpect(status().isNotFound());
     }
 }

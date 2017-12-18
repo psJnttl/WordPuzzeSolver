@@ -61,5 +61,20 @@ public class SymbolController {
         symbolService.deleteSymbol(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    
+    @RequestMapping(value = "/api/symbols/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<SymbolDto> modifySymbol(@PathVariable long id, @RequestBody SymbolMod symbol) {
+        if (!symbolService.findSymbol(id).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (!symbolService.isSymbolModValid(symbol)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if (symbolService.doesSymbolValueExist(symbol, id)) {
+            return new ResponseEntity<>(HttpStatus.LOCKED);
+        }
+        SymbolDto dto = symbolService.modifySymbol(id, symbol);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
 
 }

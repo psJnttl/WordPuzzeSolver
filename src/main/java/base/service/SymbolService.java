@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import base.controller.SymbolAdd;
+import base.controller.SymbolMod;
 import base.domain.Symbol;
 import base.repository.SymbolRepository;
 
@@ -64,6 +65,31 @@ public class SymbolService {
     @Transactional
     public void deleteSymbol(long id) {
         symbolRepository.delete(id);        
+    }
+
+    public boolean isSymbolModValid(SymbolMod symbol) {
+        if (null == symbol || null == symbol.getValue() || symbol.getValue().isEmpty() ||
+                symbol.getScore() <= 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean doesSymbolValueExist(SymbolMod symbol, long id) {
+        Symbol oldSymbol = symbolRepository.findByValue(symbol.getValue());
+        if (null == oldSymbol || id == oldSymbol.getId()) {
+            return false;
+        }
+        return true;
+    }
+
+    @Transactional
+    public SymbolDto modifySymbol(long id, SymbolMod symbol) {
+        Symbol oldSymbol = symbolRepository.findOne(id);
+        oldSymbol.setValue(symbol.getValue());
+        oldSymbol.setScore(symbol.getScore());
+        oldSymbol = symbolRepository.saveAndFlush(oldSymbol);
+        return createDto(oldSymbol);
     }
 
 }

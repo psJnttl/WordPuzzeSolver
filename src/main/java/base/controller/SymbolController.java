@@ -52,5 +52,14 @@ public class SymbolController {
         }
         return new ResponseEntity<>(oSdto.get(), HttpStatus.OK);
     }
+    
+    @RequestMapping(value = "/api/symbols/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<SymbolDto> deleteSymbol(@PathVariable long id) {
+        if (!symbolService.findSymbol(id).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        symbolService.deleteSymbol(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

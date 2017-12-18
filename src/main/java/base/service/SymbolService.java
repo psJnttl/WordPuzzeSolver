@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import base.controller.SymbolAdd;
 import base.domain.Symbol;
@@ -44,6 +45,7 @@ public class SymbolService {
         return false;
     }
 
+    @Transactional
     public SymbolDto addSymbol(SymbolAdd symbol) {
         Symbol newSymbol = new Symbol(symbol.getValue(), symbol.getScore());
         newSymbol = symbolRepository.saveAndFlush(newSymbol);
@@ -58,6 +60,10 @@ public class SymbolService {
         SymbolDto dto = createDto(symbol);
         return Optional.of(dto);
     }
-    
-    
+
+    @Transactional
+    public void deleteSymbol(long id) {
+        symbolRepository.delete(id);        
+    }
+
 }

@@ -46,6 +46,7 @@ public class SymbolControllerTest {
     private static final int SCORE3 = 3;
     private static final int ZEROSCORE = 0;
     private static final int NEGATIVESCORE = -1;
+    private static final long WRONG_ID = Long.MAX_VALUE;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -169,5 +170,26 @@ public class SymbolControllerTest {
                             .contentType(MediaType.APPLICATION_JSON_UTF8)
                             .content(content))
                 .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    public void fetchSingleSymbol() throws Exception {
+        MvcResult result = mockMvc
+                .perform(get(PATH + "/" + s1.getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn();
+        assertFalse("Contents cannot be empty!", result.getResponse().getContentAsString().isEmpty());
+        ObjectMapper mapper = new ObjectMapper();
+        SymbolDto dto = mapper.readValue(result.getResponse().getContentAsString(), SymbolDto.class);
+        assertTrue(dto.getValue().equals(s1.getValue()));
+        assertTrue(dto.getScore() == s1.getScore());
+    }
+    
+    @Test
+    public void fetchSingleSymbolWithWrongIdFails() throws Exception {
+        mockMvc
+                .perform(get(PATH + "/" + WRONG_ID))
+                .andExpect(status().isNotFound());
     }
 }

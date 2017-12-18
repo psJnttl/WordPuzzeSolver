@@ -2,6 +2,7 @@ package base.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -192,4 +193,19 @@ public class SymbolControllerTest {
                 .perform(get(PATH + "/" + WRONG_ID))
                 .andExpect(status().isNotFound());
     }
+    
+    @Test
+    public void deleteSymbolOK() throws Exception {
+        mockMvc.perform(
+                delete(PATH + "/" + s2.getId()))
+                .andExpect(status().isOk());
+    }
+    
+    @Test
+    public void deleteSymbolWithWrongIdFails() throws Exception {
+        mockMvc.perform(
+                delete(PATH + "/" + WRONG_ID))
+                .andExpect(status().isNotFound());
+    }
+    
 }

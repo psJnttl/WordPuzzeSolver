@@ -1,6 +1,7 @@
 package base.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,15 @@ public class SymbolService {
         Symbol newSymbol = new Symbol(symbol.getValue(), symbol.getScore());
         newSymbol = symbolRepository.saveAndFlush(newSymbol);
         return createDto(newSymbol);
+    }
+
+    public Optional<SymbolDto> findSymbol(long id) {
+        Symbol symbol = symbolRepository.findOne(id);
+        if (null == symbol) {
+            return Optional.empty();
+        }
+        SymbolDto dto = createDto(symbol);
+        return Optional.of(dto);
     }
     
     

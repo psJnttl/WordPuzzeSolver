@@ -9,7 +9,7 @@ public class SymbolAdd {
 
     }
 
-    public SymbolAdd(String symbol, int score) {
+    public SymbolAdd(String value, int score) {
         this.value = value;
         this.score = score;
     }

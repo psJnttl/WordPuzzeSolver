@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import base.controller.SymbolAdd;
 import base.domain.Symbol;
 import base.repository.SymbolRepository;
 
@@ -25,4 +26,28 @@ public class SymbolService {
     private SymbolDto createDto(Symbol symbol) {
         return new SymbolDto(symbol.getId(), symbol.getValue(), symbol.getScore());
     }
+
+    public boolean isSymbolAddValid(SymbolAdd symbol) {
+        if (null == symbol || null == symbol.getValue() || symbol.getValue().isEmpty() ||
+                symbol.getScore() <= 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean doesSymbolExist(SymbolAdd symbol) {
+        Symbol oldSymbol = symbolRepository.findByValue(symbol.getValue());
+        if (null != oldSymbol) {
+            return true;
+        }
+        return false;
+    }
+
+    public SymbolDto addSymbol(SymbolAdd symbol) {
+        Symbol newSymbol = new Symbol(symbol.getValue(), symbol.getScore());
+        newSymbol = symbolRepository.saveAndFlush(newSymbol);
+        return createDto(newSymbol);
+    }
+    
+    
 }

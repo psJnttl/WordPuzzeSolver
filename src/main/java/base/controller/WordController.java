@@ -69,6 +69,9 @@ public class WordController {
         if (null == word || word.getValue().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        if (wordService.doesWordValueExist(id, word)) {
+            return new ResponseEntity<>(HttpStatus.LOCKED);
+        }
         WordDto dto = wordService.modifyWord(id, word);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }

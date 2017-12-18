@@ -63,4 +63,12 @@ public class WordService {
         word2mod = wordRepository.saveAndFlush(word2mod);
         return createDto(word2mod);
     }
+
+    public boolean doesWordValueExist(long id, WordMod word) {
+        Word oldWord = wordRepository.findByValue(word.getValue());
+        if (null == oldWord || id == oldWord.getId()) {
+            return false;
+        }
+        return true;
+    }
 }

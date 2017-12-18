@@ -217,4 +217,29 @@ public class WordControllerTest {
                 .andExpect(status().isBadRequest());
     }
     
+    @Test
+    public void modifyingWordWithExistingValueExThisFails() throws Exception {
+        WordMod wordMod = new WordMod(w2.getId(), WORD1);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(wordMod);
+        mockMvc
+                .perform(
+                        put(PATH + "/" + w2.getId())
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(content))
+                .andExpect(status().isLocked());
+    }
+    
+    @Test
+    public void modifyingWordWithExistingValueExThisOK() throws Exception {
+        WordMod wordMod = new WordMod(w2.getId(), WORD2);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(wordMod);
+        mockMvc
+                .perform(
+                        put(PATH + "/" + w2.getId())
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(content))
+                .andExpect(status().isOk());
+    }
 }

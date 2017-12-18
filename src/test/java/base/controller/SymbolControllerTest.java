@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -206,6 +207,105 @@ public class SymbolControllerTest {
         mockMvc.perform(
                 delete(PATH + "/" + WRONG_ID))
                 .andExpect(status().isNotFound());
+    }
+    
+    @Test
+    public void modifySymbolOKandReturnsChangedContent() throws Exception {
+        SymbolMod modSymbol = new SymbolMod(s2.getId(), SYMBOL3, SCORE3);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(modSymbol);
+        MvcResult result = mockMvc
+                                   .perform(
+                                           put(PATH + "/" + s2.getId())
+                                           .contentType(MediaType.APPLICATION_JSON_UTF8)
+                                           .content(content))
+                                   .andExpect(status().isOk())
+                                   .andReturn();
+        SymbolDto dto = mapper.readValue(result.getResponse().getContentAsString(), SymbolDto.class);
+        assertTrue("Value to changed correctly!", dto.getValue().equals(SYMBOL3));
+        assertTrue("Score not changed correctly!", dto.getScore() == SCORE3);
+    }
+    
+    @Test
+    public void modifyingSymbolWithWrongIdFails() throws Exception {
+        SymbolMod modSymbol = new SymbolMod(s2.getId(), SYMBOL3, SCORE3);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(modSymbol);
+        mockMvc
+                .perform(
+                        put(PATH + "/" + WRONG_ID)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(content))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void modifyingSymbolWithEmptyContentsFails() throws Exception {
+        SymbolMod modSymbol = new SymbolMod(s2.getId(), EMPTY_STRING, SCORE3);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(modSymbol);
+        mockMvc
+                .perform(
+                        put(PATH + "/" + s2.getId())
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(content))
+                .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    public void modifyingSymbolWithZeroScoreFails() throws Exception {
+        SymbolMod modSymbol = new SymbolMod(s2.getId(), SYMBOL3, ZEROSCORE);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(modSymbol);
+        mockMvc
+                .perform(
+                        put(PATH + "/" + s2.getId())
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(content))
+                .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    public void modifyingSymbolWithNegativeScoreFails() throws Exception {
+        SymbolMod modSymbol = new SymbolMod(s2.getId(), SYMBOL3, NEGATIVESCORE);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(modSymbol);
+        mockMvc
+                .perform(
+                        put(PATH + "/" + s2.getId())
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(content))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void modifyingSymbolWithExistingValueFails() throws Exception {
+        SymbolMod modSymbol = new SymbolMod(s2.getId(), SYMBOL1, SCORE3);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(modSymbol);
+        mockMvc
+                .perform(
+                        put(PATH + "/" + s2.getId())
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(content))
+                .andExpect(status().isLocked());
+    }
+    
+    @Test
+    public void modifyingOnlyScoreOK() throws Exception {
+        SymbolMod modSymbol = new SymbolMod(s2.getId(), SYMBOL2, SCORE3);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(modSymbol);
+        MvcResult result = mockMvc
+                                   .perform(
+                                           put(PATH + "/" + s2.getId())
+                                           .contentType(MediaType.APPLICATION_JSON_UTF8)
+                                           .content(content))
+                                   .andExpect(status().isOk())
+                                   .andReturn();
+        SymbolDto dto = mapper.readValue(result.getResponse().getContentAsString(), SymbolDto.class);
+        assertTrue("Value changed incorrectly!", dto.getValue().equals(SYMBOL2));
+        assertTrue("Score not changed correctly!", dto.getScore() == SCORE3);
     }
     
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import base.service.WordCountDto;
 import base.service.WordDto;
 import base.service.WordService;
 
@@ -74,5 +75,10 @@ public class WordController {
         }
         WordDto dto = wordService.modifyWord(id, word);
         return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/api/words/count", method = RequestMethod.GET)
+    public WordCountDto wordCount() {
+        return wordService.countWords();
     }
 }

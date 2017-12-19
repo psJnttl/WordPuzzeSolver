@@ -71,4 +71,9 @@ public class WordService {
         }
         return true;
     }
+
+    public WordCountDto countWords() {
+        long wordCount = wordRepository.count();
+        return new WordCountDto(wordCount);
+    }
 }

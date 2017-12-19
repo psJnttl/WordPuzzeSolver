@@ -26,12 +26,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import base.domain.Word;
 import base.repository.WordRepository;
+import base.service.WordCountDto;
 import base.service.WordDto;
 
 @RunWith(SpringRunner.class)
@@ -45,6 +45,7 @@ public class WordControllerTest {
     private static final String WORD3 = "pokipkiojNdw";
     private static final String EMPTY_STRING = "";
     private static final long WRONG_ID = Long.MAX_VALUE;
+    private static final String WORD_COUNT_PATH = "/api/words/count";
     
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -241,5 +242,18 @@ public class WordControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(content))
                 .andExpect(status().isOk());
+    }
+    
+    @Test
+    public void wordCountReportedOK() throws Exception {
+        MvcResult result = mockMvc
+                                   .perform(get(WORD_COUNT_PATH))
+                                   .andReturn();
+        String content = result.getResponse().getContentAsString();
+        assertFalse("Project list must not be empty.", content.equals("[]"));
+        ObjectMapper mapper = new ObjectMapper();
+        WordCountDto dto = mapper.readValue(result.getResponse().getContentAsString(), WordCountDto.class);
+        long expected = wordRepository.count();
+        assertEquals("Word count reported incorrectly!", expected, dto.getCount());
     }
 }

@@ -81,4 +81,9 @@ public class WordController {
     public WordCountDto wordCount() {
         return wordService.countWords();
     }
+    
+    @RequestMapping(value = "/api/words/page/{number}/{count}", method = RequestMethod.GET)
+    public List<WordDto> getWordPage(@PathVariable int number, @PathVariable int count) {
+        return wordService.getWordPage(number, count);
+    }
 }

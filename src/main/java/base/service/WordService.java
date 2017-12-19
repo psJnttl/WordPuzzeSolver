@@ -5,6 +5,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,5 +78,14 @@ public class WordService {
     public WordCountDto countWords() {
         long wordCount = wordRepository.count();
         return new WordCountDto(wordCount);
+    }
+
+    public List<WordDto> getWordPage(int number, int count) {
+        Pageable pageable = new PageRequest(number, count);
+        Page<Word> wordPage = wordRepository.findAll(pageable);
+        List<Word> pageWords = wordPage.getContent();
+        return pageWords.stream()
+                        .map(w -> createDto(w))
+                        .collect(Collectors.toList());
     }
 }

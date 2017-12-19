@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Icon, Menu } from 'semantic-ui-react'
+import { Icon, Menu, Table } from 'semantic-ui-react'
 import _ from 'lodash';
 
 class Words extends React.Component {
@@ -81,9 +81,27 @@ class Words extends React.Component {
     const activeItem = this.state.activeItem;
     const pageCount = this.getPageCount();
     const visible = this.state.visibleItems;
+    const dataRows = this.state.words.map((item, index) =>
+      <Table.Row key={index}>
+        <Table.Cell>{item.id}</Table.Cell>
+        <Table.Cell>{item.value}</Table.Cell>
+        <Table.Cell></Table.Cell>
+      </Table.Row>);
     return (
       <div>
         <h4>Words in database: {this.state.wordCount}</h4>
+        <Table celled unstackable>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>id</Table.HeaderCell>
+              <Table.HeaderCell>value</Table.HeaderCell>
+              <Table.HeaderCell>actions</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {dataRows}
+          </Table.Body>
+        </Table>
         <Menu pagination>
           {pageCount > 3 && ( <Menu.Item icon onClick={this.handleBack} >
             <Icon name='chevron left' />

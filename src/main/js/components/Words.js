@@ -7,15 +7,16 @@ import _ from 'lodash';
 class Words extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {wordCount:0, itemsPerPage:8, activeItem: '1',
-      visibleItems: ['1','2','3'], }
+    this.state = {wordCount:0, itemsPerPage:5, activeItem: '1',
+      visibleItems: ['1','2','3'], words: [], };
     this.handleItemClick = this.handleItemClick.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleForward = this.handleForward.bind(this);
   }
 
   handleItemClick(e, { name }) {
-    this.setState({ activeItem: name })
+    this.setState({ activeItem: name },
+      () => this.getWordPage(this.state.activeItem, this.state.itemsPerPage));
   }
 
   handleBack(e) {
@@ -54,8 +55,23 @@ class Words extends React.Component {
          });
   }
 
+  getWordPage(pageNumber, count) {
+    const page = parseInt(pageNumber) - 1;
+    const url = '/api/words/page/' + page + "/" + count;
+    const self = this;
+    const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
+    axios.get(url, config)
+         .then(function (response) {
+           self.setState({words: response.data});
+         })
+         .catch(function (error) {
+           console.log("fetching word page failed");
+         });
+  }
+
   componentWillMount() {
     this.getWordCount();
+    this.getWordPage(this.state.activeItem, this.state.itemsPerPage);
   }
 
   getPageCount() {

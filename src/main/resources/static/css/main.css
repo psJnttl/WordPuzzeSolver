@@ -85,3 +85,31 @@ a {
   font-weight: bold;
   background: #e2e2e2;
 }
+/*======================================================================*/
+.modalFooter {
+  padding: 15px;
+  text-align: right;
+  border-top: 1px solid #e5e5e5;
+  background: #f8f8f8 !important;
+}
+
+.modalDangerHeader {
+  padding: 15px;
+  border-bottom: 1px solid #e5e5e5;
+  background: #CC0000 !important;
+  color: white !important;
+}
+
+.modalSuccessHeader {
+  padding: 15px;
+  border-bottom: 1px solid #e5e5e5;
+  background: #007E33 !important;
+  color: white !important;
+}
+
+.modalWarningHeader {
+  padding: 15px;
+  border-bottom: 1px solid #e5e5e5;
+  background: #ffc107 !important;
+  color: black !important;
+}

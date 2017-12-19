@@ -128,7 +128,7 @@ class Words extends React.Component {
         <ModalSimpleConfirmation
           modalOpen={this.state.delConfirmationVisible}
           title="Delete word"
-          question="Are you sure you want to delete word?"
+          question={"Are you sure you want to delete '" + this.state.word.value + "' ?"}
           reply={this.deleteReply}
         />
         <h4>Words in database: {this.state.wordCount}</h4>

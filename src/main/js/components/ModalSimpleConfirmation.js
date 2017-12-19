@@ -10,21 +10,19 @@ class ModalSimpleConfirmation extends React.Component {
   }
 
   render() {
-    const {modalOpen} = this.props;
+    const open = this.props.modalOpen;
     return (
       <div>
-        <Modal size="tiny"> open={modalOpen}
+        <Modal size="tiny" open={open} onClose={() => this.props.reply(false)}>
           <Modal.Header>
-            Delete Your Account
+            {this.props.title}
           </Modal.Header>
           <Modal.Content>
-            <p>Are you sure you want to delete your account</p>
+            <strong>{this.props.question}</strong>
           </Modal.Content>
           <Modal.Actions>
-            <Button negative>
-              No
-            </Button>
-            <Button positive icon='checkmark' labelPosition='right' content='Yes' />
+            <Button negative content="No" onClick={() => this.props.reply(false)} />
+            <Button positive content='Yes' onClick={() => this.props.reply(true)} />
           </Modal.Actions>
         </Modal>
       </div>
@@ -36,9 +34,11 @@ ModalSimpleConfirmation.PropTypes = {
   title: PropTypes.string,
   question: PropTypes.string,
   reply: PropTypes.func.isRequired,
+  headerStyle: PropTypes.string,
 }
 ModalSimpleConfirmation.defaultProps = {
   title: "Please confirm",
-  question: "Are you sure?",
+  question: "Are you sure",
+  headerStyle: "failedModalHeader"
 }
 export default ModalSimpleConfirmation;

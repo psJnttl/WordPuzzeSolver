@@ -1,17 +1,44 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Menu } from 'semantic-ui-react'
+import { Icon, Menu } from 'semantic-ui-react'
+import _ from 'lodash';
 
 class Words extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {wordCount:0, itemsPerPage:10, activeItem: '10', }
+    this.state = {wordCount:0, itemsPerPage:8, activeItem: '1',
+      visibleItems: ['1','2','3'], }
     this.handleItemClick = this.handleItemClick.bind(this);
+    this.handleBack = this.handleBack.bind(this);
+    this.handleForward = this.handleForward.bind(this);
   }
 
   handleItemClick(e, { name }) {
     this.setState({ activeItem: name })
+  }
+
+  handleBack(e) {
+    const visible = this.state.visibleItems;
+    const lowest = parseInt(visible[0]) - 1;
+    if (lowest === 0) {
+      return;
+    }
+    const strPres = "" + lowest;
+    const array = _.concat([], strPres, visible[0], visible[1]);
+    this.setState({visibleItems: array});
+  }
+
+  handleForward(e) {
+    const visible = this.state.visibleItems;
+    const highest = parseInt(visible[2]) + 1;
+    const pageCount = this.getPageCount();
+    if (highest > pageCount) {
+      return;
+    }
+    const strPres = "" + highest;
+    const array = _.concat([], visible[1], visible[2], strPres);
+    this.setState({visibleItems: array});
   }
 
   getWordCount() {
@@ -25,24 +52,34 @@ class Words extends React.Component {
          .catch(function (error) {
            console.log("fetching count failed");
          });
-
   }
 
   componentWillMount() {
     this.getWordCount();
   }
 
+  getPageCount() {
+    return Math.ceil(this.state.wordCount / this.state.itemsPerPage);
+  }
   render() {
     const activeItem = this.state.activeItem;
+    const pageCount = this.getPageCount();
+    const visible = this.state.visibleItems;
     return (
       <div>
         <h4>Words in database: {this.state.wordCount}</h4>
         <Menu pagination>
-          <Menu.Item name='1' active={activeItem === '1'} onClick={this.handleItemClick} />
-          <Menu.Item disabled>...</Menu.Item>
-          <Menu.Item name='10' active={activeItem === '10'} onClick={this.handleItemClick} />
-          <Menu.Item name='11' active={activeItem === '11'} onClick={this.handleItemClick} />
-          <Menu.Item name='12' active={activeItem === '12'} onClick={this.handleItemClick} />
+          {pageCount > 3 && ( <Menu.Item icon onClick={this.handleBack} >
+            <Icon name='chevron left' />
+          </Menu.Item> ) }
+          <Menu.Item name={visible[0]} active={activeItem === visible[0]} onClick={this.handleItemClick} />
+          {pageCount > 1 &&
+            <Menu.Item name={visible[1]} active={activeItem === visible[1]} onClick={this.handleItemClick} /> }
+          {pageCount > 2 &&
+            <Menu.Item name={visible[2]} active={activeItem === visible[2]} onClick={this.handleItemClick} /> }
+          {pageCount > 3 && <Menu.Item icon onClick={this.handleForward}>
+            <Icon name='chevron right' />
+          </Menu.Item>}
         </Menu>
 
       </div>

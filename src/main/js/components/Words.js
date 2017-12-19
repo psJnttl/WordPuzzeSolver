@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Icon, Menu, Table } from 'semantic-ui-react'
+import { Button, Icon, Menu, Popup, Table } from 'semantic-ui-react'
 import _ from 'lodash';
 
 class Words extends React.Component {
@@ -85,7 +85,24 @@ class Words extends React.Component {
       <Table.Row key={index}>
         <Table.Cell>{item.id}</Table.Cell>
         <Table.Cell>{item.value}</Table.Cell>
-        <Table.Cell></Table.Cell>
+        <Table.Cell>
+          <Popup
+            trigger={
+              <Button
+                icon="pencil"
+                color="yellow"
+              />}
+            content="edit"
+          />
+          <Popup
+            trigger={
+              <Button
+                icon="trash outline"
+                color="red"
+              />}
+            content="delete"
+          />
+        </Table.Cell>
       </Table.Row>);
     return (
       <div>

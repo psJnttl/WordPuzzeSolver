@@ -8,8 +8,8 @@ import ModalSimpleConfirmation from './ModalSimpleConfirmation';
 class Words extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {wordCount:0, itemsPerPage:5, activeItem: '1',
-      visibleItems: ['1','2','3'], words: [], word:{},
+    this.state = {wordCount:0, itemsPerPage:5, activePage: '1',
+      visiblePages: ['1','2','3'], words: [], word:{},
       delConfirmationVisible: false, };
     this.handleItemClick = this.handleItemClick.bind(this);
     this.handleBack = this.handleBack.bind(this);
@@ -18,26 +18,27 @@ class Words extends React.Component {
     this.deleteReply = this.deleteReply.bind(this);
     this.getWordPage = this.getWordPage.bind(this);
     this.deleteWord = this.deleteWord.bind(this);
+    this.updateVisibleItems = this.updateVisibleItems.bind(this);
   }
 
   handleItemClick(e, { name }) {
-    this.setState({ activeItem: name },
-      () => this.getWordPage(this.state.activeItem, this.state.itemsPerPage));
+    this.setState({ activePage: name },
+      () => this.getWordPage(this.state.activePage, this.state.itemsPerPage));
   }
 
   handleBack(e) {
-    const visible = this.state.visibleItems;
+    const visible = this.state.visiblePages;
     const lowest = parseInt(visible[0]) - 1;
     if (lowest === 0) {
       return;
     }
     const strPres = "" + lowest;
     const array = _.concat([], strPres, visible[0], visible[1]);
-    this.setState({visibleItems: array});
+    this.setState({visiblePages: array});
   }
 
   handleForward(e) {
-    const visible = this.state.visibleItems;
+    const visible = this.state.visiblePages;
     const highest = parseInt(visible[2]) + 1;
     const pageCount = this.getPageCount();
     if (highest > pageCount) {
@@ -45,7 +46,21 @@ class Words extends React.Component {
     }
     const strPres = "" + highest;
     const array = _.concat([], visible[1], visible[2], strPres);
-    this.setState({visibleItems: array});
+    this.setState({visiblePages: array});
+  }
+
+  updateVisibleItems() {
+    const visible = this.state.visiblePages;
+    const pageCount = this.getPageCount();
+    if (pageCount >= 3 && parseInt(visible[2]) > pageCount) {
+      this.handleBack(null);
+    }
+    const activePage = parseInt(this.state.activePage);
+    if (pageCount > 0 && activePage > pageCount) {
+      this.setState({activePage: '' + pageCount},
+        () => this.getWordPage(this.state.activePage, this.state.itemsPerPage));
+    }
+
   }
 
   setDeleteConfirmModalVisible(item) {
@@ -75,8 +90,9 @@ class Words extends React.Component {
   }
 
   getWordPage(pageNumber, count) {
-    const page = parseInt(pageNumber) - 1;
-    const url = '/api/words/page/' + page + "/" + count;
+    let page = parseInt(pageNumber) - 1;
+    page = page > -1 ? page : 0;
+    const url = '/api/words/page/' + page + '/' + count;
     const self = this;
     const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
     axios.get(url, config)
@@ -95,8 +111,9 @@ class Words extends React.Component {
     const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
     axios.delete(url, config)
          .then(function (response) {
-           self.setState({wordCount: self.state.wordCount - 1})
-           self.getWordPage(self.state.activeItem, self.state.itemsPerPage);
+           self.setState({wordCount: self.state.wordCount - 1});
+           self.getWordPage(self.state.activePage, self.state.itemsPerPage);
+           self.updateVisibleItems();
          })
          .catch(function (error) {
            console.log("deleting word failed");
@@ -105,16 +122,16 @@ class Words extends React.Component {
 
   componentWillMount() {
     this.getWordCount();
-    this.getWordPage(this.state.activeItem, this.state.itemsPerPage);
+    this.getWordPage(this.state.activePage, this.state.itemsPerPage);
   }
 
   getPageCount() {
     return Math.ceil(this.state.wordCount / this.state.itemsPerPage);
   }
   render() {
-    const activeItem = this.state.activeItem;
+    const activePage = this.state.activePage;
     const pageCount = this.getPageCount();
-    const visible = this.state.visibleItems;
+    const visible = this.state.visiblePages;
     const dataRows = this.state.words.map((item, index) =>
       <Table.Row key={index} size="small">
         <Table.Cell>{item.id}</Table.Cell>
@@ -164,11 +181,11 @@ class Words extends React.Component {
           {pageCount > 3 && ( <Menu.Item icon onClick={this.handleBack} >
             <Icon name='chevron left' />
           </Menu.Item> ) }
-          <Menu.Item name={visible[0]} active={activeItem === visible[0]} onClick={this.handleItemClick} />
+          <Menu.Item name={visible[0]} active={activePage === visible[0]} onClick={this.handleItemClick} />
           {pageCount > 1 &&
-            <Menu.Item name={visible[1]} active={activeItem === visible[1]} onClick={this.handleItemClick} /> }
+            <Menu.Item name={visible[1]} active={activePage === visible[1]} onClick={this.handleItemClick} /> }
           {pageCount > 2 &&
-            <Menu.Item name={visible[2]} active={activeItem === visible[2]} onClick={this.handleItemClick} /> }
+            <Menu.Item name={visible[2]} active={activePage === visible[2]} onClick={this.handleItemClick} /> }
           {pageCount > 3 && <Menu.Item icon onClick={this.handleForward}>
             <Icon name='chevron right' />
           </Menu.Item>}

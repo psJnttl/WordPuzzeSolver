@@ -16,6 +16,8 @@ class Words extends React.Component {
     this.handleForward = this.handleForward.bind(this);
     this.setDeleteConfirmModalVisible = this.setDeleteConfirmModalVisible.bind(this);
     this.deleteReply = this.deleteReply.bind(this);
+    this.getWordPage = this.getWordPage.bind(this);
+    this.deleteWord = this.deleteWord.bind(this);
   }
 
   handleItemClick(e, { name }) {
@@ -54,8 +56,7 @@ class Words extends React.Component {
 
   deleteReply(answer) {
     if (true === answer) {
-      console.log("delete: ");
-      console.log(this.state.word);
+      this.deleteWord(this.state.word);
     }
     this.setState({delConfirmationVisible: false, word: {} });
   }
@@ -84,6 +85,21 @@ class Words extends React.Component {
          })
          .catch(function (error) {
            console.log("fetching word page failed");
+         });
+  }
+
+  deleteWord(item) {
+    const word = _.assign({}, item);
+    const self = this;
+    const url = '/api/words/' + word.id;
+    const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
+    axios.delete(url, config)
+         .then(function (response) {
+           self.setState({wordCount: self.state.wordCount - 1})
+           self.getWordPage(self.state.activeItem, self.state.itemsPerPage);
+         })
+         .catch(function (error) {
+           console.log("deleting word failed");
          });
   }
 

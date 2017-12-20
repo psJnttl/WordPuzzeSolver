@@ -23,10 +23,10 @@ class ModalWord extends React.Component {
     const word = this.state.word;
     let letterCount;
     if (word.value !== undefined) {
-      letterCount = <Label>{word.value.length}</Label>
+      letterCount = word.value.length;
     }
     else {
-      letterCount = <Label>0</Label>
+      letterCount = 0;
     }
 
     return (
@@ -40,12 +40,14 @@ class ModalWord extends React.Component {
               onChange={this.onChangeValue}
               placeholder={this.props.placeholder}
               labelPosition="right"
-              label={letterCount}
+              label={<Label>{letterCount}</Label>}
+              value={this.state.word.value}
             />
           </Modal.Content>
           <Modal.Actions className="modalFooter">
             <Button negative content="Cancel" onClick={() => this.props.close()} />
-            <Button positive content='Save' onClick={() => this.props.save(this.state.word)} />
+            <Button positive content='Save' onClick={() => this.props.save(this.state.word)}
+              disabled={! (letterCount > 1)} />
           </Modal.Actions>
         </Modal>
       </div>

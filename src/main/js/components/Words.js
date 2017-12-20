@@ -4,13 +4,14 @@ import axios from 'axios';
 import { Button, Icon, Menu, Popup, Table } from 'semantic-ui-react'
 import _ from 'lodash';
 import ModalSimpleConfirmation from './ModalSimpleConfirmation';
+import ModalWord from './ModalWord';
 
 class Words extends React.Component {
   constructor(props) {
     super(props);
     this.state = {wordCount:0, itemsPerPage:5, activePage: '1',
       visiblePages: ['1','2','3'], words: [], word:{},
-      delConfirmationVisible: false, };
+      delConfirmationVisible: false, addModalVisible:false,};
     this.handleItemClick = this.handleItemClick.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleForward = this.handleForward.bind(this);
@@ -19,6 +20,9 @@ class Words extends React.Component {
     this.getWordPage = this.getWordPage.bind(this);
     this.deleteWord = this.deleteWord.bind(this);
     this.updateVisibleItems = this.updateVisibleItems.bind(this);
+    this.openAddModal = this.openAddModal.bind(this);
+    this.closeAddModal = this.closeAddModal.bind(this);
+    this.addWord = this.addWord.bind(this);
   }
 
   handleItemClick(e, { name }) {
@@ -128,7 +132,46 @@ class Words extends React.Component {
   getPageCount() {
     return Math.ceil(this.state.wordCount / this.state.itemsPerPage);
   }
+
+  openAddModal() {
+    this.setState({addModalVisible: true});
+  }
+
+  closeAddModal() {
+    this.setState({addModalVisible: false});
+  }
+
+  addWord(word) {
+    this.closeAddModal();
+    const self = this;
+    const command = _.assign({}, word);
+    const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
+    axios.post('/api/words', command, config)
+         .then(function (response) {
+           self.setState({wordCount: self.state.wordCount + 1});
+           self.getWordPage(self.state.activePage, self.state.itemsPerPage);
+         })
+         .catch(function (error) {
+           console.log("adding word failed");
+         });
+  }
+
+
   render() {
+    let wordModal;
+    if (this.state.addModalVisible) {
+      wordModal =
+      <ModalWord
+        modalOpen={this.state.addModalVisible}
+        title="Add word"
+        close={this.closeAddModal}
+        save={this.addWord}
+
+      />
+    }
+    else {
+      wordModal = null;
+    }
     const activePage = this.state.activePage;
     const pageCount = this.getPageCount();
     const visible = this.state.visiblePages;
@@ -164,7 +207,17 @@ class Words extends React.Component {
           question={"Are you sure you want to delete '" + this.state.word.value + "' ?"}
           reply={this.deleteReply}
         />
+        {wordModal}
         <h4>Words in database: {this.state.wordCount}</h4>
+        <Popup
+          trigger={
+            <Button
+              icon="plus"
+              color="green"
+              onClick={() => this.openAddModal()}
+            />}
+          content="add"
+        />
         <Table celled unstackable>
           <Table.Header>
             <Table.Row>

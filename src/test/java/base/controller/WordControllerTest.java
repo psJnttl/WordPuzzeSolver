@@ -1,6 +1,8 @@
 package base.controller;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -9,6 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.util.List;
 
@@ -18,6 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -46,7 +50,13 @@ public class WordControllerTest {
     private static final String EMPTY_STRING = "";
     private static final long WRONG_ID = Long.MAX_VALUE;
     private static final String WORD_COUNT_PATH = "/api/words/count";
+    private static final String SEARCHED_WORD1 = "khedcveef";
+    private static final String SEARCHED_WORD2 = "eefuuv3v";
+    private static final String SEARCHED_WORD3 = "iyiyeefjhjlbf";
+    private static final int SEARCH1_HITS = 3;
     
+    private final String [] pagedwords = {"kyuguyg", SEARCHED_WORD1, "edcybgyne", "nygef", SEARCHED_WORD2, "xnygefygne",
+            SEARCHED_WORD3, "dcybtfubi", "frxhumrfy", "ytvfugy"};
     @Autowired
     private WebApplicationContext webApplicationContext;
 
@@ -63,6 +73,8 @@ public class WordControllerTest {
         wordRepository.saveAndFlush(w1);
         w2 = new Word(WORD2);
         wordRepository.saveAndFlush(w2);
+        initPagedSearchTest(pagedwords);
+
     }
 
     @After
@@ -73,6 +85,7 @@ public class WordControllerTest {
         if ( null != w3) {
             wordRepository.delete(w3);
         }
+        cleanupPagedSearchTest(pagedwords);
     }
 
     @Test
@@ -255,5 +268,42 @@ public class WordControllerTest {
         WordCountDto dto = mapper.readValue(result.getResponse().getContentAsString(), WordCountDto.class);
         long expected = wordRepository.count();
         assertEquals("Word count reported incorrectly!", expected, dto.getCount());
+    }
+
+    private void initPagedSearchTest(String [] words) {
+        for (String word : words) {
+            Word w = new Word(word);
+            wordRepository.saveAndFlush(w);            
+        }
+    }
+    
+    private void cleanupPagedSearchTest(String [] words) {
+        for (String word : words) {
+            Word w = wordRepository.findByValue(word);
+            if (null != w) {
+                wordRepository.delete(w);
+            }
+        }
+    }
+
+    @Test
+    public void searchWordsPagedOK() throws Exception {
+        mockMvc
+                .perform(get("/api/words/search/page/eef/0/3"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.content", hasSize(SEARCH1_HITS)))
+                .andExpect(jsonPath("$.content[0].value", is(SEARCHED_WORD2)))
+                .andExpect(jsonPath("$.content[1].value", is(SEARCHED_WORD3)))
+                .andExpect(jsonPath("$.content[2].value", is(SEARCHED_WORD1)));
+    }
+
+    @Test
+    public void searchWordsPagedNothingFound() throws Exception {
+        mockMvc
+                .perform(get("/api/words/search/page/notfound/0/3"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.content", hasSize(0)));
     }
 }

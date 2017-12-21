@@ -87,4 +87,10 @@ public class WordController {
     public Page<WordDto> getWordPage(@PathVariable int number, @PathVariable int count) {
         return wordService.getWordPage(number, count);
     }
+    
+    @RequestMapping(value = "/api/words/search/page/{searchValue}/{number}/{count}", method = RequestMethod.GET)
+    public Page<WordDto> searchWordPage(@PathVariable String searchValue, 
+                                        @PathVariable int number, @PathVariable int count) {
+        return wordService.searchWordPage(number, count, searchValue);
+    }
 }

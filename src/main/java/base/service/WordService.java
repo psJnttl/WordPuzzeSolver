@@ -88,5 +88,12 @@ public class WordService {
         return dtos;
     }
     
-
+    public Page<WordDto> searchWordPage(int number, int count, String searchValue) {
+        Pageable pageable = new PageRequest(number,count,Sort.Direction.ASC, "value");
+        Page<Word> wordPage = wordRepository.findByValueContainsIgnoreCase(searchValue, pageable);
+        Page<WordDto> dtos = wordPage.map(this::createDto);
+        return dtos;
+    }
+    
+    
 }

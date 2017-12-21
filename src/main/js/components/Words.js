@@ -110,7 +110,8 @@ class Words extends React.Component {
     const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
     axios.get(url, config)
          .then(function (response) {
-           self.setState({words: response.data});
+           const resp = response.data;
+           self.setState({words: resp.content, wordCount: resp.totalElements});
          })
          .catch(function (error) {
            console.log("fetching word page failed");
@@ -134,7 +135,6 @@ class Words extends React.Component {
   }
 
   componentWillMount() {
-    this.getWordCount();
     this.getWordPage(this.state.activePage, this.state.itemsPerPage);
   }
 

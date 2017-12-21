@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Button, Icon, Menu, Popup, Table } from 'semantic-ui-react'
+import { Button, Icon, Input, List, Menu, Popup, Table } from 'semantic-ui-react'
 import _ from 'lodash';
 import ModalSimpleConfirmation from './ModalSimpleConfirmation';
 import ModalWord from './ModalWord';
@@ -12,7 +12,7 @@ class Words extends React.Component {
     this.state = {wordCount:0, itemsPerPage:5, activePage: 1,
       visiblePages: [1,2,3], words: [], word:{},
       delConfirmationVisible: false, addModalVisible:false,
-      editModalVisible: false,};
+      editModalVisible: false, searchValue:"", };
     this.handleItemClick = this.handleItemClick.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleForward = this.handleForward.bind(this);
@@ -28,17 +28,52 @@ class Words extends React.Component {
     this.closeEditModal = this.closeEditModal.bind(this);
     this.modifyWord = this.modifyWord.bind(this);
     this.setItemsPerPage = this.setItemsPerPage.bind(this);
+    this.onChangeSearchValue = this.onChangeSearchValue.bind(this);
+    this.searchWordPaged = this.searchWordPaged.bind(this);
+    this.proxyGetPage = this.proxyGetPage.bind(this);
+  }
+
+  proxyGetPage() {
+    if (this.state.searchValue.length > 1) {
+      this.searchWordPaged(this.state.activePage, this.state.itemsPerPage);
+    }
+    else {
+      this.getWordPage(this.state.activePage, this.state.itemsPerPage);
+    }
+  }
+  onChangeSearchValue(e) {
+    const value = e.target.value;
+    this.setState({searchValue: value, activePage: 1},
+      () => this.proxyGetPage());
+
+  }
+
+  searchWordPaged(pageNumber, count) {
+    let page = pageNumber - 1;
+    page = page > -1 ? page : 0;
+    const searchValue = this.state.searchValue;
+    const url = '/api/words/search/page/' + searchValue + '/' + page + '/' + count;
+    const self = this;
+    const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
+    axios.get(url, config)
+         .then(function (response) {
+           const resp = response.data;
+           self.setState({words: resp.content, wordCount: resp.totalElements});
+         })
+         .catch(function (error) {
+           console.log("searching a word failed!");
+         });
   }
 
   setItemsPerPage(nbrItems) {
     this.setState({itemsPerPage: nbrItems, activePage: 1},
-    ()=> this.getWordPage(this.state.activePage, this.state.itemsPerPage));
+    ()=> this.proxyGetPage());
   }
 
   handleItemClick(e, { name } ) {
     const number = parseInt(name);
     this.setState({ activePage: number },
-      () => this.getWordPage(this.state.activePage, this.state.itemsPerPage));
+      () => this.proxyGetPage());
   }
 
   handleBack(e) {
@@ -71,7 +106,7 @@ class Words extends React.Component {
     const activePage = this.state.activePage;
     if (pageCount > 0 && activePage > pageCount) {
       this.setState({activePage: pageCount},
-        () => this.getWordPage(this.state.activePage, this.state.itemsPerPage));
+        () => this.proxyGetPage());
     }
 
   }
@@ -125,8 +160,8 @@ class Words extends React.Component {
     const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
     axios.delete(url, config)
          .then(function (response) {
-           self.setState({wordCount: self.state.wordCount - 1});
-           self.getWordPage(self.state.activePage, self.state.itemsPerPage);
+           self.setState({wordCount: self.state.wordCount - 1},
+             () => self.proxyGetPage());
            self.updateVisibleItems();
          })
          .catch(function (error) {
@@ -135,7 +170,7 @@ class Words extends React.Component {
   }
 
   componentWillMount() {
-    this.getWordPage(this.state.activePage, this.state.itemsPerPage);
+    this.proxyGetPage();
   }
 
   getPageCount() {
@@ -157,8 +192,8 @@ class Words extends React.Component {
     const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
     axios.post('/api/words', command, config)
          .then(function (response) {
-           self.setState({wordCount: self.state.wordCount + 1});
-           self.getWordPage(self.state.activePage, self.state.itemsPerPage);
+           self.setState({wordCount: self.state.wordCount + 1},
+             ()=> self.proxyGetPage());
          })
          .catch(function (error) {
            console.log("adding word failed");
@@ -173,15 +208,15 @@ class Words extends React.Component {
     this.setState({editModalVisible: false, word: {} });
   }
 
-  modifyWord(item) {
+  modifyWord(word) {
     this.closeEditModal();
     const self = this;
     const command = _.assign({}, word);
     const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
-    axios.put('/api/words', command, config)
+    axios.put('/api/words/' + command.id, command, config)
          .then(function (response) {
-           self.setState({wordCount: self.state.wordCount + 1});
-           self.getWordPage(self.state.activePage, self.state.itemsPerPage);
+           self.setState({wordCount: self.state.wordCount + 1},
+             () => self.proxyGetPage());
          })
          .catch(function (error) {
            console.log("adding word failed");
@@ -259,15 +294,26 @@ class Words extends React.Component {
         />
         {wordModal}
         <h4>Words in database: {this.state.wordCount}</h4>
-        <Popup
-          trigger={
-            <Button
-              icon="plus"
-              color="green"
-              onClick={() => this.openAddModal()}
-            />}
-          content="add"
-        />
+        <ul style={{'display': 'flex', 'listStyleType': 'none'}}>
+          <li>
+            <Popup
+              trigger={
+                <Button
+                  icon="plus"
+                  color="green"
+                  onClick={() => this.openAddModal()}
+                />}
+              content="add"
+            />
+          </li>
+          <li style={{'marginLeft': '10px'}}>
+            <Input
+              value={this.state.searchValue}
+              placeholder="search"
+              onChange={this.onChangeSearchValue}
+            />
+          </li>
+        </ul>
         <Table celled unstackable>
           <Table.Header>
             <Table.Row>

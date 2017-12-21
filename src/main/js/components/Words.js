@@ -31,7 +31,8 @@ class Words extends React.Component {
   }
 
   setItemsPerPage(nbrItems) {
-    this.setState({itemsPerPage: nbrItems, currentPage: 1});
+    this.setState({itemsPerPage: nbrItems, activePage: 1},
+    ()=> this.getWordPage(this.state.activePage, this.state.itemsPerPage));
   }
 
   handleItemClick(e, { name } ) {
@@ -214,6 +215,15 @@ class Words extends React.Component {
     const activePage = this.state.activePage;
     const pageCount = this.getPageCount();
     const visible = this.state.visiblePages;
+    const choices = [5,10,20,40];
+    const itemsPer = choices.map( (item, index) =>
+      <Menu.Item
+        name={'' + item}
+        active={item === this.state.itemsPerPage}
+        onClick={() => this.setItemsPerPage(item)}
+      />
+    );
+
     const dataRows = this.state.words.map((item, index) =>
       <Table.Row key={index} size="small">
         <Table.Cell>{item.id}</Table.Cell>
@@ -283,7 +293,10 @@ class Words extends React.Component {
             <Icon name='chevron right' />
           </Menu.Item>}
         </Menu>
-
+        <br />
+        <Menu pagination size="mini">
+          {itemsPer}
+        </Menu>
       </div>
     );
   }

@@ -9,9 +9,10 @@ import ModalWord from './ModalWord';
 class Words extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {wordCount:0, itemsPerPage:5, activePage: '1',
-      visiblePages: ['1','2','3'], words: [], word:{},
-      delConfirmationVisible: false, addModalVisible:false,};
+    this.state = {wordCount:0, itemsPerPage:5, activePage: 1,
+      visiblePages: [1,2,3], words: [], word:{},
+      delConfirmationVisible: false, addModalVisible:false,
+      editModalVisible: false,};
     this.handleItemClick = this.handleItemClick.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleForward = this.handleForward.bind(this);
@@ -23,45 +24,52 @@ class Words extends React.Component {
     this.openAddModal = this.openAddModal.bind(this);
     this.closeAddModal = this.closeAddModal.bind(this);
     this.addWord = this.addWord.bind(this);
+    this.openEditModal = this.openEditModal.bind(this);
+    this.closeEditModal = this.closeEditModal.bind(this);
+    this.modifyWord = this.modifyWord.bind(this);
+    this.setItemsPerPage = this.setItemsPerPage.bind(this);
   }
 
-  handleItemClick(e, { name }) {
-    this.setState({ activePage: name },
+  setItemsPerPage(nbrItems) {
+    this.setState({itemsPerPage: nbrItems, currentPage: 1});
+  }
+
+  handleItemClick(e, { name } ) {
+    const number = parseInt(name);
+    this.setState({ activePage: number },
       () => this.getWordPage(this.state.activePage, this.state.itemsPerPage));
   }
 
   handleBack(e) {
     const visible = this.state.visiblePages;
-    const lowest = parseInt(visible[0]) - 1;
+    const lowest = visible[0] - 1;
     if (lowest === 0) {
       return;
     }
-    const strPres = "" + lowest;
-    const array = _.concat([], strPres, visible[0], visible[1]);
+    const array = _.concat([], lowest, visible[0], visible[1]);
     this.setState({visiblePages: array});
   }
 
   handleForward(e) {
     const visible = this.state.visiblePages;
-    const highest = parseInt(visible[2]) + 1;
+    const highest = visible[2] + 1;
     const pageCount = this.getPageCount();
     if (highest > pageCount) {
       return;
     }
-    const strPres = "" + highest;
-    const array = _.concat([], visible[1], visible[2], strPres);
+    const array = _.concat([], visible[1], visible[2], highest);
     this.setState({visiblePages: array});
   }
 
   updateVisibleItems() {
     const visible = this.state.visiblePages;
     const pageCount = this.getPageCount();
-    if (pageCount >= 3 && parseInt(visible[2]) > pageCount) {
+    if (pageCount >= 3 && visible[2] > pageCount) {
       this.handleBack(null);
     }
-    const activePage = parseInt(this.state.activePage);
+    const activePage = this.state.activePage;
     if (pageCount > 0 && activePage > pageCount) {
-      this.setState({activePage: '' + pageCount},
+      this.setState({activePage: pageCount},
         () => this.getWordPage(this.state.activePage, this.state.itemsPerPage));
     }
 
@@ -94,7 +102,7 @@ class Words extends React.Component {
   }
 
   getWordPage(pageNumber, count) {
-    let page = parseInt(pageNumber) - 1;
+    let page = pageNumber - 1;
     page = page > -1 ? page : 0;
     const url = '/api/words/page/' + page + '/' + count;
     const self = this;
@@ -156,6 +164,28 @@ class Words extends React.Component {
          });
   }
 
+  openEditModal(item) {
+    this.setState({editModalVisible: true, word: item});
+  }
+
+  closeEditModal() {
+    this.setState({editModalVisible: false, word: {} });
+  }
+
+  modifyWord(item) {
+    this.closeEditModal();
+    const self = this;
+    const command = _.assign({}, word);
+    const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
+    axios.put('/api/words', command, config)
+         .then(function (response) {
+           self.setState({wordCount: self.state.wordCount + 1});
+           self.getWordPage(self.state.activePage, self.state.itemsPerPage);
+         })
+         .catch(function (error) {
+           console.log("adding word failed");
+         });
+  }
 
   render() {
     let wordModal;
@@ -166,7 +196,16 @@ class Words extends React.Component {
         title="Add word"
         close={this.closeAddModal}
         save={this.addWord}
-
+      />
+    }
+    else if (this.state.editModalVisible) {
+      wordModal =
+      <ModalWord
+        modalOpen={this.state.editModalVisible}
+        title="Edit word"
+        close={this.closeEditModal}
+        save={this.modifyWord}
+        word={this.state.word}
       />
     }
     else {
@@ -185,6 +224,7 @@ class Words extends React.Component {
               <Button
                 icon="pencil"
                 color="yellow"
+                onClick={() => this.openEditModal(item)}
               />}
             content="edit"
           />
@@ -234,11 +274,11 @@ class Words extends React.Component {
           {pageCount > 3 && ( <Menu.Item icon onClick={this.handleBack} >
             <Icon name='chevron left' />
           </Menu.Item> ) }
-          <Menu.Item name={visible[0]} active={activePage === visible[0]} onClick={this.handleItemClick} />
+          <Menu.Item name={'' + visible[0]} active={activePage === visible[0]} onClick={this.handleItemClick} />
           {pageCount > 1 &&
-            <Menu.Item name={visible[1]} active={activePage === visible[1]} onClick={this.handleItemClick} /> }
+            <Menu.Item name={'' + visible[1]} active={activePage === visible[1]} onClick={this.handleItemClick} /> }
           {pageCount > 2 &&
-            <Menu.Item name={visible[2]} active={activePage === visible[2]} onClick={this.handleItemClick} /> }
+            <Menu.Item name={'' + visible[2]} active={activePage === visible[2]} onClick={this.handleItemClick} /> }
           {pageCount > 3 && <Menu.Item icon onClick={this.handleForward}>
             <Icon name='chevron right' />
           </Menu.Item>}

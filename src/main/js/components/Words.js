@@ -31,6 +31,13 @@ class Words extends React.Component {
     this.onChangeSearchValue = this.onChangeSearchValue.bind(this);
     this.searchWordPaged = this.searchWordPaged.bind(this);
     this.proxyGetPage = this.proxyGetPage.bind(this);
+    this.clearSearch = this.clearSearch.bind(this);
+  }
+
+  clearSearch() {
+    console.log("clearSearch()");
+    this.setState({searchValue: "" },
+      () => this.proxyGetPage());
   }
 
   proxyGetPage() {
@@ -311,6 +318,7 @@ class Words extends React.Component {
               value={this.state.searchValue}
               placeholder="search"
               onChange={this.onChangeSearchValue}
+              icon={{ name: 'remove', link: true, onClick: this.clearSearch }}
             />
           </li>
         </ul>

@@ -81,12 +81,12 @@ public class WordService {
         return new WordCountDto(wordCount);
     }
 
-    public List<WordDto> getWordPage(int number, int count) {
+    public Page<WordDto> getWordPage(int number, int count) {
         Pageable pageable = new PageRequest(number,count,Sort.Direction.ASC, "value");
         Page<Word> wordPage = wordRepository.findAll(pageable);
-        List<Word> pageWords = wordPage.getContent();
-        return pageWords.stream()
-                        .map(w -> createDto(w))
-                        .collect(Collectors.toList());
+        Page<WordDto> dtos = wordPage.map(this::createDto);
+        return dtos;
     }
+    
+
 }

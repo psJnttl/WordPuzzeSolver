@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -83,7 +84,7 @@ public class WordController {
     }
     
     @RequestMapping(value = "/api/words/page/{number}/{count}", method = RequestMethod.GET)
-    public List<WordDto> getWordPage(@PathVariable int number, @PathVariable int count) {
+    public Page<WordDto> getWordPage(@PathVariable int number, @PathVariable int count) {
         return wordService.getWordPage(number, count);
     }
 }

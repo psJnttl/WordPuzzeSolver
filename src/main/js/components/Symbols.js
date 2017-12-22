@@ -1,12 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Table } from 'semantic-ui-react'
+import { Button, Popup, Table } from 'semantic-ui-react'
+import ModalSimpleConfirmation from './ModalSimpleConfirmation';
 
 class Symbols extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {symbols: [], }
+    this.state = {symbols: [], symbol: {}, delConfirmationVisible: false,
+    };
+    this.setDeleteConfirmModalVisible = this.setDeleteConfirmModalVisible.bind(this);
+    this.deleteReply = this.deleteReply.bind(this);
+  }
+
+  setDeleteConfirmModalVisible(item) {
+    if (false === this.state.delConfirmationVisible) {
+      this.setState({delConfirmationVisible: true, symbol: item});
+    }
+  }
+
+  deleteReply(answer) {
+    if (true === answer) {
+      this.deleteWord(this.state.symbol);
+    }
+    this.setState({delConfirmationVisible: false, symbol: {} });
+  }
+
+  deleteWord(item) {
 
   }
 
@@ -32,12 +52,30 @@ class Symbols extends React.Component {
          <Table.Cell>{item.id}</Table.Cell>
          <Table.Cell>{item.value}</Table.Cell>
          <Table.Cell>{item.score}</Table.Cell>
-         <Table.Cell></Table.Cell>
+         <Table.Cell>
+           <Popup
+             trigger={
+               <Button
+                 icon="trash outline"
+                 color="red"
+                 onClick={() => this.setDeleteConfirmModalVisible(item)}
+               />}
+             content="delete"
+           />
+         </Table.Cell>
        </Table.Row>
     );
     return (
       <div>
         <h4>Symbols</h4>
+
+        <ModalSimpleConfirmation
+          modalOpen={this.state.delConfirmationVisible}
+          title="Delete symbol"
+          question={"Are you sure you want to delete '" + this.state.symbol.value + "' ?"}
+          reply={this.deleteReply}
+        />
+
         <Table celled unstackable>
           <Table.Header>
             <Table.Row>

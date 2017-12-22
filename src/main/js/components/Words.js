@@ -259,7 +259,7 @@ class Words extends React.Component {
     const visible = this.state.visiblePages;
     const choices = [5,10,20,40];
     const itemsPer = choices.map( (item, index) =>
-      <Menu.Item
+      <Menu.Item key={index}
         name={'' + item}
         active={item === this.state.itemsPerPage}
         onClick={() => this.setItemsPerPage(item)}

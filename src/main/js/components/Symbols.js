@@ -3,14 +3,18 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Button, Popup, Table } from 'semantic-ui-react'
 import ModalSimpleConfirmation from './ModalSimpleConfirmation';
+import ModalSymbol from './ModalSymbol';
 
 class Symbols extends React.Component {
   constructor(props) {
     super(props);
     this.state = {symbols: [], symbol: {}, delConfirmationVisible: false,
+      addModalVisible: false,
     };
     this.setDeleteConfirmModalVisible = this.setDeleteConfirmModalVisible.bind(this);
     this.deleteReply = this.deleteReply.bind(this);
+    this.openAddModal = this.openAddModal.bind(this);
+    this.closeAddModal = this.closeAddModal.bind(this);
   }
 
   setDeleteConfirmModalVisible(item) {
@@ -40,6 +44,14 @@ class Symbols extends React.Component {
          });
   }
 
+  openAddModal() {
+    this.setState({addModalVisible: true});
+  }
+
+  closeAddModal() {
+    this.setState({addModalVisible: false});
+  }
+
   getAllSymbols() {
     const self = this;
     const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
@@ -57,6 +69,19 @@ class Symbols extends React.Component {
   }
 
   render() {
+    let symbolModal;
+    if (this.state.addModalVisible) {
+      symbolModal =
+      <ModalSymbol
+        modalOpen={this.state.addModalVisible}
+        title="Add symbol"
+        close={this.closeAddModal}
+        save={this.addSymbol}
+      />
+    }
+    else {
+      symbolModal = null;
+    }
     const dataRows = this.state.symbols.map((item, index) =>
        <Table.Row key={index} size="small">
          <Table.Cell>{item.id}</Table.Cell>
@@ -85,7 +110,20 @@ class Symbols extends React.Component {
           question={"Are you sure you want to delete '" + this.state.symbol.value + "' ?"}
           reply={this.deleteReply}
         />
-
+        {symbolModal}
+        <ul style={{'display': 'flex', 'listStyleType': 'none'}}>
+          <li>
+            <Popup
+              trigger={
+                <Button
+                  icon="plus"
+                  color="green"
+                  onClick={() => this.openAddModal()}
+                />}
+              content="add"
+            />
+          </li>
+        </ul>
         <Table celled unstackable>
           <Table.Header>
             <Table.Row>

@@ -5,7 +5,7 @@ import { Button, Input, Label, Modal } from 'semantic-ui-react'
 class ModalWord extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {word:{}, }
+    this.state = {word:{id:0, value:""}, }
     this.onChangeValue = this.onChangeValue.bind(this);
   }
 

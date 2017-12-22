@@ -15,6 +15,7 @@ class Symbols extends React.Component {
     this.deleteReply = this.deleteReply.bind(this);
     this.openAddModal = this.openAddModal.bind(this);
     this.closeAddModal = this.closeAddModal.bind(this);
+    this.addSymbol = this.addSymbol.bind(this);
   }
 
   setDeleteConfirmModalVisible(item) {
@@ -50,6 +51,20 @@ class Symbols extends React.Component {
 
   closeAddModal() {
     this.setState({addModalVisible: false});
+  }
+
+  addSymbol(symbol) {
+    this.closeAddModal();
+    const self = this;
+    const command = _.assign({}, symbol);
+    const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
+    axios.post('/api/symbols', command, config)
+         .then(function (response) {
+           self.getAllSymbols();
+         })
+         .catch(function (error) {
+           console.log("adding symbol failed");
+         });
   }
 
   getAllSymbols() {

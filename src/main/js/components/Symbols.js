@@ -21,13 +21,23 @@ class Symbols extends React.Component {
 
   deleteReply(answer) {
     if (true === answer) {
-      this.deleteWord(this.state.symbol);
+      this.deleteSymbol(this.state.symbol);
     }
     this.setState({delConfirmationVisible: false, symbol: {} });
   }
 
-  deleteWord(item) {
-
+  deleteSymbol(item) {
+    const symbol = _.assign({}, item);
+    const self = this;
+    const url = '/api/symbols/' + symbol.id;
+    const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
+    axios.delete(url, config)
+         .then(function (response) {
+           self.getAllSymbols();
+         })
+         .catch(function (error) {
+           console.log("deleting symbol failed");
+         });
   }
 
   getAllSymbols() {

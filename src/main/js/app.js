@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {NavLink, BrowserRouter as Router, Route,  Link, Switch} from 'react-router-dom';
 import { Input } from 'semantic-ui-react';
 import Words from './components/Words';
+import Symbols from './components/Symbols';
 
 class Nav extends React.Component {
   constructor(props) {
@@ -25,6 +26,11 @@ class Nav extends React.Component {
         <li>
           <NavLink activeClassName="active" to="/words" >
             Words
+          </NavLink>
+        </li>
+        <li>
+          <NavLink activeClassName="active" to="/symbols" >
+            Symbols
           </NavLink>
         </li>
         <li>
@@ -72,6 +78,7 @@ class App extends React.Component {
             <Route exact path="/" component={Home} />
             <Route path="/game" component={Game} />
             <Route path="/words" component={Words} />
+            <Route path="/symbols" component={Symbols} />
             <Route path="/about" component={About} />
             <Route render={ () => <div><h1>404 - Not Found!</h1></div>} />
           </Switch>

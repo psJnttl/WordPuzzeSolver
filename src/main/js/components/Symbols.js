@@ -9,13 +9,16 @@ class Symbols extends React.Component {
   constructor(props) {
     super(props);
     this.state = {symbols: [], symbol: {}, delConfirmationVisible: false,
-      addModalVisible: false,
+      addModalVisible: false, editModalVisible: false,
     };
     this.setDeleteConfirmModalVisible = this.setDeleteConfirmModalVisible.bind(this);
     this.deleteReply = this.deleteReply.bind(this);
     this.openAddModal = this.openAddModal.bind(this);
     this.closeAddModal = this.closeAddModal.bind(this);
     this.addSymbol = this.addSymbol.bind(this);
+    this.openEditModal = this.openEditModal.bind(this);
+    this.closeEditModal = this.closeEditModal.bind(this);
+    this.modifySymbol = this.modifySymbol.bind(this);
   }
 
   setDeleteConfirmModalVisible(item) {
@@ -67,6 +70,28 @@ class Symbols extends React.Component {
          });
   }
 
+  openEditModal(symbol) {
+    this.setState({editModalVisible: true, symbol: symbol});
+  }
+
+  closeEditModal() {
+    this.setState({editModalVisible: false, symbol: {}});
+  }
+
+  modifySymbol(symbol) {
+    this.closeEditModal();
+    const self = this;
+    const command = _.assign({}, symbol);
+    const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
+    axios.put('/api/symbols/' + command.id, command, config)
+         .then(function (response) {
+           self.getAllSymbols();
+         })
+         .catch(function (error) {
+           console.log("modifying symbol failed");
+         });
+  }
+
   getAllSymbols() {
     const self = this;
     const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
@@ -94,6 +119,16 @@ class Symbols extends React.Component {
         save={this.addSymbol}
       />
     }
+    else if (this.state.editModalVisible) {
+      symbolModal =
+      <ModalSymbol
+        modalOpen={this.state.editModalVisible}
+        title="Edit symbol"
+        close={this.closeEditModal}
+        save={this.modifySymbol}
+        symbol={this.state.symbol}
+      />
+    }
     else {
       symbolModal = null;
     }
@@ -103,6 +138,15 @@ class Symbols extends React.Component {
          <Table.Cell>{item.value}</Table.Cell>
          <Table.Cell>{item.score}</Table.Cell>
          <Table.Cell>
+           <Popup
+             trigger={
+               <Button
+                 icon="pencil"
+                 color="yellow"
+                 onClick={() => this.openEditModal(item)}
+               />}
+             content="edit"
+           />
            <Popup
              trigger={
                <Button

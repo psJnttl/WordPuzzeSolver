@@ -5,6 +5,7 @@ import { Button, Icon, Input, List, Menu, Popup, Table } from 'semantic-ui-react
 import _ from 'lodash';
 import ModalSimpleConfirmation from './ModalSimpleConfirmation';
 import ModalWord from './ModalWord';
+import ModalSimpleInformation from './ModalSimpleInformation';
 
 class Words extends React.Component {
   constructor(props) {
@@ -12,7 +13,9 @@ class Words extends React.Component {
     this.state = {wordCount:0, itemsPerPage:5, activePage: 1,
       visiblePages: [1,2,3], words: [], word:{},
       delConfirmationVisible: false, addModalVisible:false,
-      editModalVisible: false, searchValue:"", };
+      editModalVisible: false, searchValue:"", infoModalVisible: false,
+      infoModalData: {},
+    };
     this.handleItemClick = this.handleItemClick.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleForward = this.handleForward.bind(this);
@@ -32,10 +35,10 @@ class Words extends React.Component {
     this.searchWordPaged = this.searchWordPaged.bind(this);
     this.proxyGetPage = this.proxyGetPage.bind(this);
     this.clearSearch = this.clearSearch.bind(this);
+    this.closeInfoModal = this.closeInfoModal.bind(this);
   }
 
   clearSearch() {
-    console.log("clearSearch()");
     this.setState({searchValue: "" },
       () => this.proxyGetPage());
   }
@@ -68,7 +71,12 @@ class Words extends React.Component {
            self.setState({words: resp.content, wordCount: resp.totalElements});
          })
          .catch(function (error) {
-           console.log("searching a word failed!");
+           self.setState({infoModalVisible: true,
+               infoModalData: {
+               title:"Search failed",
+              notification: "Searching a word failed!",
+              name: ""}
+            });
          });
   }
 
@@ -140,7 +148,12 @@ class Words extends React.Component {
            self.setState({wordCount: resp.count});
          })
          .catch(function (error) {
-           console.log("fetching count failed");
+           self.setState({infoModalVisible: true,
+               infoModalData: {
+               title:"Fetch count failed",
+              notification: "Fetching word count failed",
+              name: ""}
+            });
          });
   }
 
@@ -156,7 +169,12 @@ class Words extends React.Component {
            self.setState({words: resp.content, wordCount: resp.totalElements});
          })
          .catch(function (error) {
-           console.log("fetching word page failed");
+           self.setState({infoModalVisible: true,
+               infoModalData: {
+               title:"Fetching page failed",
+              notification: "Could not fetch page ",
+              name: page+1}
+            });
          });
   }
 
@@ -172,8 +190,17 @@ class Words extends React.Component {
            self.updateVisibleItems();
          })
          .catch(function (error) {
-           console.log("deleting word failed");
+           self.setState({infoModalVisible: true,
+               infoModalData: {
+               title:"Deleting a word failed",
+              notification: "Could not delete word",
+              name: word.value}
+            });
          });
+  }
+
+  closeInfoModal() {
+    this.setState({infoModalVisible: false, infoModalData: {}})
   }
 
   componentWillMount() {
@@ -203,7 +230,12 @@ class Words extends React.Component {
              ()=> self.proxyGetPage());
          })
          .catch(function (error) {
-           console.log("adding word failed");
+           self.setState({infoModalVisible: true,
+               infoModalData: {
+               title:"Adding a word failed",
+              notification: "Could not add word",
+              name: command.value}
+            });
          });
   }
 
@@ -226,7 +258,12 @@ class Words extends React.Component {
              () => self.proxyGetPage());
          })
          .catch(function (error) {
-           console.log("adding word failed");
+           self.setState({infoModalVisible: true,
+               infoModalData: {
+               title:"Modifying a word failed",
+              notification: "Could not modify word",
+              name: command.value}
+            });
          });
   }
 
@@ -293,6 +330,13 @@ class Words extends React.Component {
       </Table.Row>);
     return (
       <div>
+        <ModalSimpleInformation
+          modalOpen={this.state.infoModalVisible}
+          title={this.state.infoModalData.title}
+          notification={this.state.infoModalData.notification}
+          name={this.state.infoModalData.name}
+          reply={this.closeInfoModal}
+        />
         <ModalSimpleConfirmation
           modalOpen={this.state.delConfirmationVisible}
           title="Delete word"

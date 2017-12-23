@@ -45,16 +45,17 @@ class ModalSymbol extends React.Component {
             <List.Item>
               <Input
                 onChange={this.onChangeValue}
-                placeholder="symbol"
+                placeholder=""
                 value={this.state.symbol.value}
+                label="symbol"
               /> <br />
             </List.Item>
             <List.Item>
               <Input
                 onChange={this.onChangeScore}
-                placeholder="score"
                 value={this.state.symbol.score}
                 type="number"
+                label="score"
               />
             </List.Item>
           </List>

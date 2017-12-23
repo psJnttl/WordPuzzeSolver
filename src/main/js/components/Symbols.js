@@ -4,12 +4,14 @@ import axios from 'axios';
 import { Button, Popup, Table } from 'semantic-ui-react'
 import ModalSimpleConfirmation from './ModalSimpleConfirmation';
 import ModalSymbol from './ModalSymbol';
+import ModalSimpleInformation from './ModalSimpleInformation';
 
 class Symbols extends React.Component {
   constructor(props) {
     super(props);
     this.state = {symbols: [], symbol: {}, delConfirmationVisible: false,
-      addModalVisible: false, editModalVisible: false,
+      addModalVisible: false, editModalVisible: false, infoModalVisible: false,
+      infoModalData: {},
     };
     this.setDeleteConfirmModalVisible = this.setDeleteConfirmModalVisible.bind(this);
     this.deleteReply = this.deleteReply.bind(this);
@@ -19,6 +21,7 @@ class Symbols extends React.Component {
     this.openEditModal = this.openEditModal.bind(this);
     this.closeEditModal = this.closeEditModal.bind(this);
     this.modifySymbol = this.modifySymbol.bind(this);
+    this.closeInfoModal = this.closeInfoModal.bind(this);
   }
 
   setDeleteConfirmModalVisible(item) {
@@ -44,7 +47,12 @@ class Symbols extends React.Component {
            self.getAllSymbols();
          })
          .catch(function (error) {
-           console.log("deleting symbol failed");
+           self.setState({infoModalVisible: true,
+               infoModalData: {
+               title:"Deleting a symbol failed",
+              notification: "Could not delete symbol",
+              name: symbol.value}
+            });
          });
   }
 
@@ -66,7 +74,12 @@ class Symbols extends React.Component {
            self.getAllSymbols();
          })
          .catch(function (error) {
-           console.log("adding symbol failed");
+           self.setState({infoModalVisible: true,
+               infoModalData: {
+               title:"Adding a symbol failed",
+              notification: "Could not add symbol",
+              name: command.value}
+            });
          });
   }
 
@@ -88,8 +101,17 @@ class Symbols extends React.Component {
            self.getAllSymbols();
          })
          .catch(function (error) {
-           console.log("modifying symbol failed");
+           self.setState({infoModalVisible: true,
+               infoModalData: {
+               title:"Modifying a symbol failed",
+              notification: "Could not modify symbol",
+              name: command.value}
+            });
          });
+  }
+
+  closeInfoModal() {
+    this.setState({infoModalVisible: false, infoModalData: {}})
   }
 
   getAllSymbols() {
@@ -100,7 +122,11 @@ class Symbols extends React.Component {
            self.setState({symbols: response.data});
          })
          .catch(function (error) {
-           console.log("getting all symbols failed");
+           self.setState({infoModalVisible: true,
+               infoModalData: {
+               title:"Fetch symbols failed",
+              notification: "Could not get the list of symbols from server!"}
+            });
          });
   }
 
@@ -163,6 +189,13 @@ class Symbols extends React.Component {
       <div>
         <h4>Symbols</h4>
 
+        <ModalSimpleInformation
+          modalOpen={this.state.infoModalVisible}
+          title={this.state.infoModalData.title}
+          notification={this.state.infoModalData.notification}
+          name={this.state.infoModalData.name}
+          reply={this.closeInfoModal}
+        />
         <ModalSimpleConfirmation
           modalOpen={this.state.delConfirmationVisible}
           title="Delete symbol"

@@ -7,6 +7,7 @@ class ModalWord extends React.Component {
     super(props);
     this.state = {word:{id:0, value:""}, }
     this.onChangeValue = this.onChangeValue.bind(this);
+    this.clearSearch = this.clearSearch.bind(this);
   }
 
   onChangeValue(e) {
@@ -16,6 +17,11 @@ class ModalWord extends React.Component {
 
   componentDidMount() {
     const wrd = _.assign({}, this.props.word);
+    this.setState({word: wrd});
+  }
+
+  clearSearch() {
+    const wrd = _.assign({}, this.state.word, {value: ""});
     this.setState({word: wrd});
   }
 
@@ -39,9 +45,10 @@ class ModalWord extends React.Component {
             <Input
               onChange={this.onChangeValue}
               placeholder={this.props.placeholder}
-              labelPosition="right"
+              labelPosition="left"
               label={<Label>{letterCount}</Label>}
               value={this.state.word.value}
+              icon={{ name: 'remove', link: true, onClick: this.clearSearch }}
             />
           </Modal.Content>
           <Modal.Actions className="modalFooter">

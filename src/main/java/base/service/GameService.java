@@ -38,6 +38,7 @@ public class GameService {
 
     public SolvedGameDto solve(GameReq game) {
         gameArea.setGameArea(game.getGameTiles());
+        gameArea.solve();
         return null;
     }
 }

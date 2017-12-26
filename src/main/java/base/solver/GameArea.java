@@ -2,6 +2,7 @@ package base.solver;
 
 import java.security.InvalidKeyException;
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,7 @@ public class GameArea {
     private Symbol[][] gameArea;
     private SymbolScore symbolScore;
     private Vocabulary vocabulary;
+    private List<FoundWords> wordList;
     
     public GameArea() throws InvalidKeyException {
         this.symbolScore = new SymbolScore();
@@ -69,5 +71,15 @@ public class GameArea {
             sb.append("\n");
         }
         return sb.toString();
+    }
+    
+    public void solve() {
+        wordList = new ArrayList<>();
+        for (int i = 0; i < Y_SIZE; i++) {
+            for (int j = 0; j < X_SIZE; j++) {
+                Symbol symbol = gameArea[i][j];
+                vocabulary.useSubVocabulary(symbol);                
+            }
+        }
     }
 }

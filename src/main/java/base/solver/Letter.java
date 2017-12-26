@@ -32,7 +32,7 @@ public class Letter implements Symbol {
         return rawPresentation;
     }
     
-    public int getGameAreaIndex() {
+    public int getCoordinates() {
         return gameAreaIndex;
     }
 

@@ -20,11 +20,12 @@ public class SymbolFactory {
      * @param gameAreaIndex   Symbol location in game area 0...15
      * @param points          The amount of points symbol is worth in the game.
      * @return                The game area Symbol
+     * @throws IllegalArgumentException if Symbol can't be created from given letters.
      */
-    public static Optional<Symbol> create(String letters, int gameAreaIndex, int points) {
+    public static Symbol create(String letters, int gameAreaIndex, int points) {
         if (letters.length() == 1 && letters.matches("[a-zA-Z]")) {
-            return Optional.of(new Letter(letters, gameAreaIndex, points));
+            return new Letter(letters, gameAreaIndex, points);
         }
-        return Optional.empty();
+        throw new IllegalArgumentException("Can't determine Symbol from given parameter.");
     }
 }

@@ -1,5 +1,6 @@
 package solver;
 
+import java.security.InvalidKeyException;
 import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,11 @@ public class GameArea {
     private static final int Y_SIZE = 4;
 
     private Symbol[][] gameArea;
+    private SymbolScore symbolScore;
+    
+    public GameArea() throws InvalidKeyException {
+        this.symbolScore = new SymbolScore();
+    }
 
     public void setGameArea(List<String> gameArea) {
         if (null == gameArea || gameArea.isEmpty() ) {

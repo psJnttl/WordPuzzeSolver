@@ -1,7 +1,6 @@
 package solver;
 
 import java.security.InvalidParameterException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,19 +14,18 @@ public class GameArea {
 
     private Symbol[][] gameArea;
 
-    public GameArea(String gameAreaString) {
-        if (null == gameAreaString || gameAreaString.isEmpty()) {
+    public void setGameArea(List<String> gameArea) {
+        if (null == gameArea || gameArea.isEmpty() ) {
             throw new NullPointerException("Must have game area as String.");
         }
-        else if (gameAreaString.length() < 16 || gameAreaString.length() > 16) {
+        else if (gameArea.size() < 16 || gameArea.size() > 16) {
             throw new InvalidParameterException("Game area String must be 16 characters.");
         }
-        insertSymbols(gameAreaString);
+        insertSymbols(gameArea);
     }
 
-    private void insertSymbols(String letters) {
-        String[] gameDataTiles = letters.split("");
-        List<String> gameData = Arrays.asList(gameDataTiles);
+    private void insertSymbols(List<String> gameArea) {
+        List<String> gameData = gameArea;
         this.gameArea = new Symbol[Y_SIZE][X_SIZE];
         for (int i = 0; i < Y_SIZE; i++) {
             Symbol [] line = new Symbol[4];

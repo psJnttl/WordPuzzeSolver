@@ -3,13 +3,20 @@ package base.service;
 import org.springframework.stereotype.Service;
 
 import base.command.GameReq;
+import solver.GameArea;
 
 @Service
 public class GameService {
 
+    private GameArea gameArea;
+    
     private static final int GAME_AREA_SIZE = 16;
     private static final String REG_EX = "[a-zA-Z\\-]{1,4}";
-    
+
+    public GameService() {
+        this.gameArea = new GameArea();
+    }
+
     public boolean isGameAreaValid(GameReq gameArea) {
         if (null == gameArea || null == gameArea.getGameTiles() ||
             gameArea.getGameTiles().isEmpty() || 
@@ -23,5 +30,10 @@ public class GameService {
             return false;
         }
         return true;
+    }
+
+    public SolvedGameDto solve(GameReq game) {
+        gameArea.setGameArea(game.getGameTiles());
+        return null;
     }
 }

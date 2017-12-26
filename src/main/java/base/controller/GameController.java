@@ -23,6 +23,7 @@ public class GameController {
         if (!gameService.isGameAreaValid(game)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return null;
+        SolvedGameDto dto = gameService.solve(game);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 }

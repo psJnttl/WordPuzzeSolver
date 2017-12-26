@@ -5,19 +5,29 @@ import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import base.service.WordService;
 import base.solver.Symbol;
 import base.solver.SymbolFactory;
 
+@Component
 public class GameArea {
 
+    @Autowired
+    private WordService wordService;
+    
     private static final int X_SIZE = 4;
     private static final int Y_SIZE = 4;
 
     private Symbol[][] gameArea;
     private SymbolScore symbolScore;
+    private Vocabulary vocabulary;
     
     public GameArea() throws InvalidKeyException {
         this.symbolScore = new SymbolScore();
+        this.vocabulary = new Vocabulary();
     }
 
     public void setGameArea(List<String> gameArea) {
@@ -28,6 +38,7 @@ public class GameArea {
             throw new InvalidParameterException("Game area String must be 16 characters.");
         }
         insertSymbols(gameArea);
+        vocabulary.setVocabulary(wordService.listAllAsString());
     }
 
     private void insertSymbols(List<String> gameArea) {

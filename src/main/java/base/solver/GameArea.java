@@ -52,13 +52,8 @@ public class GameArea {
         for (int i = 0; i < Y_SIZE; i++) {
             Symbol [] line = new Symbol[4];
             for (int j = 0; j < X_SIZE; j++) {
-                Optional<Symbol> symbol = SymbolFactory.create(gameData.get(i*4 + j), (i*4 + j), 1);
-                if (symbol.isPresent()) {
-                    line[j] = symbol.get();
-                }
-                else {
-                    throw new InvalidParameterException("Can't determine symbol!");
-                }
+                Symbol symbol = SymbolFactory.create(gameData.get(i*4 + j), (i*4 + j), 1);
+                line[j] = symbol;                
             }
             this.gameArea[i] = line;
         }

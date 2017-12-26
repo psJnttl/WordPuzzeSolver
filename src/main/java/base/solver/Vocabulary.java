@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import base.solver.symbol.Symbol;
+
 public class Vocabulary {
 
     private Map<String, List<String>> wordHash = new HashMap<>();

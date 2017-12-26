@@ -3,6 +3,8 @@ package base.solver;
 import java.util.ArrayList;
 import java.util.List;
 
+import base.solver.symbol.Symbol;
+
 /**
  * Word consist of symbols on the game tiles.
  * 

@@ -1,4 +1,4 @@
-package base.solver;
+package base.solver.symbol;
 
 import java.util.Optional;
 

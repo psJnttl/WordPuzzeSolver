@@ -10,8 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import base.service.WordService;
-import base.solver.Symbol;
-import base.solver.SymbolFactory;
+import base.solver.symbol.Symbol;
+import base.solver.symbol.SymbolFactory;
+import base.solver.symbol.SymbolScore;
 
 @Component
 public class GameArea {

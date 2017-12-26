@@ -1,4 +1,4 @@
-package base.solver;
+package base.solver.symbol;
 
 public class Letter implements Symbol {
 

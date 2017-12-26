@@ -1,4 +1,4 @@
-package base.controller;
+package base.command;
 
 import java.util.List;
 

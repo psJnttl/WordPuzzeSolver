@@ -12,8 +12,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import base.controller.WordAdd;
-import base.controller.WordMod;
+import base.command.WordAdd;
+import base.command.WordMod;
 import base.domain.Word;
 import base.repository.WordRepository;
 

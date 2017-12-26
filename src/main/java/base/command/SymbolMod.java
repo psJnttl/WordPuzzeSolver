@@ -1,17 +1,19 @@
-package base.controller;
+package base.command;
 
-public class WordMod {
+public class SymbolMod {
 
     private long id;
     private String value;
-    
-    public WordMod() {
+    private int score;
+
+    public SymbolMod() {
 
     }
     
-    public WordMod(long id, String value) {
+    public SymbolMod(long id, String value, int score) {
         this.id = id;
         this.value = value;
+        this.score = score;
     }
 
     public long getId() {
@@ -30,11 +32,20 @@ public class WordMod {
         this.value = value;
     }
 
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + (int) (id ^ (id >>> 32));
+        result = prime * result + score;
         result = prime * result + ((value == null) ? 0 : value.hashCode());
         return result;
     }
@@ -44,8 +55,9 @@ public class WordMod {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        WordMod other = (WordMod) obj;
+        SymbolMod other = (SymbolMod) obj;
         if (id != other.id) return false;
+        if (score != other.score) return false;
         if (value == null) {
             if (other.value != null) return false;
         }
@@ -55,7 +67,7 @@ public class WordMod {
 
     @Override
     public String toString() {
-        return "WordMod [id=" + id + ", value=" + value + "]";
+        return "SymbolMod [id=" + id + ", value=" + value + ", score=" + score + "]";
     }
-    
+
 }

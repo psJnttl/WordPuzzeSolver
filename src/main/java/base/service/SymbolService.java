@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import base.controller.SymbolAdd;
-import base.controller.SymbolMod;
+import base.command.SymbolAdd;
+import base.command.SymbolMod;
 import base.domain.Symbol;
 import base.repository.SymbolRepository;
 

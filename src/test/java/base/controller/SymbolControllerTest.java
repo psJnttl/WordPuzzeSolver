@@ -29,6 +29,8 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import base.command.SymbolAdd;
+import base.command.SymbolMod;
 import base.domain.Symbol;
 import base.repository.SymbolRepository;
 import base.service.SymbolDto;

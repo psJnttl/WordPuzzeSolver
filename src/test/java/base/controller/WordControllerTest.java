@@ -33,6 +33,8 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import base.command.WordAdd;
+import base.command.WordMod;
 import base.domain.Word;
 import base.repository.WordRepository;
 import base.service.WordCountDto;

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import base.command.WordAdd;
+import base.command.WordMod;
 import base.service.WordCountDto;
 import base.service.WordDto;
 import base.service.WordService;

@@ -37,10 +37,10 @@ import base.service.WordDto;
 public class GameControllerTest {
 
     private static final String PATH = "/api/games";
-    private static final List<String> GAME1 = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "ll", "a", "a", "a", "a", "a", "e");
-    private static final List<String> GAME_TOO_SHORT = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "ll", "a", "a", "a", "a", "a");
-    private static final List<String> GAME_TOO_LONG = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "ll", "a", "a", "a", "a", "a", "e", "h");
-    private static final List<String> GAME_WITH_NUMBER0 = Arrays.asList("d", "a", "a", "p", "e", "a", "0", "a", "a", "ll", "a", "a", "a", "a", "a", "e");
+    private static final List<String> GAME1 = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "l", "a", "a", "a", "a", "a", "e");
+    private static final List<String> GAME_TOO_SHORT = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "l", "a", "a", "a", "a", "a");
+    private static final List<String> GAME_TOO_LONG = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "l", "a", "a", "a", "a", "a", "e", "h");
+    private static final List<String> GAME_WITH_NUMBER0 = Arrays.asList("d", "a", "a", "p", "e", "a", "0", "a", "a", "l", "a", "a", "a", "a", "a", "e");
 
     @Autowired
     private WebApplicationContext webApplicationContext;

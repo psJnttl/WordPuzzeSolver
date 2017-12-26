@@ -24,9 +24,11 @@ public class GameArea {
     private static final int Y_SIZE = 4;
 
     private Symbol[][] gameArea;
+    private Symbol[][] tempGameArea;
     private SymbolScore symbolScore;
     private Vocabulary vocabulary;
     private List<FoundWords> wordList;
+    private Word word;
     
     public GameArea() throws InvalidKeyException {
         this.symbolScore = new SymbolScore();
@@ -57,8 +59,8 @@ public class GameArea {
                 else {
                     throw new InvalidParameterException("Can't determine symbol!");
                 }
-                this.gameArea[i] = line;
             }
+            this.gameArea[i] = line;
         }
     }
 
@@ -79,7 +81,32 @@ public class GameArea {
         for (int i = 0; i < Y_SIZE; i++) {
             for (int j = 0; j < X_SIZE; j++) {
                 Symbol symbol = gameArea[i][j];
-                vocabulary.useSubVocabulary(symbol);                
+                vocabulary.useSubVocabulary(symbol); 
+                processVocabulary(symbol, i, j);
+            }
+        }
+    }
+    
+    private void processVocabulary(Symbol symbol, int gY, int gX) {
+        String nextWord = "";
+        while (true) {
+            Optional<String> nextWordConditional = vocabulary.getNextWord(); 
+            if (nextWordConditional.isPresent()) {
+                nextWord = nextWordConditional.get();
+                backUpGameArea();  // mutating will take place
+                word = new Word(nextWord);  // track word path
+            }
+            else {
+                break;
+            }
+        }
+    }
+    
+    private void backUpGameArea() {
+        this.tempGameArea = new Symbol[Y_SIZE][X_SIZE];
+        for (int i = 0; i < Y_SIZE; i++) {
+            for (int j = 0; j < X_SIZE; j++) {
+                tempGameArea[i][j] = gameArea[i][j].copyOf();
             }
         }
     }

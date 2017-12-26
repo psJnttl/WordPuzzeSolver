@@ -36,4 +36,9 @@ public class Letter implements Symbol {
         return gameAreaIndex;
     }
 
+    @Override
+    public Symbol copyOf() {
+        return new Letter(rawPresentation, gameAreaIndex, points);
+    }
+
 }

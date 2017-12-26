@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import base.solver.symbol.Symbol;
 
@@ -36,5 +37,13 @@ public class Vocabulary {
             lastWordIndex = activeVocabulary.size();
             wordIndex = 0;
         }
+    }
+    
+    public Optional<String> getNextWord() {
+        if (this.wordIndex < this.lastWordIndex) {
+            String word = activeVocabulary.get(wordIndex++);
+            return Optional.of(word);
+        }
+        return Optional.empty();
     }
 }

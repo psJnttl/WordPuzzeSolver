@@ -1,12 +1,12 @@
-package solver;
+package base.solver;
 
 import java.security.InvalidKeyException;
 import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Optional;
 
-import solver.Symbol;
-import solver.SymbolFactory;
+import base.solver.Symbol;
+import base.solver.SymbolFactory;
 
 public class GameArea {
 

@@ -1,4 +1,4 @@
-package solver;
+package base.solver;
 
 import java.security.InvalidKeyException;
 import java.util.HashMap;

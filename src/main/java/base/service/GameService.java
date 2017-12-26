@@ -5,7 +5,7 @@ import java.security.InvalidKeyException;
 import org.springframework.stereotype.Service;
 
 import base.command.GameReq;
-import solver.GameArea;
+import base.solver.GameArea;
 
 @Service
 public class GameService {

@@ -28,7 +28,7 @@ public class GameArea {
     private Symbol[][] tempGameArea;
     private SymbolScore symbolScore;
     private Vocabulary vocabulary;
-    private List<FoundWords> wordList;
+    private FoundWords foundWords;
     private Word word;
     private List<Symbol[][]> gameAreaStack;
 
@@ -74,7 +74,7 @@ public class GameArea {
     }
 
     public void solve() {
-        wordList = new ArrayList<>();
+        foundWords = new FoundWords();
         for (int i = 0; i < Y_SIZE; i++) {
             for (int j = 0; j < X_SIZE; j++) {
                 Symbol symbol = gameArea[i][j];
@@ -94,6 +94,10 @@ public class GameArea {
                 word = new Word(nextWord); // track word path
                 gameAreaStack = new ArrayList<>();
                 searchPath(nextWord, 0, gY, gX);
+                if (word.isComplete()) {
+                    System.out.println("Found: " + word);
+                    foundWords.insertWord(word);
+                }
             }
             else {
                 break;
@@ -162,6 +166,9 @@ public class GameArea {
             this.tempGameArea = gameAreaStack.remove(gameAreaStack.size() - 1);
             this.word.removeLastSymbol();
         }
-
+    }
+    
+    public void printResults() {
+        foundWords.printWordList();
     }
 }

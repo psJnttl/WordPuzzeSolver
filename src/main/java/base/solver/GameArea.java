@@ -131,6 +131,9 @@ public class GameArea {
                 wordIndex += status;
             }
         }
+        else if (status == 0) {
+            return;
+        }
         if (!word.isComplete()) {
             searchPath(nextWord, wordIndex, gY, gX + 1); // E
         }

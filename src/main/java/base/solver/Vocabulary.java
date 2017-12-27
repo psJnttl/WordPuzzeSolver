@@ -10,13 +10,14 @@ import base.solver.symbol.Symbol;
 
 public class Vocabulary {
 
-    private Map<String, List<String>> wordHash = new HashMap<>();
+    private Map<String, List<String>> wordHash;
     private int wordCount = 0;
     private List<String> activeVocabulary;
     private int lastWordIndex = 0;
     private int wordIndex = 0;
     
     public void setVocabulary(List<String> words) {
+        wordHash = new HashMap<>();
         for (String word: words) {
             String key = word.substring(0, 1);
             List<String> list = wordHash.getOrDefault(key, new ArrayList<String>());

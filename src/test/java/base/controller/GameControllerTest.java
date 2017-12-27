@@ -41,6 +41,7 @@ public class GameControllerTest {
     private static final List<String> GAME1 = Arrays.asList("d", "a", "a", "p", "e", "l", "o", "a", "a", "l", "a", "a", "a", "a", "a", "e");
     private static final List<String> GAME2 = Arrays.asList("u", "b", "i", "q", "a", "a", "a", "u", "a", "a", "a", "i", "s", "u", "o", "t");
     private static final List<String> GAME3 = Arrays.asList("i", "l", "i", "b", "t", "s", "e", "i", "i", "p", "r", "s", "e", "s", "o", "n");
+    private static final List<String> GAME4 = Arrays.asList("a", "a", "a", "a", "a", "e", "d", "a", "a", "o", "ll", "a", "p", "a", "a", "a");
     private static final List<String> GAME_TOO_SHORT = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "l", "a", "a", "a", "a", "a");
     private static final List<String> GAME_TOO_LONG = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "l", "a", "a", "a", "a", "a", "e", "h");
     private static final List<String> GAME_WITH_NUMBER0 = Arrays.asList("d", "a", "a", "p", "e", "a", "0", "a", "a", "l", "a", "a", "a", "a", "a", "e");
@@ -146,6 +147,23 @@ public class GameControllerTest {
         SolvedGameDto dto = mapper.readValue(result.getResponse().getContentAsString(), SolvedGameDto.class);
         assertTrue(dto.getWords().stream()
                         .filter(w -> w.getValue().equals("responsibilities"))
+                        .findFirst().isPresent());
+    }
+    
+    @Test
+    public void word_polled_with_digram_is_found() throws Exception {
+        String content = getGameAreaInJson(GAME4);
+        MvcResult result = mockMvc
+                .perform(
+                        post(PATH)
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .content(content))
+                .andExpect(status().isOk())
+                .andReturn();
+        ObjectMapper mapper = new ObjectMapper();
+        SolvedGameDto dto = mapper.readValue(result.getResponse().getContentAsString(), SolvedGameDto.class);
+        assertTrue(dto.getWords().stream()
+                        .filter(w -> w.getValue().equals("polled"))
                         .findFirst().isPresent());
     }
 }

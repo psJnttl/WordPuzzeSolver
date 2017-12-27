@@ -26,7 +26,7 @@ public class SymbolFactory {
         if (letters.length() == 1 && letters.matches("[a-zA-Z]")) {
             return new Letter(letters, gameAreaIndex, points);
         }
-        else if (letters.length() == 1 && letters.matches("[0-9]")) {
+        else if (letters.matches("[0-9]{1,2}")) {
             return new IndexNumber(letters, gameAreaIndex, points);
         }
         throw new IllegalArgumentException("Can't determine Symbol from given parameter: " + letters);

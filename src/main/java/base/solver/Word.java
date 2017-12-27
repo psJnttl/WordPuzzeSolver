@@ -34,6 +34,7 @@ public class Word {
     public void setComplete() {
         this.complete = true;
         symbolList.stream().forEach(s -> this.plainWord += s.toString());
+        points = calculatePoints();
     }
     
     public boolean isComplete() {
@@ -56,7 +57,7 @@ public class Word {
      * Length does matter.
      * @return  int amount of points
      */
-    public int calculatePoints() {
+    private int calculatePoints() {
         int points = this.points;
         if (plainWord.length() == 5) {
             points = points * 3 / 2; // on purpose: no decimals and rounding down
@@ -69,5 +70,9 @@ public class Word {
         }
         return points;
     }
-    
+
+    public int getPoints() {
+        return points;
+    }
+
 }    

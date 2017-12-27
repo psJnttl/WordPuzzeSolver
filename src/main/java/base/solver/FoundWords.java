@@ -18,7 +18,7 @@ public class FoundWords {
             if (aWord.toString().equals(newWord.toString())) {
                 duplicate = true; 
                 System.out.println("duplicate: " + newWord);
-                if (newWord.calculatePoints() > aWord.calculatePoints()) {
+                if (newWord.getPoints() > aWord.getPoints()) {
                     removeWord(aWord); // can happen with digram, either/or:
                     wordList.add(newWord); // same word yields more points
                     System.out.println("replace: " + newWord);
@@ -40,7 +40,7 @@ public class FoundWords {
     
     public void printWordList() {
         for (Word aWord : wordList) {
-            System.out.println(aWord.calculatePoints() + ": " + aWord.toString());
+            System.out.println(aWord.getPoints() + ": " + aWord.toString());
         }
     }
 }

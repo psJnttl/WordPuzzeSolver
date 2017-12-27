@@ -32,6 +32,13 @@ public class SymbolFactory {
         else if (letters.length() > 1 && letters.length() < 4 && letters.matches("[a-zA-Z]{2,3}")) {
             return new Digram(letters, gameAreaIndex, points);
         }
-        throw new IllegalArgumentException("Can't determine Symbol from given parameter: " + letters);
+        StringBuilder sb = new StringBuilder();
+        sb.append("\nletters: ")
+          .append(letters)
+          .append("\nindex: ")
+          .append(gameAreaIndex)
+          .append("\npoints: ")
+          .append(points);
+        throw new IllegalArgumentException("Can't determine Symbol from given parameter." + sb.toString());
     }
 }

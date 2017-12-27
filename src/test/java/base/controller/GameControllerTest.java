@@ -28,6 +28,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import base.command.GameReq;
+import base.service.SolvedGameDto;
 import base.service.SolvedWord;
 import base.service.WordDto;
 
@@ -108,8 +109,8 @@ public class GameControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         ObjectMapper mapper = new ObjectMapper();
-        List<SolvedWord> words = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<SolvedWord>>() { });
-        assertTrue(words.stream()
+        SolvedGameDto dto = mapper.readValue(result.getResponse().getContentAsString(), SolvedGameDto.class);
+        assertTrue(dto.getWords().stream()
                         .filter(w -> w.getValue().equals("polled"))
                         .findFirst().isPresent());
     }
@@ -125,8 +126,8 @@ public class GameControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         ObjectMapper mapper = new ObjectMapper();
-        List<SolvedWord> words = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<SolvedWord>>() { });
-        assertTrue(words.stream()
+        SolvedGameDto dto = mapper.readValue(result.getResponse().getContentAsString(), SolvedGameDto.class);
+        assertTrue(dto.getWords().stream()
                         .filter(w -> w.getValue().equals("ubiquitous"))
                         .findFirst().isPresent());
     }
@@ -142,8 +143,8 @@ public class GameControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         ObjectMapper mapper = new ObjectMapper();
-        List<SolvedWord> words = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<SolvedWord>>() { });
-        assertTrue(words.stream()
+        SolvedGameDto dto = mapper.readValue(result.getResponse().getContentAsString(), SolvedGameDto.class);
+        assertTrue(dto.getWords().stream()
                         .filter(w -> w.getValue().equals("responsibilities"))
                         .findFirst().isPresent());
     }

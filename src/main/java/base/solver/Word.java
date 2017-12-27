@@ -51,5 +51,23 @@ public class Word {
         return plainWord;
     }
  
+    /**
+     * Calculate the amount of points word is worth.
+     * Length does matter.
+     * @return  int amount of points
+     */
+    public int calculatePoints() {
+        int points = this.points;
+        if (plainWord.length() == 5) {
+            points = points * 3 / 2; // on purpose: no decimals and rounding down
+        }
+        else if (plainWord.length() > 5 && plainWord.length() < 8) {
+            points *= 2;
+        }
+        else if (plainWord.length() >= 8) {
+            points = points * 5 / 2;
+        }
+        return points;
+    }
     
 }    

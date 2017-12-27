@@ -28,7 +28,7 @@ public class IndexNumber implements Symbol {
 
     @Override
     public Symbol copyOf() {
-        return null;
+        return new IndexNumber(this.rawPresentation, this.gameAreaIndex, this.points);
     }
 
     @Override

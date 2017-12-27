@@ -43,7 +43,7 @@ public class FoundWords {
         Collections.sort(wordList);
         Collections.reverse(wordList);
         for (Word aWord : wordList) {
-            System.out.println(aWord.getPoints() + ": " + aWord.toString());
+            System.out.println(aWord.getPoints() + ": " + aWord.toString() + ", " + aWord.getPath());
         }
     }
 }

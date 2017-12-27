@@ -31,7 +31,7 @@ public class DatabaseLoader implements CommandLineRunner {
     @Override
     public void run(String... strings) throws InvalidKeyException {
         final String [] words = {"abandon","babies","cabbage","daily","eager","fabric","gadgets","habanero","iceberg",
-                "jacket","karat","label","machete","nab","oaring","polled","quadrant","rabbi","sacred","table",
+                "jacket","karat","label","machete","nab","oaring","polled","quadrant","responsibilities","sacred","table",
                 "ubiquitous","vacation","wages","xray","yahoo","zealot"};
         final Object[] symbolScores = { "a", 2, "at", 6, "b", 5, "c", 3, "d", 3, "e", 1, "ed", 7, "-est", 12,
                 "f", 5, "g", 4, "h", 4, "i", 2, "i/m", 20, "in-", 12, "j", 10, "k", 6, "l", 3, "ll", 8, "m", 4, "n", 2, "o",

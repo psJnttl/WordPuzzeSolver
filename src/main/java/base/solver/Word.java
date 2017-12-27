@@ -45,4 +45,11 @@ public class Word {
         this.points -= removed.points();
         this.path.remove(this.path.size() - 1);
     }
-}
+
+    @Override
+    public String toString() {
+        return plainWord;
+    }
+ 
+    
+}    

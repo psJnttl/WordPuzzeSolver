@@ -23,4 +23,26 @@ public class Word {
     public Word(String word) {
         this.initWord = word;
     }
+    
+    public void insertSymbol(Symbol symbol) {
+        Symbol newSymbol = symbol.copyOf();
+        symbolList.add(newSymbol);
+        points += symbol.points(); 
+        path.add(symbol.getCoordinates()); 
+    }
+
+    public void setComplete() {
+        this.complete = true;
+        symbolList.stream().forEach(s -> this.plainWord += s.toString());
+    }
+    
+    public boolean isComplete() {
+        return this.complete;
+    }
+    
+    public void removeLastSymbol() {
+        Symbol removed = this.symbolList.remove(this.symbolList.size() - 1);
+        this.points -= removed.points();
+        this.path.remove(this.path.size() - 1);
+    }
 }

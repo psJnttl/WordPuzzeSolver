@@ -11,7 +11,7 @@ import base.solver.symbol.Symbol;
  * @author Pasi
  *
  */
-public class Word {
+public class Word implements Comparable<Word> {
 
     private List<Symbol> symbolList = new ArrayList<>();
     private List<Integer> path = new ArrayList<>();
@@ -21,7 +21,7 @@ public class Word {
     private String initWord;
     
     public Word(String word) {
-        this.initWord = word;
+        initWord = word;
     }
     
     public void insertSymbol(Symbol symbol) {
@@ -32,19 +32,19 @@ public class Word {
     }
 
     public void setComplete() {
-        this.complete = true;
+        complete = true;
         symbolList.stream().forEach(s -> this.plainWord += s.toString());
         points = calculatePoints();
     }
     
     public boolean isComplete() {
-        return this.complete;
+        return complete;
     }
     
     public void removeLastSymbol() {
         Symbol removed = this.symbolList.remove(this.symbolList.size() - 1);
-        this.points -= removed.points();
-        this.path.remove(this.path.size() - 1);
+        points -= removed.points();
+        path.remove(this.path.size() - 1);
     }
 
     @Override
@@ -73,6 +73,17 @@ public class Word {
 
     public int getPoints() {
         return points;
+    }
+
+    @Override
+    public int compareTo(Word other) {
+        if (points < other.points) {
+            return -1;
+        }
+        else if (points > other.points) {
+            return 1;
+        }
+        return 0;
     }
 
 }    

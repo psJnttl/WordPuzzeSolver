@@ -1,6 +1,7 @@
 package base.solver;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +40,8 @@ public class FoundWords {
     }
     
     public void printWordList() {
+        Collections.sort(wordList);
+        Collections.reverse(wordList);
         for (Word aWord : wordList) {
             System.out.println(aWord.getPoints() + ": " + aWord.toString());
         }

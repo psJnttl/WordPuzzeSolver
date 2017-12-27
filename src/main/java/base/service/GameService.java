@@ -1,12 +1,15 @@
 package base.service;
 
 import java.security.InvalidKeyException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import base.command.GameReq;
 import base.solver.GameArea;
+import base.solver.Word;
 
 @Service
 public class GameService {
@@ -39,7 +42,14 @@ public class GameService {
     public SolvedGameDto solve(GameReq game) {
         gameArea.setGameArea(game.getGameTiles());
         gameArea.solve();
-        gameArea.printResults();
-        return null;
+        List<Word> words = gameArea.getResults();
+        return mapWordsToDto(words);
+    }
+    
+    private SolvedGameDto mapWordsToDto(List<Word> words) {
+        List<SolvedWord> solvedWords = words.stream()
+                                            .map(w -> new SolvedWord(w.toString(), w.getPoints(), w.getPath()))
+                                            .collect(Collectors.toList());
+        return new SolvedGameDto(solvedWords);
     }
 }

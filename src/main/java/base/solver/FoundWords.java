@@ -46,4 +46,10 @@ public class FoundWords {
             System.out.println(aWord.getPoints() + ": " + aWord.toString() + ", " + aWord.getPath());
         }
     }
+
+    public List<Word> getResults() {
+        Collections.sort(wordList);
+        Collections.reverse(wordList);
+        return wordList;
+    }
 }

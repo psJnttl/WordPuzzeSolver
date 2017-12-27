@@ -1,17 +1,17 @@
 package base.service;
 
-import java.util.Arrays;
+import java.util.List;
 
 public class SolvedWord {
 
     private String value;
     private int points;
-    private int [] path;
+    private List<Integer> path;
     
     public SolvedWord() {
     }
 
-    public SolvedWord(String value, int points, int [] path) {
+    public SolvedWord(String value, int points, List<Integer> path) {
         this.value = value;
         this.points = points;
         this.path = path;
@@ -33,11 +33,11 @@ public class SolvedWord {
         this.points = points;
     }
 
-    public int[] getPath() {
+    public List<Integer> getPath() {
         return path;
     }
 
-    public void setPath(int[] path) {
+    public void setPath(List<Integer> path) {
         this.path = path;
     }
 
@@ -45,7 +45,7 @@ public class SolvedWord {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + Arrays.hashCode(path);
+        result = prime * result + ((path == null) ? 0 : path.hashCode());
         result = prime * result + points;
         result = prime * result + ((value == null) ? 0 : value.hashCode());
         return result;
@@ -57,7 +57,10 @@ public class SolvedWord {
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
         SolvedWord other = (SolvedWord) obj;
-        if (!Arrays.equals(path, other.path)) return false;
+        if (path == null) {
+            if (other.path != null) return false;
+        }
+        else if (!path.equals(other.path)) return false;
         if (points != other.points) return false;
         if (value == null) {
             if (other.value != null) return false;
@@ -68,7 +71,7 @@ public class SolvedWord {
 
     @Override
     public String toString() {
-        return "SolvedWord [value=" + value + ", points=" + points + ", path=" + Arrays.toString(path) + "]";
+        return "SolvedWord [value=" + value + ", points=" + points + ", path=" + path + "]";
     }
     
 }

@@ -171,4 +171,8 @@ public class GameArea {
     public void printResults() {
         foundWords.printWordList();
     }
+    
+    public List<Word> getResults() {
+        return foundWords.getResults();
+    }
 }

@@ -44,6 +44,7 @@ public class GameControllerTest {
     private static final List<String> GAME4 = Arrays.asList("a", "a", "a", "a", "a", "e", "d", "a", "a", "o", "ll", "a", "p", "a", "a", "a");
     private static final List<String> GAME5 = Arrays.asList("a", "a", "a", "a", "a", "b", "a", "a", "a", "o", "in-", "a", "a", "a", "x", "a");
     private static final List<String> GAME6 = Arrays.asList("-est", "a", "a", "a", "a", "t", "a", "a", "r", "e", "a", "a", "g", "a", "a", "a");
+    private static final List<String> GAME7 = Arrays.asList("a", "a", "c", "a", "a", "i/m", "a", "h", "a", "r", "a", "e", "b", "f", "e", "t");
     private static final List<String> GAME_TOO_SHORT = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "l", "a", "a", "a", "a", "a");
     private static final List<String> GAME_TOO_LONG = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "l", "a", "a", "a", "a", "a", "e", "h");
     private static final List<String> GAME_WITH_NUMBER0 = Arrays.asList("d", "a", "a", "p", "e", "a", "0", "a", "a", "l", "a", "a", "a", "a", "a", "e");
@@ -202,4 +203,23 @@ public class GameControllerTest {
                         .filter(w -> w.getValue().equals("greatest"))
                         .findFirst().isPresent());
     }
+    
+    @Test
+    public void words_machete_fabric_with_digram_eitheror_are_found() throws Exception {
+        String content = getGameAreaInJson(GAME7);
+        MvcResult result = mockMvc
+                .perform(
+                        post(PATH)
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .content(content))
+                .andExpect(status().isOk())
+                .andReturn();
+        ObjectMapper mapper = new ObjectMapper();
+        SolvedGameDto dto = mapper.readValue(result.getResponse().getContentAsString(), SolvedGameDto.class);
+        assertEquals(2, dto.getWords().stream()
+                        .filter(w -> w.getValue().equals("fabric") || w.getValue().equals("machete"))
+                        .count());
+    }
+
+
 }

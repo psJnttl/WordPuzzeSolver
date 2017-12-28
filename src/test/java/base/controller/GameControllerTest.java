@@ -69,7 +69,10 @@ public class GameControllerTest {
     private static final List<String> GAME_TOO_SHORT = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "l", "a", "a", "a", "a", "a");
     private static final List<String> GAME_TOO_LONG = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "l", "a", "a", "a", "a", "a", "e", "h");
     private static final List<String> GAME_WITH_NUMBER0 = Arrays.asList("d", "a", "a", "p", "e", "a", "0", "a", "a", "l", "a", "a", "a", "a", "a", "e");
-
+    private static final List<String> GAME8 = Arrays.asList("a", "a", "t", "s", "a", "a", "t", "e", "a", "e", "-est", "a", "a", "r", "g", "a");
+    private static final int GAME8_SCORE = 57;
+    private static final List<Integer> GAME8_PATH = Arrays.asList(14, 13, 9, 6, 10);
+    
     @Autowired
     private WebApplicationContext webApplicationContext;
     
@@ -261,5 +264,20 @@ public class GameControllerTest {
         assertTrue("Path not correct!", isMatchingWordPaths(GAME7_PATH2, solved.get().getPath()));
     }
 
+    @Test
+    public void word_best_better_scoring_instance_replaces_worse_scoring() throws Exception {
+        String content = getGameAreaInJson(GAME8);
+        MvcResult result = mockMvc
+                .perform(
+                        post(PATH)
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .content(content))
+                .andExpect(status().isOk())
+                .andReturn();
+        Optional<SolvedWord> solved = findWordFromResult(result, "greatest");
+        assertTrue("Word not found!", solved.isPresent());
+        assertEquals("Score not correct", GAME8_SCORE, solved.get().getPoints());
+        assertTrue("Path not correct!", isMatchingWordPaths(GAME8_PATH, solved.get().getPath()));
+    }
 
 }

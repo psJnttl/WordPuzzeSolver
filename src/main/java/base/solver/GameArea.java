@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import base.service.SymbolService;
 import base.service.WordService;
 import base.solver.symbol.Symbol;
 import base.solver.symbol.SymbolFactory;
@@ -20,6 +21,9 @@ public class GameArea {
     @Autowired
     private WordService wordService;
 
+    @Autowired
+    private SymbolService symbolService;
+    
     private static final int X_SIZE = 4;
     private static final int Y_SIZE = 4;
     private static final int MAX_WORD_LENGTH = X_SIZE * Y_SIZE;
@@ -46,6 +50,7 @@ public class GameArea {
         }
         insertSymbols(gameArea);
         vocabulary.setVocabulary(wordService.listAllAsString());
+        symbolScore.setSymbolScores(symbolService.listAll());
     }
 
     private void insertSymbols(List<String> gameArea) {
@@ -54,7 +59,9 @@ public class GameArea {
         for (int i = 0; i < Y_SIZE; i++) {
             Symbol[] line = new Symbol[4];
             for (int j = 0; j < X_SIZE; j++) {
-                Symbol symbol = SymbolFactory.create(gameData.get(i * 4 + j), (i * 4 + j), 1);
+                String letters = gameData.get(i * 4 + j);
+                int points = symbolScore.getScore(letters);
+                Symbol symbol = SymbolFactory.create(letters, (i * 4 + j), points);
                 line[j] = symbol;
             }
             this.gameArea[i] = line;

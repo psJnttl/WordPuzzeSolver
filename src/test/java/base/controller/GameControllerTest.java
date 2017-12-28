@@ -43,6 +43,7 @@ public class GameControllerTest {
     private static final List<String> GAME3 = Arrays.asList("i", "l", "i", "b", "t", "s", "e", "i", "i", "p", "r", "s", "e", "s", "o", "n");
     private static final List<String> GAME4 = Arrays.asList("a", "a", "a", "a", "a", "e", "d", "a", "a", "o", "ll", "a", "p", "a", "a", "a");
     private static final List<String> GAME5 = Arrays.asList("a", "a", "a", "a", "a", "b", "a", "a", "a", "o", "in-", "a", "a", "a", "x", "a");
+    private static final List<String> GAME6 = Arrays.asList("-est", "a", "a", "a", "a", "t", "a", "a", "r", "e", "a", "a", "g", "a", "a", "a");
     private static final List<String> GAME_TOO_SHORT = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "l", "a", "a", "a", "a", "a");
     private static final List<String> GAME_TOO_LONG = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "l", "a", "a", "a", "a", "a", "e", "h");
     private static final List<String> GAME_WITH_NUMBER0 = Arrays.asList("d", "a", "a", "p", "e", "a", "0", "a", "a", "l", "a", "a", "a", "a", "a", "e");
@@ -182,6 +183,23 @@ public class GameControllerTest {
         SolvedGameDto dto = mapper.readValue(result.getResponse().getContentAsString(), SolvedGameDto.class);
         assertTrue(dto.getWords().stream()
                         .filter(w -> w.getValue().equals("inbox"))
+                        .findFirst().isPresent());
+    }
+    
+    @Test
+    public void word_greatest_with_digram_last_is_found() throws Exception {
+        String content = getGameAreaInJson(GAME6);
+        MvcResult result = mockMvc
+                .perform(
+                        post(PATH)
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .content(content))
+                .andExpect(status().isOk())
+                .andReturn();
+        ObjectMapper mapper = new ObjectMapper();
+        SolvedGameDto dto = mapper.readValue(result.getResponse().getContentAsString(), SolvedGameDto.class);
+        assertTrue(dto.getWords().stream()
+                        .filter(w -> w.getValue().equals("greatest"))
                         .findFirst().isPresent());
     }
 }

@@ -19,7 +19,9 @@ public class DigramLast implements Symbol {
         if (0 == wordIndex) {
             return 0;
         }
-        if (nextWord.indexOf(refinedPresentation) == nextWord.length() - refinedPresentation.length()) {
+        String testWord = nextWord.substring(wordIndex);
+        if (nextWord.indexOf(refinedPresentation) == nextWord.length() - refinedPresentation.length() && 
+            testWord.length() == refinedPresentation.length() ) {
             return refinedPresentation.length();
         }
         return 0;

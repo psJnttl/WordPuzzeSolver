@@ -38,6 +38,9 @@ public class SymbolFactory {
         else if (letters.length() > 2 && letters.length() < 5 && letters.matches("-[a-zA-Z]{2,3}")) {
             return new DigramLast(letters, gameAreaIndex, points);
         }
+        else if (letters.length() == 3 && letters.matches("[a-zA-Z]/[a-zA-Z]")) {
+            return new EitherOr(letters, gameAreaIndex, points);
+        }
         StringBuilder sb = new StringBuilder();
         sb.append("\nletters: ")
           .append(letters)

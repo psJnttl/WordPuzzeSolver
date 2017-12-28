@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import base.service.SymbolService;
 import base.service.WordService;
+import base.solver.symbol.EitherOr;
 import base.solver.symbol.Symbol;
 import base.solver.symbol.SymbolFactory;
 import base.solver.symbol.SymbolScore;
@@ -87,6 +88,12 @@ public class GameArea {
                 Symbol symbol = gameArea[i][j];
                 vocabulary.useSubVocabulary(symbol);
                 processVocabulary(symbol, i, j);
+                if (symbol.getClass().equals(EitherOr.class)) {
+                    EitherOr eo = (EitherOr)symbol;
+                    eo.toggle();
+                    vocabulary.useSubVocabulary(eo);
+                    processVocabulary(eo, i, j);
+                }
             }
         }
     }

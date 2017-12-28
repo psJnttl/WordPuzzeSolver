@@ -6,8 +6,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.After;
 import org.junit.Before;
@@ -23,8 +26,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import base.command.GameReq;
@@ -39,12 +44,28 @@ public class GameControllerTest {
 
     private static final String PATH = "/api/games"; 
     private static final List<String> GAME1 = Arrays.asList("d", "a", "a", "p", "e", "l", "o", "a", "a", "l", "a", "a", "a", "a", "a", "e");
+    private static final int GAME1_SCORE = 32;
+    private static final List<Integer> GAME1_PATH = Arrays.asList(3, 6, 9, 5, 4, 0);
     private static final List<String> GAME2 = Arrays.asList("u", "b", "i", "q", "a", "a", "a", "u", "a", "a", "a", "i", "s", "u", "o", "t");
+    private static final int GAME2_SCORE = 92;
+    private static final List<Integer> GAME2_PATH = Arrays.asList(0, 1, 2, 3, 7, 11, 15, 14, 13, 12);
     private static final List<String> GAME3 = Arrays.asList("i", "l", "i", "b", "t", "s", "e", "i", "i", "p", "r", "s", "e", "s", "o", "n");
+    private static final int GAME3_SCORE = 90;
+    private static final List<Integer> GAME3_PATH = Arrays.asList(10, 6, 5, 9, 14, 15, 11, 7, 3, 2, 1, 0, 4, 8, 12, 13);
     private static final List<String> GAME4 = Arrays.asList("a", "a", "a", "a", "a", "e", "d", "a", "a", "o", "ll", "a", "p", "a", "a", "a");
+    private static final int GAME4_SCORE = 36;
+    private static final List<Integer> GAME4_PATH = Arrays.asList(12, 9, 10, 5, 6);
     private static final List<String> GAME5 = Arrays.asList("a", "a", "a", "a", "a", "b", "a", "a", "a", "o", "in-", "a", "a", "a", "x", "a");
+    private static final int GAME5_SCORE = 42;
+    private static final List<Integer> GAME5_PATH = Arrays.asList(10, 5, 9, 14);
     private static final List<String> GAME6 = Arrays.asList("-est", "a", "a", "a", "a", "t", "a", "a", "r", "e", "a", "a", "g", "a", "a", "a");
+    private static final int GAME6_SCORE = 57;
+    private static final List<Integer> GAME6_PATH = Arrays.asList(12, 8, 9, 10, 5, 0);
     private static final List<String> GAME7 = Arrays.asList("a", "a", "c", "a", "a", "i/m", "a", "h", "a", "r", "a", "e", "b", "f", "e", "t");
+    private static final int GAME7_SCORE1 = 74;
+    private static final List<Integer> GAME7_PATH1 = Arrays.asList(13, 8, 12, 9, 5, 2);
+    private static final int GAME7_SCORE2 = 66;
+    private static final List<Integer> GAME7_PATH2 = Arrays.asList(5, 6, 2, 7, 11, 15, 14);
     private static final List<String> GAME_TOO_SHORT = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "l", "a", "a", "a", "a", "a");
     private static final List<String> GAME_TOO_LONG = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "l", "a", "a", "a", "a", "a", "e", "h");
     private static final List<String> GAME_WITH_NUMBER0 = Arrays.asList("d", "a", "a", "p", "e", "a", "0", "a", "a", "l", "a", "a", "a", "a", "a", "e");
@@ -102,6 +123,28 @@ public class GameControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    private Optional<SolvedWord> findWordFromResult(MvcResult result, String word) throws JsonParseException, JsonMappingException, UnsupportedEncodingException, IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        SolvedGameDto dto = mapper.readValue(result.getResponse().getContentAsString(), SolvedGameDto.class);
+        return dto.getWords()
+                  .stream()
+                  .filter(w -> w.getValue().equals(word))
+                  .findFirst();
+    }
+    
+    private boolean isMatchingWordPaths(List<Integer> expected, List<Integer> actual) {
+        if (null == expected || null == actual || expected.isEmpty() || actual.isEmpty() ||
+            expected.size() != actual.size()) {
+            return false;
+        }
+        for (int i=0,j=0; i < expected.size(); i++,j++) {
+            if (expected.get(i) != actual.get(j)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     @Test
     public void word_polled_is_found() throws Exception {
         String content = getGameAreaInJson(GAME1);
@@ -112,11 +155,10 @@ public class GameControllerTest {
                             .content(content))
                 .andExpect(status().isOk())
                 .andReturn();
-        ObjectMapper mapper = new ObjectMapper();
-        SolvedGameDto dto = mapper.readValue(result.getResponse().getContentAsString(), SolvedGameDto.class);
-        assertTrue(dto.getWords().stream()
-                        .filter(w -> w.getValue().equals("polled"))
-                        .findFirst().isPresent());
+        Optional<SolvedWord> solved = findWordFromResult(result, "polled");
+        assertTrue("Word not found!", solved.isPresent());
+        assertEquals("Score not correct", GAME1_SCORE, solved.get().getPoints());
+        assertTrue("Path not correct!", isMatchingWordPaths(GAME1_PATH, solved.get().getPath()));
     }
     
     @Test
@@ -129,11 +171,10 @@ public class GameControllerTest {
                             .content(content))
                 .andExpect(status().isOk())
                 .andReturn();
-        ObjectMapper mapper = new ObjectMapper();
-        SolvedGameDto dto = mapper.readValue(result.getResponse().getContentAsString(), SolvedGameDto.class);
-        assertTrue(dto.getWords().stream()
-                        .filter(w -> w.getValue().equals("ubiquitous"))
-                        .findFirst().isPresent());
+        Optional<SolvedWord> solved = findWordFromResult(result, "ubiquitous");
+        assertTrue("Word not found!", solved.isPresent());
+        assertEquals("Score not correct", GAME2_SCORE, solved.get().getPoints());
+        assertTrue("Path not correct!", isMatchingWordPaths(GAME2_PATH, solved.get().getPath()));
     }
 
     @Test
@@ -146,11 +187,10 @@ public class GameControllerTest {
                             .content(content))
                 .andExpect(status().isOk())
                 .andReturn();
-        ObjectMapper mapper = new ObjectMapper();
-        SolvedGameDto dto = mapper.readValue(result.getResponse().getContentAsString(), SolvedGameDto.class);
-        assertTrue(dto.getWords().stream()
-                        .filter(w -> w.getValue().equals("responsibilities"))
-                        .findFirst().isPresent());
+        Optional<SolvedWord> solved = findWordFromResult(result, "responsibilities");
+        assertTrue("Word not found!", solved.isPresent());
+        assertEquals("Score not correct", GAME3_SCORE, solved.get().getPoints());
+        assertTrue("Path not correct!", isMatchingWordPaths(GAME3_PATH, solved.get().getPath()));
     }
     
     @Test
@@ -163,11 +203,10 @@ public class GameControllerTest {
                             .content(content))
                 .andExpect(status().isOk())
                 .andReturn();
-        ObjectMapper mapper = new ObjectMapper();
-        SolvedGameDto dto = mapper.readValue(result.getResponse().getContentAsString(), SolvedGameDto.class);
-        assertTrue(dto.getWords().stream()
-                        .filter(w -> w.getValue().equals("polled"))
-                        .findFirst().isPresent());
+        Optional<SolvedWord> solved = findWordFromResult(result, "polled");
+        assertTrue("Word not found!", solved.isPresent());
+        assertEquals("Score not correct", GAME4_SCORE, solved.get().getPoints());
+        assertTrue("Path not correct!", isMatchingWordPaths(GAME4_PATH, solved.get().getPath()));
     }
 
     @Test
@@ -180,11 +219,10 @@ public class GameControllerTest {
                             .content(content))
                 .andExpect(status().isOk())
                 .andReturn();
-        ObjectMapper mapper = new ObjectMapper();
-        SolvedGameDto dto = mapper.readValue(result.getResponse().getContentAsString(), SolvedGameDto.class);
-        assertTrue(dto.getWords().stream()
-                        .filter(w -> w.getValue().equals("inbox"))
-                        .findFirst().isPresent());
+        Optional<SolvedWord> solved = findWordFromResult(result, "inbox");
+        assertTrue("Word not found!", solved.isPresent());
+        assertEquals("Score not correct", GAME5_SCORE, solved.get().getPoints());
+        assertTrue("Path not correct!", isMatchingWordPaths(GAME5_PATH, solved.get().getPath()));
     }
     
     @Test
@@ -197,11 +235,10 @@ public class GameControllerTest {
                             .content(content))
                 .andExpect(status().isOk())
                 .andReturn();
-        ObjectMapper mapper = new ObjectMapper();
-        SolvedGameDto dto = mapper.readValue(result.getResponse().getContentAsString(), SolvedGameDto.class);
-        assertTrue(dto.getWords().stream()
-                        .filter(w -> w.getValue().equals("greatest"))
-                        .findFirst().isPresent());
+        Optional<SolvedWord> solved = findWordFromResult(result, "greatest");
+        assertTrue("Word not found!", solved.isPresent());
+        assertEquals("Score not correct", GAME6_SCORE, solved.get().getPoints());
+        assertTrue("Path not correct!", isMatchingWordPaths(GAME6_PATH, solved.get().getPath()));
     }
     
     @Test
@@ -214,11 +251,14 @@ public class GameControllerTest {
                             .content(content))
                 .andExpect(status().isOk())
                 .andReturn();
-        ObjectMapper mapper = new ObjectMapper();
-        SolvedGameDto dto = mapper.readValue(result.getResponse().getContentAsString(), SolvedGameDto.class);
-        assertEquals(2, dto.getWords().stream()
-                        .filter(w -> w.getValue().equals("fabric") || w.getValue().equals("machete"))
-                        .count());
+        Optional<SolvedWord> solved = findWordFromResult(result, "fabric");
+        assertTrue("Word not found!", solved.isPresent());
+        assertEquals("Score not correct", GAME7_SCORE1, solved.get().getPoints());
+        assertTrue("Path not correct!", isMatchingWordPaths(GAME7_PATH1, solved.get().getPath()));
+        solved = findWordFromResult(result, "machete");
+        assertTrue("Word not found!", solved.isPresent());
+        assertEquals("Score not correct", GAME7_SCORE2, solved.get().getPoints());
+        assertTrue("Path not correct!", isMatchingWordPaths(GAME7_PATH2, solved.get().getPath()));
     }
 
 

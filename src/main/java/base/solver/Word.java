@@ -18,10 +18,8 @@ public class Word implements Comparable<Word> {
     private int points = 0;
     private String plainWord= "";
     private boolean complete = false;
-    private String initWord;
-    
-    public Word(String word) {
-        initWord = word;
+
+    public Word() {
     }
     
     public void insertSymbol(Symbol symbol) {

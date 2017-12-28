@@ -105,7 +105,7 @@ public class GameArea {
             if (nextWordConditional.isPresent()) {
                 nextWord = nextWordConditional.get();
                 this.tempGameArea = backUpGameArea(this.gameArea); // mutating
-                word = new Word(nextWord); // track word path
+                word = new Word(); // track word path
                 gameAreaStack = new ArrayList<>();
                 searchPath(nextWord, 0, gY, gX);
                 if (word.isComplete()) {

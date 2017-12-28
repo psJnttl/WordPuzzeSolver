@@ -66,12 +66,15 @@ public class GameControllerTest {
     private static final List<Integer> GAME7_PATH1 = Arrays.asList(13, 8, 12, 9, 5, 2);
     private static final int GAME7_SCORE2 = 66;
     private static final List<Integer> GAME7_PATH2 = Arrays.asList(5, 6, 2, 7, 11, 15, 14);
-    private static final List<String> GAME_TOO_SHORT = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "l", "a", "a", "a", "a", "a");
-    private static final List<String> GAME_TOO_LONG = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "l", "a", "a", "a", "a", "a", "e", "h");
-    private static final List<String> GAME_WITH_NUMBER0 = Arrays.asList("d", "a", "a", "p", "e", "a", "0", "a", "a", "l", "a", "a", "a", "a", "a", "e");
     private static final List<String> GAME8 = Arrays.asList("a", "a", "t", "s", "a", "a", "t", "e", "a", "e", "-est", "a", "a", "r", "g", "a");
     private static final int GAME8_SCORE = 57;
     private static final List<Integer> GAME8_PATH = Arrays.asList(14, 13, 9, 6, 10);
+    private static final List<String> GAME9 = Arrays.asList("g", "a", "r", "g", "r", "a", "e", "a", "a", "e", "s", "t", "t", "e", "t", "-est");
+    private static final int GAME9_SCORE = 57;
+    private static final List<Integer> GAME9_PATH = Arrays.asList(3, 2, 6, 7, 11, 15);
+    private static final List<String> GAME_TOO_SHORT = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "l", "a", "a", "a", "a", "a");
+    private static final List<String> GAME_TOO_LONG = Arrays.asList("d", "a", "a", "p", "e", "a", "o", "a", "a", "l", "a", "a", "a", "a", "a", "e", "h");
+    private static final List<String> GAME_WITH_NUMBER0 = Arrays.asList("d", "a", "a", "p", "e", "a", "0", "a", "a", "l", "a", "a", "a", "a", "a", "e");
     
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -265,7 +268,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void word_best_better_scoring_instance_replaces_worse_scoring() throws Exception {
+    public void word_best_better_scoring_instance_replaces_worse_scoring_same_origin() throws Exception {
         String content = getGameAreaInJson(GAME8);
         MvcResult result = mockMvc
                 .perform(
@@ -280,4 +283,19 @@ public class GameControllerTest {
         assertTrue("Path not correct!", isMatchingWordPaths(GAME8_PATH, solved.get().getPath()));
     }
 
+    @Test
+    public void word_best_better_scoring_instance_replaces_worse_scoring() throws Exception {
+        String content = getGameAreaInJson(GAME9);
+        MvcResult result = mockMvc
+                .perform(
+                        post(PATH)
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .content(content))
+                .andExpect(status().isOk())
+                .andReturn();
+        Optional<SolvedWord> solved = findWordFromResult(result, "greatest");
+        assertTrue("Word not found!", solved.isPresent());
+        assertEquals("Score not correct", GAME9_SCORE, solved.get().getPoints());
+        assertTrue("Path not correct!", isMatchingWordPaths(GAME9_PATH, solved.get().getPath()));
+    }
 }

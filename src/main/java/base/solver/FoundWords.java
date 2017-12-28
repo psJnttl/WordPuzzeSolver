@@ -23,6 +23,7 @@ public class FoundWords {
                     removeWord(aWord); // can happen with digram, either/or:
                     wordList.add(newWord); // same word yields more points
                     System.out.println("replace: " + newWord);
+                    break;
                 }
             }
         }
@@ -32,7 +33,7 @@ public class FoundWords {
     }
     
     public void removeWord(Word aWord) {
-        Optional<Word> tbr = wordList.stream().filter(w -> w.toString().equals(aWord)).findFirst();
+        Optional<Word> tbr = wordList.stream().filter(w -> w.toString().equals(aWord.toString())).findFirst();
         if (tbr.isPresent()) {
             Word toBeRemoved = tbr.get();
             wordList.remove(toBeRemoved);

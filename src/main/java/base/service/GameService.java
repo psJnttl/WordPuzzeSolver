@@ -17,7 +17,7 @@ public class GameService {
     private GameArea gameArea;
     
     private static final int GAME_AREA_SIZE = 16;
-    private static final String REG_EX = "[a-zA-Z\\-]{1,4}";
+    private static final String REG_EX = "([a-zA-Z\\-]){1,4}|([a-zA-Z]\\/[a-zA-Z])";
 
     @Autowired
     public GameService(GameArea gameArea) throws InvalidKeyException {

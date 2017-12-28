@@ -132,13 +132,13 @@ public class GameControllerTest {
                   .findFirst();
     }
     
-    private boolean isMatchingWordPaths(List<Integer> expected, List<Integer> actual) {
+    private <E> boolean isMatchingWordPaths(List<E> expected, List<E> actual) {
         if (null == expected || null == actual || expected.isEmpty() || actual.isEmpty() ||
             expected.size() != actual.size()) {
             return false;
         }
         for (int i=0,j=0; i < expected.size(); i++,j++) {
-            if (expected.get(i) != actual.get(j)) {
+            if (!expected.get(i).equals(actual.get(j))) {
                 return false;
             }
         }

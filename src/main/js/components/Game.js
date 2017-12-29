@@ -4,15 +4,18 @@ import { Button, Grid, Input, Popup } from 'semantic-ui-react'
 import _ from 'lodash';
 import GameTile from './GameTile';
 import axios from 'axios';
+import FoundWord from './FoundWord';
 
 class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       tileValues: ["d", "a", "a", "p", "e", "l", "o", "a", "a", "l", "a", "a", "a", "a", "a", "e"],
+      result: [],
     };
     this.onChangeTileValue = this.onChangeTileValue.bind(this);
     this.sendGameToServer = this.sendGameToServer.bind(this);
+    this.selectResultWord = this.selectResultWord.bind(this);
   }
 
   onChangeTileValue(e, index) {
@@ -22,20 +25,45 @@ class Game extends React.Component {
   }
 
   sendGameToServer() {
+    this.setState({result: []});
     const self = this;
     const command = {gameTiles: _.take(this.state.tileValues, 16)};
     const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
     axios.post('/api/games/', command, config)
          .then(function (response) {
-           console.log("response:");
-           console.log(response.data);
+           const words = response.data.words;
+           self.setState({result: words});
          })
          .catch(function (error) {
            console.log("Failed to solve game.");
          });
   }
 
+  selectResultWord(e, index) {
+    const word = this.state.result[index];
+    console.log("word from result: ")
+    console.log(word);
+  }
+
   render() {
+    const resultData = this.state.result.map( (item, index) =>
+      <li key={index}>
+        <FoundWord
+          points={item.points}
+          word={item.value}
+          onClick={this.selectResultWord}
+          index={index}
+        />
+      </li>
+    );
+    let resultList;
+    if (this.state.result.length > 0) {
+      resultList =
+      <ul style={{'display': 'flex', 'listStyleType': 'none'}}>{resultData}</ul>
+    }
+    else {
+      resultList = null;
+    }
 
     return (
       <div>
@@ -169,6 +197,8 @@ class Game extends React.Component {
           color="green"
           onClick={() => this.sendGameToServer()}
         />
+        <br />
+        {resultList}
       </div>
     );
   }

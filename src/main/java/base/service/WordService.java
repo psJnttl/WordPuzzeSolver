@@ -94,6 +94,10 @@ public class WordService {
         Page<WordDto> dtos = wordPage.map(this::createDto);
         return dtos;
     }
-    
+
+    public List<String> listAllAsString() {
+        List<Word> words = wordRepository.findAll();
+        return words.stream().map(w -> w.getValue()).collect(Collectors.toList());
+    }
     
 }

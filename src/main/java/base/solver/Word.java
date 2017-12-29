@@ -17,7 +17,6 @@ public class Word implements Comparable<Word> {
     private List<Integer> path = new ArrayList<>();
     private int points = 0;
     private String plainWord= "";
-    private boolean complete = false;
 
     public Word() {
     }
@@ -30,13 +29,9 @@ public class Word implements Comparable<Word> {
     }
 
     public void setComplete() {
-        complete = true;
+        this.plainWord = "";
         symbolList.stream().forEach(s -> this.plainWord += s.toString());
         points = calculatePoints();
-    }
-    
-    public boolean isComplete() {
-        return complete;
     }
     
     public void removeLastSymbol() {
@@ -56,7 +51,9 @@ public class Word implements Comparable<Word> {
      * @return  int amount of points
      */
     private int calculatePoints() {
-        int points = this.points;
+        int points = symbolList.stream()
+                               .mapToInt(s -> s.points())
+                               .sum();
         if (plainWord.length() == 5) {
             points = points * 3 / 2; // on purpose: no decimals and rounding down
         }
@@ -86,6 +83,28 @@ public class Word implements Comparable<Word> {
 
     public List<Integer> getPath() {
         return path;
+    }
+    
+    public Word(List<Symbol> symbolList, List<Integer> path ) {
+        this.symbolList = symbolList;
+        this.path = path;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public void setPlainWord(String plainWord) {
+        this.plainWord = plainWord;
+    }
+
+    public Word copyOf() {
+        List<Integer> path = new ArrayList<>(this.path);
+        List<Symbol> symbolList = new ArrayList<>(this.symbolList);
+        Word copy = new Word(symbolList, path);
+        copy.setPlainWord(plainWord);
+        copy.setPoints(points);
+        return copy;
     }
 
 }    

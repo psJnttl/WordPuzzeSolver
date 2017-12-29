@@ -108,10 +108,6 @@ public class GameArea {
                 word = new Word(); // track word path
                 gameAreaStack = new ArrayList<>();
                 searchPath(nextWord, 0, gY, gX);
-                if (word.isComplete()) {
-                    System.out.println("Found: " + word);
-                    foundWords.insertWord(word);
-                }
             }
             else {
                 break;
@@ -139,6 +135,8 @@ public class GameArea {
             word.insertSymbol(tileSymbol);
             if (nextWord.length() == (wordIndex + status)) {
                 word.setComplete();
+                foundWords.insertWord(word);
+                word.removeLastSymbol();
                 return;
             }
             else {
@@ -152,34 +150,17 @@ public class GameArea {
         else if (status == 0) {
             return;
         }
-        if (!word.isComplete()) {
-            searchPath(nextWord, wordIndex, gY, gX + 1); // E
-        }
-        if (!word.isComplete()) {
-            searchPath(nextWord, wordIndex, gY + 1, gX + 1); // SE
-        }
-        if (!word.isComplete()) {
-            searchPath(nextWord, wordIndex, gY + 1, gX); // S
-        }
-        if (!word.isComplete()) {
-            searchPath(nextWord, wordIndex, gY + 1, gX - 1); // SW
-        }
-        if (!word.isComplete()) {
-            searchPath(nextWord, wordIndex, gY, gX - 1); // W
-        }
-        if (!word.isComplete()) {
-            searchPath(nextWord, wordIndex, gY - 1, gX - 1); // NW
-        }
-        if (!word.isComplete()) {
-            searchPath(nextWord, wordIndex, gY - 1, gX); // N
-        }
-        if (!word.isComplete()) {
-            searchPath(nextWord, wordIndex, gY - 1, gX + 1); // NE
-        }
-        if (!word.isComplete()) { // nowhere to go, word not found
-            this.tempGameArea = gameAreaStack.remove(gameAreaStack.size() - 1);
-            this.word.removeLastSymbol();
-        }
+        searchPath(nextWord, wordIndex, gY, gX + 1); // E
+        searchPath(nextWord, wordIndex, gY + 1, gX + 1); // SE
+        searchPath(nextWord, wordIndex, gY + 1, gX); // S
+        searchPath(nextWord, wordIndex, gY + 1, gX - 1); // SW
+        searchPath(nextWord, wordIndex, gY, gX - 1); // W
+        searchPath(nextWord, wordIndex, gY - 1, gX - 1); // NW
+        searchPath(nextWord, wordIndex, gY - 1, gX); // N
+        searchPath(nextWord, wordIndex, gY - 1, gX + 1); // NE
+        // nowhere to go, word not found
+        this.tempGameArea = gameAreaStack.remove(gameAreaStack.size() - 1);
+        this.word.removeLastSymbol();
     }
     
     public void printResults() {

@@ -13,16 +13,15 @@ import java.util.Optional;
 public class FoundWords {
     private List<Word> wordList = new ArrayList<>();
 
-    public void insertWord(Word newWord) {
+    public void insertWord(Word word) {
+        Word newWord = word.copyOf();
         boolean duplicate = false;
         for (Word aWord : wordList) {
             if (aWord.toString().equals(newWord.toString())) {
                 duplicate = true; 
-                System.out.println("duplicate: " + newWord);
                 if (newWord.getPoints() > aWord.getPoints()) {
                     removeWord(aWord); // can happen with digram, either/or:
                     wordList.add(newWord); // same word yields more points
-                    System.out.println("replace: " + newWord);
                     break;
                 }
             }

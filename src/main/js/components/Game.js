@@ -9,7 +9,7 @@ class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tileValues: ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p'],
+      tileValues: ["d", "a", "a", "p", "e", "l", "o", "a", "a", "l", "a", "a", "a", "a", "a", "e"],
     };
     this.onChangeTileValue = this.onChangeTileValue.bind(this);
     this.sendGameToServer = this.sendGameToServer.bind(this);

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Input } from 'semantic-ui-react'
+import { Button, Grid, Input, Popup } from 'semantic-ui-react'
 import _ from 'lodash';
 import GameTile from './GameTile';
 
@@ -11,12 +11,17 @@ class Game extends React.Component {
       tileValues: ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p'],
     };
     this.onChangeTileValue = this.onChangeTileValue.bind(this);
+    this.sendGameToServer = this.sendGameToServer.bind(this);
   }
 
   onChangeTileValue(e, index) {
     var array = this.state.tileValues;
     array[index] = e.target.value;
     this.setState({tileValues: _.take(array, 16)})
+  }
+
+  sendGameToServer() {
+    console.log("sendGameToServer()");
   }
 
   render() {
@@ -146,6 +151,13 @@ class Game extends React.Component {
             </Grid.Column>
           </Grid.Row>
         </Grid>
+        <br />
+        <Button
+          content="Solve"
+          icon="lightning"
+          color="green"
+          onClick={() => this.sendGameToServer()}
+        />
       </div>
     );
   }

@@ -4,6 +4,7 @@ import {NavLink, BrowserRouter as Router, Route,  Link, Switch} from 'react-rout
 import { Input } from 'semantic-ui-react';
 import Words from './components/Words';
 import Symbols from './components/Symbols';
+import Game from './components/Game';
 
 class Nav extends React.Component {
   constructor(props) {
@@ -47,12 +48,6 @@ class Nav extends React.Component {
 const Home = () => (
   <div>
     Home page of the application.
-  </div>
-);
-
-const Game = () => (
-  <div>
-    This is game area.
   </div>
 );
 

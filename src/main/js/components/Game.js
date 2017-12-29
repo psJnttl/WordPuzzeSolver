@@ -5,6 +5,7 @@ import _ from 'lodash';
 import GameTile from './GameTile';
 import axios from 'axios';
 import FoundWord from './FoundWord';
+import PresetGames from './PresetGames';
 
 class Game extends React.Component {
   constructor(props) {
@@ -16,6 +17,7 @@ class Game extends React.Component {
     this.onChangeTileValue = this.onChangeTileValue.bind(this);
     this.sendGameToServer = this.sendGameToServer.bind(this);
     this.selectResultWord = this.selectResultWord.bind(this);
+    this.setTileValues = this.setTileValues.bind(this);
   }
 
   onChangeTileValue(e, index) {
@@ -45,6 +47,10 @@ class Game extends React.Component {
     console.log(word);
   }
 
+  setTileValues(tiles) {
+    this.setState({tileValues: tiles});
+  }
+
   render() {
     const resultData = this.state.result.map( (item, index) =>
       <li key={index}>
@@ -67,8 +73,10 @@ class Game extends React.Component {
 
     return (
       <div>
+        <PresetGames selectGame={this.setTileValues}/>
         <h4>Game</h4>
-        <Grid columns={4}>
+
+        <Grid >
           <Grid.Row>
             <Grid.Column>
               <GameTile
@@ -198,6 +206,7 @@ class Game extends React.Component {
           onClick={() => this.sendGameToServer()}
         />
         <br />
+
         {resultList}
       </div>
     );

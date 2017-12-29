@@ -1,9 +1,7 @@
 package base.controller;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
@@ -11,7 +9,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,14 +25,12 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import base.command.GameReq;
 import base.service.SolvedGameDto;
 import base.service.SolvedWord;
-import base.service.WordDto;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -139,6 +134,14 @@ public class GameControllerTest {
                   .stream()
                   .filter(w -> w.getValue().equals(word))
                   .findFirst();
+    }
+    
+    private long countWordInstances(MvcResult result, String word) throws JsonParseException, JsonMappingException, UnsupportedEncodingException, IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        SolvedGameDto dto = mapper.readValue(result.getResponse().getContentAsString(), SolvedGameDto.class);
+        return dto.getWords().stream()
+                  .filter(w -> w.getValue().equals(word))
+                  .count();
     }
     
     private <E> boolean isMatchingWordPaths(List<E> expected, List<E> actual) {
@@ -316,5 +319,6 @@ public class GameControllerTest {
         assertTrue("Word not found!", solved.isPresent());
         assertEquals("Score not correct", GAME10_SCORE, solved.get().getPoints());
         assertTrue("Path not correct!", isMatchingWordPaths(GAME10_PATH, solved.get().getPath()));
+        assertTrue("Word should only appear once!", 1 == countWordInstances(result, "nab"));
     }
 }

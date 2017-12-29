@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Grid, Input, Popup } from 'semantic-ui-react'
 import _ from 'lodash';
 import GameTile from './GameTile';
+import axios from 'axios';
 
 class Game extends React.Component {
   constructor(props) {
@@ -21,7 +22,17 @@ class Game extends React.Component {
   }
 
   sendGameToServer() {
-    console.log("sendGameToServer()");
+    const self = this;
+    const command = {gameTiles: _.take(this.state.tileValues, 16)};
+    const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
+    axios.post('/api/games/', command, config)
+         .then(function (response) {
+           console.log("response:");
+           console.log(response.data);
+         })
+         .catch(function (error) {
+           console.log("Failed to solve game.");
+         });
   }
 
   render() {

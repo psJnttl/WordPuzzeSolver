@@ -19,8 +19,11 @@ class FoundWords extends React.Component {
   }
 
   selectStyle(index) {
-    if (this.state.mouseOver === index) {
-      return {'display': 'flex', 'listStyleType': 'none', 'cursor': 'pointer', 'background': '#FFFFFF'};
+    if (this.props.selected) {
+      return {'display': 'flex', 'listStyleType': 'none', 'cursor': 'pointer', 'background': '#bbdefb'};
+    }
+    else if (this.state.mouseOver === index) {
+      return {'display': 'flex', 'listStyleType': 'none', 'cursor': 'pointer', 'background': '#e3f2fd'};
     }
     return {'display': 'flex', 'listStyleType': 'none', 'cursor': 'pointer', 'background': '#e0e0e0'};
   }
@@ -48,11 +51,13 @@ FoundWords.PropTypes = {
   word: PropTypes.string,
   onClick: PropTypes.func,
   index: PropTypes.number,
+  selected: PropTypes.boolean,
 }
 FoundWords.defaultProps = {
   points: 1,
   word: "a",
   onClick: () => {},
   index: 0,
+  selected: false,
 }
 export default FoundWords;

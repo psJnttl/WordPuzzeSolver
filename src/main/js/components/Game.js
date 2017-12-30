@@ -12,7 +12,7 @@ class Game extends React.Component {
     super(props);
     this.state = {
       tileValues: ["d", "a", "a", "p", "e", "l", "o", "a", "a", "l", "a", "a", "a", "a", "a", "e"],
-      result: [],
+      result: [], selectedWordIndex: '',
     };
     this.onChangeTileValue = this.onChangeTileValue.bind(this);
     this.sendGameToServer = this.sendGameToServer.bind(this);
@@ -27,7 +27,7 @@ class Game extends React.Component {
   }
 
   sendGameToServer() {
-    this.setState({result: []});
+    this.setState({result: [], selectedWordIndex:''});
     const self = this;
     const command = {gameTiles: _.take(this.state.tileValues, 16)};
     const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
@@ -45,6 +45,7 @@ class Game extends React.Component {
     const word = this.state.result[index];
     console.log("word from result: ")
     console.log(word);
+    this.setState({selectedWordIndex: index});
   }
 
   setTileValues(tiles) {
@@ -59,6 +60,7 @@ class Game extends React.Component {
           word={item.value}
           onClick={this.selectResultWord}
           index={index}
+          selected={this.state.selectedWordIndex === index}
         />
       </li>
     );

@@ -8,6 +8,7 @@ const GameTile = (props) => (
       onChange={ (e) => props.onChange(e, props.index)}
       autoComplete="off"
       size={2}
+      className="gametileinput"
     />
   </div>
 );

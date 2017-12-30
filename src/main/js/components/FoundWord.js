@@ -1,26 +1,58 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const NewComponent = (props) => (
-  <div>
-    <ul
-      style={{'display': 'flex', 'listStyleType': 'none', 'cursor': 'pointer'} } 
-      onClick={(e) => props.onClick(e, props.index)} >
-      <li>{props.points}</li>
-      <li>{props.word}</li>
-    </ul>
-  </div>
-);
-NewComponent.PropTypes = {
+class FoundWords extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {mouseOver: '', }
+    this.onMouseEnter = this.onMouseEnter.bind(this);
+    this.onMouseLeave = this.onMouseLeave.bind(this);
+    this.selectStyle = this.selectStyle.bind(this);
+  }
+
+  onMouseEnter(index) {
+    this.setState({mouseOver: index});
+  }
+
+  onMouseLeave() {
+    this.setState({mouseOver: ''});
+  }
+
+  selectStyle(index) {
+    if (this.state.mouseOver === index) {
+      return {'display': 'flex', 'listStyleType': 'none', 'cursor': 'pointer', 'background': '#FFFFFF'};
+    }
+    return {'display': 'flex', 'listStyleType': 'none', 'cursor': 'pointer', 'background': '#e0e0e0'};
+  }
+
+  render() {
+    return (
+      <div
+        onMouseEnter={() =>  this.onMouseEnter(this.props.index)}
+        onMouseLeave={ () => this.onMouseLeave()}
+      >
+        <ul
+          style={this.selectStyle(this.props.index) }
+          onClick={(e) => this.props.onClick(e, this.props.index)} >
+          <li style={{'padding': '0 10px 0 10px'}}>{this.props.points}</li>
+          <span>|</span>
+          <li style={{'padding': '0 50px 0 10px'}}>{this.props.word}</li>
+        </ul>
+      </div>
+    );
+  }
+}
+
+FoundWords.PropTypes = {
   points: PropTypes.number,
   word: PropTypes.string,
   onClick: PropTypes.func,
   index: PropTypes.number,
 }
-NewComponent.defaultProps = {
+FoundWords.defaultProps = {
   points: 1,
   word: "a",
   onClick: () => {},
   index: 0,
 }
-export default NewComponent;
+export default FoundWords;

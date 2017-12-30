@@ -9,7 +9,20 @@ class PresetGames extends React.Component {
       games: [
         ["d", "a", "a", "p", "e", "l", "o", "a", "a", "l", "a", "a", "a", "a", "a", "e"],
         ["u", "b", "i", "q", "a", "a", "a", "u", "a", "a", "a", "i", "s", "u", "o", "t"],
-        ["i", "l", "i", "b", "t", "s", "e", "i", "i", "p", "r", "s", "e", "s", "o", "n"]
+        ["i", "l", "i", "b", "t", "s", "e", "i", "i", "p", "r", "s", "e", "s", "o", "n"],
+        ["a", "a", "a", "a", "a", "e", "d", "a", "a", "o", "ll", "a", "p", "a", "a", "a"],
+        ["a", "a", "a", "a", "a", "b", "a", "a", "a", "o", "in-", "a", "a", "a", "x", "a"],
+        ["-est", "a", "a", "a", "a", "t", "a", "a", "r", "e", "a", "a", "g", "a", "a", "a"],
+        ["a", "a", "c", "a", "a", "i/m", "a", "h", "a", "r", "a", "e", "b", "f", "e", "t"]
+      ],
+      title: [
+        "single 1",
+        "single 2",
+        "single 3",
+        "digram",
+        "digram first",
+        "digram last",
+        "either or"
       ],
     };
     this.handleItemClick = this.handleItemClick.bind(this)
@@ -23,7 +36,7 @@ class PresetGames extends React.Component {
     const menuItems = this.state.games.map((item,index) =>
       <Dropdown.Item
         key={index}
-        text={""+index}
+        text={this.state.title[index]}
         onClick={(e) => this.handleItemClick(e, item)}
       />
     );

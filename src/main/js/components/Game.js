@@ -67,7 +67,7 @@ class Game extends React.Component {
     let resultList;
     if (this.state.result.length > 0) {
       resultList =
-      <ul style={{'display': 'flex', 'listStyleType': 'none'}}>{resultData}</ul>
+      <ul style={{'listStyleType': 'none'}}>{resultData}</ul>
     }
     else {
       resultList = null;

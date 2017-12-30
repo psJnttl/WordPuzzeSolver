@@ -20,12 +20,15 @@ class FoundWords extends React.Component {
 
   selectStyle(index) {
     if (this.props.selected) {
-      return {'display': 'flex', 'listStyleType': 'none', 'cursor': 'pointer', 'background': '#bbdefb'};
+      return {'display': 'flex', 'listStyleType': 'none', 'cursor': 'pointer',
+              'background': '#bbdefb', 'width': '240px'};
     }
     else if (this.state.mouseOver === index) {
-      return {'display': 'flex', 'listStyleType': 'none', 'cursor': 'pointer', 'background': '#e3f2fd'};
+      return {'display': 'flex', 'listStyleType': 'none', 'cursor': 'pointer',
+              'background': '#e3f2fd', 'width': '240px'};
     }
-    return {'display': 'flex', 'listStyleType': 'none', 'cursor': 'pointer', 'background': '#e0e0e0'};
+    return {'display': 'flex', 'listStyleType': 'none', 'cursor': 'pointer',
+            'background': '#e0e0e0', 'width': '240px'};
   }
 
   render() {

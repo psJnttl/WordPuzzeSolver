@@ -53,7 +53,7 @@ class Game extends React.Component {
   }
 
   setTileValues(tiles) {
-    this.setState({tileValues: tiles});
+    this.setState({tileValues: tiles, result: [], selectedWordIndex:'', usedColors: []});
   }
 
  componentWillMount() {

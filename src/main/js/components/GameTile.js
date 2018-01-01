@@ -16,7 +16,12 @@ class GameTile extends React.Component {
   }
 
   render() {
-    const inputStyle = _.assign({}, this.state.inputStyle, this.props.background);
+    const red = this.props.background.red;
+    const green = this.props.background.green;
+    const blue = this.props.background.blue;
+    const alpha = this.props.background.alpha;
+    const background = {background: "rgba("+red+","+green+","+blue+","+alpha+")"}
+    const inputStyle = _.assign({}, this.state.inputStyle, background);
     return (
       <div>
         <input
@@ -38,6 +43,6 @@ GameTile.PropTypes = {
   background: PropTypes.object,
 }
 GameTile.defaultProps = {
-  background: {background: "#ffffff"}
+  background: {red: 255, green: 255, blue: 255, alpha: 1},
 }
 export default GameTile;

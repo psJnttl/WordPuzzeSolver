@@ -49,7 +49,7 @@ class Game extends React.Component {
       var wIdx = word.path[i];
       array[wIdx] = this.state.defaultColors[i];
     }
-    this.state({usedColors: array, selectedWordIndex: index});
+    this.setState({usedColors: array, selectedWordIndex: index});
   }
 
   setTileValues(tiles) {

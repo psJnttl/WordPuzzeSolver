@@ -6,13 +6,14 @@ import GameTile from './GameTile';
 import axios from 'axios';
 import FoundWord from './FoundWord';
 import PresetGames from './PresetGames';
+import defaultColors from './defaultColors';
 
 class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       tileValues: ["d", "a", "a", "p", "e", "l", "o", "a", "a", "l", "a", "a", "a", "a", "a", "e"],
-      result: [], selectedWordIndex: '',
+      result: [], selectedWordIndex: '', usedColors: [],
     };
     this.onChangeTileValue = this.onChangeTileValue.bind(this);
     this.sendGameToServer = this.sendGameToServer.bind(this);
@@ -27,7 +28,7 @@ class Game extends React.Component {
   }
 
   sendGameToServer() {
-    this.setState({result: [], selectedWordIndex:''});
+    this.setState({result: [], selectedWordIndex:'', usedColors: []});
     const self = this;
     const command = {gameTiles: _.take(this.state.tileValues, 16)};
     const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
@@ -43,14 +44,21 @@ class Game extends React.Component {
 
   selectResultWord(e, index) {
     const word = this.state.result[index];
-    console.log("word from result: ")
-    console.log(word);
-    this.setState({selectedWordIndex: index});
+    var array = _.times(16, _.constant({red: 255, green: 255, blue: 255, alpha: 1} ));
+    for (var i = 0; i < word.path.length; i++) {
+      var wIdx = word.path[i];
+      array[wIdx] = this.state.defaultColors[i];
+    }
+    this.state({usedColors: array, selectedWordIndex: index});
   }
 
   setTileValues(tiles) {
     this.setState({tileValues: tiles});
   }
+
+ componentWillMount() {
+   this.setState({defaultColors: defaultColors});
+ }
 
   render() {
     const resultData = this.state.result.map( (item, index) =>
@@ -85,6 +93,7 @@ class Game extends React.Component {
                 value={this.state.tileValues[0]}
                 onChange={this.onChangeTileValue}
                 index={0}
+                background={this.state.usedColors[0]}
               />
             </Grid.Column>
             <Grid.Column width="2">
@@ -92,6 +101,7 @@ class Game extends React.Component {
                 value={this.state.tileValues[1]}
                 onChange={this.onChangeTileValue}
                 index={1}
+                background={this.state.usedColors[1]}
               />
             </Grid.Column>
             <Grid.Column width="2">
@@ -99,6 +109,7 @@ class Game extends React.Component {
                 value={this.state.tileValues[2]}
                 onChange={this.onChangeTileValue}
                 index={2}
+                background={this.state.usedColors[2]}
               />
             </Grid.Column>
             <Grid.Column width="2">
@@ -106,6 +117,7 @@ class Game extends React.Component {
                 value={this.state.tileValues[3]}
                 onChange={this.onChangeTileValue}
                 index={3}
+                background={this.state.usedColors[3]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -115,6 +127,7 @@ class Game extends React.Component {
                 value={this.state.tileValues[4]}
                 onChange={this.onChangeTileValue}
                 index={4}
+                background={this.state.usedColors[4]}
               />
             </Grid.Column>
             <Grid.Column width="2">
@@ -122,6 +135,7 @@ class Game extends React.Component {
                 value={this.state.tileValues[5]}
                 onChange={this.onChangeTileValue}
                 index={5}
+                background={this.state.usedColors[5]}
               />
             </Grid.Column>
             <Grid.Column width="2">
@@ -129,6 +143,7 @@ class Game extends React.Component {
                 value={this.state.tileValues[6]}
                 onChange={this.onChangeTileValue}
                 index={6}
+                background={this.state.usedColors[6]}
               />
             </Grid.Column>
             <Grid.Column width="2">
@@ -136,6 +151,7 @@ class Game extends React.Component {
                 value={this.state.tileValues[7]}
                 onChange={this.onChangeTileValue}
                 index={7}
+                background={this.state.usedColors[7]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -145,6 +161,7 @@ class Game extends React.Component {
                 value={this.state.tileValues[8]}
                 onChange={this.onChangeTileValue}
                 index={8}
+                background={this.state.usedColors[8]}
               />
             </Grid.Column>
             <Grid.Column width="2">
@@ -152,6 +169,7 @@ class Game extends React.Component {
                 value={this.state.tileValues[9]}
                 onChange={this.onChangeTileValue}
                 index={9}
+                background={this.state.usedColors[9]}
               />
             </Grid.Column>
             <Grid.Column width="2">
@@ -159,6 +177,7 @@ class Game extends React.Component {
                 value={this.state.tileValues[10]}
                 onChange={this.onChangeTileValue}
                 index={10}
+                background={this.state.usedColors[10]}
               />
             </Grid.Column>
             <Grid.Column width="2">
@@ -166,6 +185,7 @@ class Game extends React.Component {
                 value={this.state.tileValues[11]}
                 onChange={this.onChangeTileValue}
                 index={11}
+                background={this.state.usedColors[11]}
               />
             </Grid.Column>
           </Grid.Row>
@@ -175,6 +195,7 @@ class Game extends React.Component {
                 value={this.state.tileValues[12]}
                 onChange={this.onChangeTileValue}
                 index={12}
+                background={this.state.usedColors[12]}
               />
             </Grid.Column>
             <Grid.Column width="2">
@@ -182,6 +203,7 @@ class Game extends React.Component {
                 value={this.state.tileValues[13]}
                 onChange={this.onChangeTileValue}
                 index={13}
+                background={this.state.usedColors[13]}
               />
             </Grid.Column>
             <Grid.Column width="2">
@@ -189,6 +211,7 @@ class Game extends React.Component {
                 value={this.state.tileValues[14]}
                 onChange={this.onChangeTileValue}
                 index={14}
+                background={this.state.usedColors[14]}
               />
             </Grid.Column>
             <Grid.Column width="2">
@@ -196,6 +219,7 @@ class Game extends React.Component {
                 value={this.state.tileValues[15]}
                 onChange={this.onChangeTileValue}
                 index={15}
+                background={this.state.usedColors[15]}
               />
             </Grid.Column>
           </Grid.Row>

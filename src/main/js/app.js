@@ -1,49 +1,41 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {NavLink, BrowserRouter as Router, Route,  Link, Switch} from 'react-router-dom';
-import { Input } from 'semantic-ui-react';
+import { Input, Menu } from 'semantic-ui-react';
 import Words from './components/Words';
 import Symbols from './components/Symbols';
 import Game from './components/Game';
 
-class Nav extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {}
-  }
-  render() {
-    return (
-      <ul className="nav">
-        <li>
-          <NavLink exact activeClassName="active" to="/">
-            Home
-          </NavLink>
-        </li>
-        <li>
-          <NavLink activeClassName="active" to="/game" >
-            Game
-          </NavLink>
-        </li>
-        <li>
-          <NavLink activeClassName="active" to="/words" >
-            Words
-          </NavLink>
-        </li>
-        <li>
-          <NavLink activeClassName="active" to="/symbols" >
-            Symbols
-          </NavLink>
-        </li>
-        <li>
-          <NavLink activeClassName="active" to="/about">
-            About
-          </NavLink>
-        </li>
-
-      </ul>
-    );
-  }
-}
+const Nav = (props) => (
+  <div>
+    <Menu>
+      <NavLink exact activeClassName="active" to="/">
+        <Menu.Item>
+          Home
+        </Menu.Item>
+      </NavLink>
+      <NavLink activeClassName="active" to="/game" >
+        <Menu.Item>
+          Game
+        </Menu.Item>
+      </NavLink>
+      <NavLink activeClassName="active" to="/words" >
+        <Menu.Item>
+          Words
+        </Menu.Item>
+      </NavLink>
+      <NavLink activeClassName="active" to="/symbols" >
+        <Menu.Item>Symbols
+        </Menu.Item>
+      </NavLink>
+      <NavLink activeClassName="active" to="/about">
+        <Menu.Item>
+          About
+        </Menu.Item>
+      </NavLink>
+    </Menu>
+  </div>
+);
 
 const Home = () => (
   <div>

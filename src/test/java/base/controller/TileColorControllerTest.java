@@ -2,6 +2,7 @@ package base.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,6 +24,8 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import base.command.TileColorAdd;
+import base.domain.TileColor;
+import base.repository.TileColorRepository;
 import base.service.TileColorDto;
 
 @RunWith(SpringRunner.class)
@@ -32,28 +35,48 @@ public class TileColorControllerTest {
 
     private static final String PATH = "/api/colors";
     private static int RED1 = 100;
+    private static int RED2 = 102;
+    private static int RED3 = 103;
     private static int GREEN1 = 100;
+    private static int GREEN2 = 102;
+    private static int GREEN3 = 103;
     private static int BLUE1 = 100;
+    private static int BLUE2 = 102;
+    private static int BLUE3 = 103;
     private static double ALPHA1 = 0.5;
     private static int TOO_SMALL_RED = -1;
     private static int TOO_BIG_RED = 256;
     private static int TOO_SMALL_ALPHA = -1;
     private static int TOO_BIG_ALPHA = 256;
+    private static long WRONG_ID = Long.MAX_VALUE;
     
     @Autowired
     private WebApplicationContext webApplicationContext;
+
+    @Autowired
+    private TileColorRepository tileColorRepository;
     
     private MockMvc mockMvc;
+    private TileColor tc1, tc2;
+    private long tc3Id = -1;
 
     @Before
     public void setUp() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        tc1 = new TileColor(RED2, GREEN2, BLUE2, ALPHA1);
+        tc1 = tileColorRepository.saveAndFlush(tc1);
+        tc2 = new TileColor(RED3, GREEN3, BLUE3, ALPHA1);
+        tc2 = tileColorRepository.saveAndFlush(tc2);
     }
 
     @After
     public void tearDown() throws Exception {
+        tileColorRepository.delete(tc1);
+        tileColorRepository.delete(tc2);
+        if (-1 != tc3Id) {
+            tileColorRepository.delete(tc3Id);
+        }
     }
-
 
     @Test
     public void addingColorReturnsLocationHeaderAndDto() throws Exception {
@@ -72,6 +95,7 @@ public class TileColorControllerTest {
         assertTrue("Red not correct", dto.getRed() == RED1);
         assertTrue("Green not correct", dto.getGreen() == GREEN1);
         assertTrue("Blue not correct", dto.getBlue() == BLUE1);
+        tc3Id = dto.getId();
     }
 
     @Test
@@ -126,6 +150,19 @@ public class TileColorControllerTest {
             .andExpect(status().isBadRequest());
     }
     
+    @Test
+    public void deleteColorOK() throws Exception {
+        mockMvc.perform(
+                delete(PATH + "/" + tc2.getId()))
+                .andExpect(status().isOk());
+    }
+    
+    @Test
+    public void deleteColorWithWrongIdFails() throws Exception {
+        mockMvc.perform(
+                delete(PATH + "/" + WRONG_ID))
+                .andExpect(status().isNotFound());
+    }
 
 
 }

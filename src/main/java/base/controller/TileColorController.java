@@ -15,23 +15,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import base.command.ColorAdd;
-import base.service.ColorDto;
-import base.service.ColorService;
+import base.command.TileColorAdd;
+import base.service.TileColorDto;
+import base.service.TileColorService;
 
 @RestController
-public class ColorController {
+public class TileColorController {
     
     @Autowired
-    private ColorService colorService;
+    private TileColorService colorService;
     
     @RequestMapping(value="/api/colors", method = RequestMethod.POST)
-    ResponseEntity<ColorDto> addColor(@RequestBody @Valid ColorAdd color,
+    ResponseEntity<TileColorDto> addColor(@RequestBody @Valid TileColorAdd color,
             BindingResult result) throws URISyntaxException {
         if (result.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        ColorDto dto = colorService.addColor(color);
+        TileColorDto dto = colorService.addColor(color);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(new URI("/api/colors/" + dto.getId()));
         return new ResponseEntity<>(dto, headers, HttpStatus.CREATED);

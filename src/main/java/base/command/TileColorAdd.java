@@ -3,7 +3,7 @@ package base.command;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
-public class ColorAdd {
+public class TileColorAdd {
 
     @Min(value = 0, message = "Red min is 0.")
     @Max(value = 255, message = "Red max is 255.")
@@ -25,14 +25,14 @@ public class ColorAdd {
         return red;
     }
     
-    public ColorAdd(int red, int green, int blue, double alpha) {
+    public TileColorAdd(int red, int green, int blue, double alpha) {
         this.red = red;
         this.green = green;
         this.blue = blue;
         this.alpha = alpha;
     }
     
-    public ColorAdd() {
+    public TileColorAdd() {
 
     }
 
@@ -82,7 +82,7 @@ public class ColorAdd {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        ColorAdd other = (ColorAdd) obj;
+        TileColorAdd other = (TileColorAdd) obj;
         if (Double.doubleToLongBits(alpha) != Double.doubleToLongBits(other.alpha)) return false;
         if (blue != other.blue) return false;
         if (green != other.green) return false;

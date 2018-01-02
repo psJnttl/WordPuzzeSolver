@@ -22,13 +22,13 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import base.command.ColorAdd;
-import base.service.ColorDto;
+import base.command.TileColorAdd;
+import base.service.TileColorDto;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class ColorControllerTest {
+public class TileColorControllerTest {
 
     private static final String PATH = "/api/colors";
     private static int RED1 = 100;
@@ -57,7 +57,7 @@ public class ColorControllerTest {
 
     @Test
     public void addingColorReturnsLocationHeaderAndDto() throws Exception {
-        ColorAdd newColor = new ColorAdd(RED1, GREEN1, BLUE1, ALPHA1);
+        TileColorAdd newColor = new TileColorAdd(RED1, GREEN1, BLUE1, ALPHA1);
         ObjectMapper mapper = new ObjectMapper();
         String content = mapper.writeValueAsString(newColor);
         MvcResult result = mockMvc
@@ -68,7 +68,7 @@ public class ColorControllerTest {
                                 .andExpect(status().isCreated())
                                 .andExpect(header().string("Location", containsString(PATH + "/")))
                                 .andReturn();
-        ColorDto dto = mapper.readValue(result.getResponse().getContentAsString(), ColorDto.class);
+        TileColorDto dto = mapper.readValue(result.getResponse().getContentAsString(), TileColorDto.class);
         assertTrue("Red not correct", dto.getRed() == RED1);
         assertTrue("Green not correct", dto.getGreen() == GREEN1);
         assertTrue("Blue not correct", dto.getBlue() == BLUE1);
@@ -76,7 +76,7 @@ public class ColorControllerTest {
 
     @Test
     public void addingColorWithTooSmallRedValue() throws Exception {
-        ColorAdd newColor = new ColorAdd(TOO_SMALL_RED, GREEN1, BLUE1, ALPHA1);
+        TileColorAdd newColor = new TileColorAdd(TOO_SMALL_RED, GREEN1, BLUE1, ALPHA1);
         ObjectMapper mapper = new ObjectMapper();
         String content = mapper.writeValueAsString(newColor);
         mockMvc
@@ -89,7 +89,7 @@ public class ColorControllerTest {
     
     @Test
     public void addingColorWithTooBigRedValue() throws Exception {
-        ColorAdd newColor = new ColorAdd(TOO_BIG_RED, GREEN1, BLUE1, ALPHA1);
+        TileColorAdd newColor = new TileColorAdd(TOO_BIG_RED, GREEN1, BLUE1, ALPHA1);
         ObjectMapper mapper = new ObjectMapper();
         String content = mapper.writeValueAsString(newColor);
         mockMvc
@@ -102,7 +102,7 @@ public class ColorControllerTest {
     
     @Test
     public void addingColorWithTooSmallAlphaValue() throws Exception {
-        ColorAdd newColor = new ColorAdd(RED1, GREEN1, BLUE1, TOO_SMALL_ALPHA);
+        TileColorAdd newColor = new TileColorAdd(RED1, GREEN1, BLUE1, TOO_SMALL_ALPHA);
         ObjectMapper mapper = new ObjectMapper();
         String content = mapper.writeValueAsString(newColor);
         mockMvc
@@ -115,7 +115,7 @@ public class ColorControllerTest {
     
     @Test
     public void addingColorWithTooBigAlphaValue() throws Exception {
-        ColorAdd newColor = new ColorAdd(RED1, GREEN1, BLUE1, TOO_BIG_ALPHA);
+        TileColorAdd newColor = new TileColorAdd(RED1, GREEN1, BLUE1, TOO_BIG_ALPHA);
         ObjectMapper mapper = new ObjectMapper();
         String content = mapper.writeValueAsString(newColor);
         mockMvc

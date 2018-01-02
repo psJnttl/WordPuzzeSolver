@@ -1,6 +1,6 @@
 package base.command;
 
-public class ColorMod {
+public class TileColorMod {
 
     private long id;
     private int red;
@@ -8,7 +8,7 @@ public class ColorMod {
     private int blue;
     private double alpha;
 
-    public ColorMod(long id, int red, int green, int blue, double alpha) {
+    public TileColorMod(long id, int red, int green, int blue, double alpha) {
         this.id = id;
         this.red = red;
         this.green = green;
@@ -16,7 +16,7 @@ public class ColorMod {
         this.alpha = alpha;
     }
     
-    public ColorMod() {
+    public TileColorMod() {
 
     }
     
@@ -79,7 +79,7 @@ public class ColorMod {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        ColorMod other = (ColorMod) obj;
+        TileColorMod other = (TileColorMod) obj;
         if (Double.doubleToLongBits(alpha) != Double.doubleToLongBits(other.alpha)) return false;
         if (blue != other.blue) return false;
         if (green != other.green) return false;

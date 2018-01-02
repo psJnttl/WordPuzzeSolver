@@ -1,6 +1,6 @@
 package base.service;
 
-public class ColorDto {
+public class TileColorDto {
 
     private long id;
     private int red;
@@ -8,7 +8,7 @@ public class ColorDto {
     private int blue;
     private double alpha;
 
-    public ColorDto(long id, int red, int green, int blue, double alpha) {
+    public TileColorDto(long id, int red, int green, int blue, double alpha) {
         this.id = id;
         this.red = red;
         this.green = green;
@@ -16,7 +16,7 @@ public class ColorDto {
         this.alpha = alpha;
     }
     
-    public ColorDto() {
+    public TileColorDto() {
     }
 
     public long getId() {
@@ -78,7 +78,7 @@ public class ColorDto {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        ColorDto other = (ColorDto) obj;
+        TileColorDto other = (TileColorDto) obj;
         if (Double.doubleToLongBits(alpha) != Double.doubleToLongBits(other.alpha)) return false;
         if (blue != other.blue) return false;
         if (green != other.green) return false;

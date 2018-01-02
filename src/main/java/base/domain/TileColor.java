@@ -1,23 +1,27 @@
 package base.domain;
 
 import javax.persistence.Entity;
-import javax.validation.constraints.Size;
-
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 public class TileColor extends AbstractPersistable<Long> {
 
-    @Size(min=0, max=255)
+    @Min(0)
+    @Max(255)
     private int red;
     
-    @Size(min=0, max=255)
+    @Min(0)
+    @Max(255)
     private int green;
     
-    @Size(min=0, max=255)
+    @Min(0)
+    @Max(255)
     private int blue;
     
-    @Size(min=0, max=1)
+    @Min(0)
+    @Max(1)
     private double alpha;
     
     public TileColor() {

@@ -5,20 +5,20 @@ import javax.validation.constraints.Min;
 
 public class ColorAdd {
 
-    @Min(0)
-    @Max(255)
+    @Min(value = 0, message = "Red min is 0.")
+    @Max(value = 255, message = "Red max is 255.")
     private int red;
     
-    @Min(0)
-    @Max(255)
+    @Min(value = 0, message = "Green min is 0.")
+    @Max(value = 255, message = "Green max is 255.")
     private int green;
     
-    @Min(0)
-    @Max(255)
+    @Min(value = 0, message = "Blue min is 0.")
+    @Max(value = 255, message = "Blue max is 255.")
     private int blue;
     
-    @Min(0)
-    @Max(1)
+    @Min(value = 0, message = "Alpha min is 0.")
+    @Max(value = 1, message = "Alpha max is 1")
     private double alpha;
 
     public int getRed() {

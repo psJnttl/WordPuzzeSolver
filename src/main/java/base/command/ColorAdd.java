@@ -1,19 +1,24 @@
 package base.command;
 
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 public class ColorAdd {
 
-    @Size(min=0, max=255)
+    @Min(0)
+    @Max(255)
     private int red;
     
-    @Size(min=0, max=255)
+    @Min(0)
+    @Max(255)
     private int green;
     
-    @Size(min=0, max=255)
+    @Min(0)
+    @Max(255)
     private int blue;
     
-    @Size(min=0, max=1)
+    @Min(0)
+    @Max(1)
     private double alpha;
 
     public int getRed() {

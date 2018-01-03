@@ -187,7 +187,7 @@ public class TileColorControllerTest {
         assertTrue("Red not correct", dto.getRed() == RED1);
         assertTrue("Green not correct", dto.getGreen() == GREEN1);
         assertTrue("Blue not correct", dto.getBlue() == BLUE1);
-        assertTrue("Alpha not correct", dto.getAlpha() == ALPHA1);
+        assertTrue("Alpha not correct", dto.getAlpha() == ALPHA2);
     }
 
     @Test

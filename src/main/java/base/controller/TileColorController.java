@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import base.command.TileColorAdd;
+import base.command.TileColorMod;
 import base.service.TileColorDto;
 import base.service.TileColorService;
 
@@ -45,6 +46,19 @@ public class TileColorController {
         }
         tileColorService.deleteColor(id);
         return new ResponseEntity<>(HttpStatus.OK);
-        
+    }
+    
+    @RequestMapping(value="/api/colors/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<TileColorDto> modifyColor(@PathVariable long id, 
+            @Valid @RequestBody TileColorMod color, 
+            BindingResult result) {
+        if (!tileColorService.findTileColor(id).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        else if (result.hasErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        TileColorDto dto = tileColorService.modifyTileColor(id, color);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 }

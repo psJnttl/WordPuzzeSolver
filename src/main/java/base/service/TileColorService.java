@@ -4,8 +4,10 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import base.command.TileColorAdd;
+import base.command.TileColorMod;
 import base.domain.TileColor;
 import base.repository.TileColorRepository;
 
@@ -15,6 +17,7 @@ public class TileColorService {
     @Autowired
     private TileColorRepository tileColorRepository;
     
+    @Transactional
     public TileColorDto addColor(TileColorAdd nc) {
         TileColor color = new TileColor(nc.getRed(), nc.getGreen(), nc.getBlue(), nc.getAlpha());
         color = tileColorRepository.saveAndFlush(color);
@@ -35,7 +38,19 @@ public class TileColorService {
         return Optional.of(dto);
     }
 
+    @Transactional
     public void deleteColor(long id) {
         tileColorRepository.delete(id);
+    }
+
+    @Transactional
+    public TileColorDto modifyTileColor(long id, TileColorMod color) {
+        TileColor tc = tileColorRepository.findOne(id);
+        tc.setAlpha(color.getAlpha());
+        tc.setBlue(color.getBlue());
+        tc.setGreen(color.getGreen());
+        tc.setRed(color.getRed());
+        tc = tileColorRepository.saveAndFlush(tc);
+        return createDto(tc);
     }
 }

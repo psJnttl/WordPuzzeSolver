@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -24,6 +25,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import base.command.TileColorAdd;
+import base.command.TileColorMod;
 import base.domain.TileColor;
 import base.repository.TileColorRepository;
 import base.service.TileColorDto;
@@ -44,8 +46,11 @@ public class TileColorControllerTest {
     private static int BLUE2 = 102;
     private static int BLUE3 = 103;
     private static double ALPHA1 = 0.5;
+    private static double ALPHA2 = 1;
     private static int TOO_SMALL_RED = -1;
     private static int TOO_BIG_RED = 256;
+    private static int TOO_SMALL_GREEN = -1;
+    private static int TOO_BIG_GREEN = 256;
     private static int TOO_SMALL_ALPHA = -1;
     private static int TOO_BIG_ALPHA = 256;
     private static long WRONG_ID = Long.MAX_VALUE;
@@ -95,6 +100,7 @@ public class TileColorControllerTest {
         assertTrue("Red not correct", dto.getRed() == RED1);
         assertTrue("Green not correct", dto.getGreen() == GREEN1);
         assertTrue("Blue not correct", dto.getBlue() == BLUE1);
+        assertTrue("Alpha not correct", dto.getAlpha() == ALPHA1);
         tc3Id = dto.getId();
     }
 
@@ -164,5 +170,88 @@ public class TileColorControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    
+    @Test
+    public void modifyColorOKandReturnsChangedContent() throws Exception {
+        TileColorMod color = new TileColorMod(tc2.getId(), RED1, GREEN1, BLUE1, ALPHA2);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(color);
+        MvcResult result = mockMvc
+                .perform(
+                        put(PATH + "/" + tc2.getId())
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(content))
+                .andExpect(status().isOk())
+                 .andReturn();
+        TileColorDto dto = mapper.readValue(result.getResponse().getContentAsString(), TileColorDto.class);
+        assertTrue("Red not correct", dto.getRed() == RED1);
+        assertTrue("Green not correct", dto.getGreen() == GREEN1);
+        assertTrue("Blue not correct", dto.getBlue() == BLUE1);
+        assertTrue("Alpha not correct", dto.getAlpha() == ALPHA1);
+    }
 
+    @Test
+    public void modifyColorWithTooSmallGreenValue() throws Exception {
+        TileColorMod color = new TileColorMod(tc2.getId(), RED1, TOO_SMALL_GREEN, BLUE1, ALPHA2);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(color);
+        mockMvc
+            .perform(
+                    put(PATH + "/" + tc2.getId())
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(content))
+            .andExpect(status().isBadRequest());
+    }
+        
+    @Test
+    public void modifyColorWithTooBigGreenValue() throws Exception {
+        TileColorMod color = new TileColorMod(tc2.getId(), RED1, TOO_BIG_GREEN, BLUE1, ALPHA2);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(color);
+        mockMvc
+            .perform(
+                    put(PATH + "/" + tc2.getId())
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(content))
+            .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    public void modifyColorWithTooSmallAlphaValue() throws Exception {
+        TileColorMod color = new TileColorMod(tc2.getId(), RED1, GREEN1, BLUE1, TOO_SMALL_ALPHA);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(color);
+        mockMvc
+            .perform(
+                    put(PATH + "/" + tc2.getId())
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(content))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void modifyColorWithTooBigAlphaValue() throws Exception {
+        TileColorMod color = new TileColorMod(tc2.getId(), RED1, GREEN1, BLUE1, TOO_BIG_ALPHA);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(color);
+        mockMvc
+            .perform(
+                    put(PATH + "/" + tc2.getId())
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(content))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void modifyColorWithWrongId() throws Exception {
+        TileColorMod color = new TileColorMod(WRONG_ID, RED1, GREEN1, BLUE1, ALPHA1);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(color);
+        mockMvc
+            .perform(
+                    put(PATH + "/" + WRONG_ID)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(content))
+            .andExpect(status().isNotFound());
+    }
 }

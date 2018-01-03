@@ -2,6 +2,7 @@ package base.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -70,5 +71,10 @@ public class TileColorController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(cDto.get(), HttpStatus.OK);
+    }
+    
+    @RequestMapping(value="/api/colors", method = RequestMethod.GET)
+    public List<TileColorDto> listAll() {
+        return tileColorService.listAll();
     }
 }

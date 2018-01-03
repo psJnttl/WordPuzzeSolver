@@ -1,6 +1,8 @@
 package base.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,5 +54,10 @@ public class TileColorService {
         tc.setRed(color.getRed());
         tc = tileColorRepository.saveAndFlush(tc);
         return createDto(tc);
+    }
+
+    public List<TileColorDto> listAll() {
+        List<TileColor> tileColors = tileColorRepository.findAll();
+        return tileColors.stream().map(t -> createDto(t)).collect(Collectors.toList());
     }
 }

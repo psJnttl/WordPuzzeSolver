@@ -1,11 +1,26 @@
 package base.command;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 public class TileColorMod {
 
     private long id;
+
+    @Min(value = 0, message = "Red min is 0.")
+    @Max(value = 255, message = "Red max is 255.")
     private int red;
+
+    @Min(value = 0, message = "Green min is 0.")
+    @Max(value = 255, message = "Green max is 255.")
     private int green;
+    
+    @Min(value = 0, message = "Blue min is 0.")
+    @Max(value = 255, message = "Blue max is 255.")
     private int blue;
+    
+    @Min(value = 0, message = "Alpha min is 0.")
+    @Max(value = 1, message = "Alpha max is 1")
     private double alpha;
 
     public TileColorMod(long id, int red, int green, int blue, double alpha) {

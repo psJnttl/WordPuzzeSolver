@@ -9,6 +9,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +25,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import base.command.TileColorAdd;
@@ -279,5 +282,20 @@ public class TileColorControllerTest {
                     get(PATH + "/" + WRONG_ID)
                     .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isNotFound());
+    }
+    
+    @Test
+    public void listAllColorsHasColors1and2() throws Exception {
+        MvcResult result = mockMvc
+                .perform(
+                        get(PATH)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andReturn();
+        ObjectMapper mapper = new ObjectMapper();
+        List<TileColorDto> dtos = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<TileColorDto>>() { });
+        assertEquals(2, dtos.stream()
+                            .filter(t -> t.getId() == tc1.getId() || t.getId() == tc2.getId())
+                            .count());
     }
 }

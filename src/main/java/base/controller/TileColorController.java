@@ -2,6 +2,7 @@ package base.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -60,5 +61,14 @@ public class TileColorController {
         }
         TileColorDto dto = tileColorService.modifyTileColor(id, color);
         return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value="/api/colors/{id}", method = RequestMethod.GET)
+    public ResponseEntity<TileColorDto> findColor(@PathVariable long id) {
+        Optional<TileColorDto> cDto = tileColorService.findTileColor(id);  
+        if (!cDto.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(cDto.get(), HttpStatus.OK);
     }
 }

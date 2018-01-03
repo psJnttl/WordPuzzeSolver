@@ -19,6 +19,7 @@ class Game extends React.Component {
     this.sendGameToServer = this.sendGameToServer.bind(this);
     this.selectResultWord = this.selectResultWord.bind(this);
     this.setTileValues = this.setTileValues.bind(this);
+    this.loadColors = this.loadColors.bind(this);
   }
 
   onChangeTileValue(e, index) {
@@ -57,7 +58,22 @@ class Game extends React.Component {
   }
 
  componentWillMount() {
-   this.setState({defaultColors: defaultColors});
+   this.loadColors();
+ }
+
+ loadColors() {
+   const self = this;
+   const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
+   axios.get('/api/colors/', config)
+        .then(function (response) {
+          const colors = response.data;
+          console.log("colors:");
+          console.log(colors);
+          self.setState({defaultColors: response.data});
+        })
+        .catch(function (error) {
+          console.log("Failed to load colors from server.");
+        });
  }
 
   render() {

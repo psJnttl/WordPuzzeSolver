@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -252,6 +253,31 @@ public class TileColorControllerTest {
                     put(PATH + "/" + WRONG_ID)
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(content))
+            .andExpect(status().isNotFound());
+    }
+    
+    @Test
+    public void getSingleColorOk() throws Exception {
+        MvcResult result = mockMvc
+                                .perform(
+                                        get(PATH + "/" + tc1.getId())
+                                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+                                .andExpect(status().isOk())
+                                .andReturn();
+        ObjectMapper mapper = new ObjectMapper();
+        TileColorDto dto = mapper.readValue(result.getResponse().getContentAsString(), TileColorDto.class);
+        assertTrue("Red not correct", dto.getRed() == RED2);
+        assertTrue("Green not correct", dto.getGreen() == GREEN2);
+        assertTrue("Blue not correct", dto.getBlue() == BLUE2);
+        assertTrue("Alpha not correct", dto.getAlpha() == ALPHA1);
+    }
+    
+    @Test
+    public void getSingleColorWithWrongId() throws Exception {
+        mockMvc
+            .perform(
+                    get(PATH + "/" + WRONG_ID)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isNotFound());
     }
 }

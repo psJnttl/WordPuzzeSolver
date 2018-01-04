@@ -5,6 +5,7 @@ import { Input, Menu } from 'semantic-ui-react';
 import Words from './components/Words';
 import Symbols from './components/Symbols';
 import Game from './components/Game';
+import Colors from './components/Colors';
 
 const Nav = (props) => (
   <div>
@@ -28,9 +29,9 @@ const Nav = (props) => (
         <Menu.Item>Symbols
         </Menu.Item>
       </NavLink>
-      <NavLink activeClassName="active" to="/about">
+      <NavLink activeClassName="active" to="/colors">
         <Menu.Item>
-          About
+          Colors
         </Menu.Item>
       </NavLink>
     </Menu>
@@ -39,7 +40,8 @@ const Nav = (props) => (
 
 const Home = () => (
   <div>
-    Home page of the application.
+    Wordament is a game where you find words on 4x4 game area of letters.<br/>
+    This app helps you find the words.
   </div>
 );
 
@@ -66,7 +68,7 @@ class App extends React.Component {
             <Route path="/game" component={Game} />
             <Route path="/words" component={Words} />
             <Route path="/symbols" component={Symbols} />
-            <Route path="/about" component={About} />
+            <Route path="/colors" component={Colors} />
             <Route render={ () => <div><h1>404 - Not Found!</h1></div>} />
           </Switch>
         </div>

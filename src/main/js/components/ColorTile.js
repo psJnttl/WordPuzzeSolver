@@ -19,11 +19,13 @@ class ColorTile extends React.Component {
   onMouseEnter() {
     const newStyle = _.assign({}, this.state.tileStyle, {'cursor': 'pointer'});
     this.setState({tileStyle: newStyle});
+    this.props.mouseOver(this.props.index);
   }
 
   onMouseLeave() {
     const newStyle = _.omit(this.state.tileStyle, 'cursor');
     this.setState({tileStyle: newStyle});
+    this.props.mouseLeave();
   }
 
   render() {
@@ -57,6 +59,8 @@ ColorTile.PropTypes = {
   selected: PropTypes.bool.isRequired,
   index: PropTypes.number.isRequired,
   select: PropTypes.func.isRequired,
+  mouseOver: PropTypes.func.isRequired,
+  mouseLeave: PropTypes.func.isRequired,
 }
 ColorTile.defaultProps = {
   color: {red: 127, green: 127, blue: 127, alpha: 1},

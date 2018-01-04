@@ -6,12 +6,14 @@ import ColorTile from './ColorTile';
 class Colors extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {colors: [], selectedColor: -1, }
+    this.state = {colors: [], selectedColor: -1, mouseOverColor: -1,}
     this.selectColor = this.selectColor.bind(this);
+    this.mouseOverTile = this.mouseOverTile.bind(this);
+    this.mouseOnBackgound = this.mouseOnBackgound.bind(this);
   }
 
-  selectColor(index) {
-    this.setState({selectedColor: index});
+  selectColor() {
+    this.setState({selectedColor: this.state.mouseOverColor});
   }
 
   loadColors() {
@@ -26,6 +28,14 @@ class Colors extends React.Component {
          });
   }
 
+  mouseOverTile(index) {
+    this.setState({mouseOverColor: index});
+  }
+
+  mouseOnBackgound() {
+    this.setState({mouseOverColor: -1});
+  }
+
   componentWillMount() {
     this.loadColors();
   }
@@ -38,11 +48,13 @@ class Colors extends React.Component {
           selected={index == this.state.selectedColor}
           index={index}
           select={this.selectColor}
+          mouseOver={this.mouseOverTile}
+          mouseLeave={this.mouseOnBackgound}
         />
       </li>
     );
     return (
-      <div style={{'marginLeft': 10}}>
+      <div style={{'marginLeft': 10}} onClick={this.selectColor}>
         Color editor<br/>
         <ul style={{'display': 'flex', 'listStyleType': 'none', 'flexWrap': 'wrap'}}>
           {tiles}

@@ -31,15 +31,22 @@ class Colors extends React.Component {
   }
 
   render() {
+    const tiles = this.state.colors.map((item, index) =>
+      <li key={index}>
+        <ColorTile
+          color={this.state.colors[index]}
+          selected={index == this.state.selectedColor}
+          index={index}
+          select={this.selectColor}
+        />
+      </li>
+    );
     return (
       <div style={{'marginLeft': 10}}>
         Color editor<br/>
-        <ColorTile
-          color={this.state.colors[0]}
-          selected={0 == this.state.selectedColor}
-          index={0}f
-          select={this.selectColor}
-        />
+        <ul style={{'display': 'flex', 'listStyleType': 'none', 'flexWrap': 'wrap'}}>
+          {tiles}
+        </ul>
       </div>
     );
   }

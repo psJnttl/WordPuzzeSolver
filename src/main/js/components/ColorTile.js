@@ -7,8 +7,9 @@ class ColorTile extends React.Component {
     super(props);
     this.state = {
       tileStyle : {
-        height: 100,
-        width: 100,
+        height: 50,
+        width: 50,
+        margin: 4
     },
   };
   this.onMouseEnter = this.onMouseEnter.bind(this);
@@ -33,7 +34,7 @@ class ColorTile extends React.Component {
     const backg = {background: "rgba("+red+","+green+","+blue+","+alpha+")"}
     let border;
     if (this.props.selected) {
-      border = {border:  "5px solid rgba(34,36,38,.15)"};
+      border = {border:  "5px solid rgba(34,36,38,.50)"};
     }
     else {
       border = {border:  "2px solid rgba(34,36,38,.15)"};

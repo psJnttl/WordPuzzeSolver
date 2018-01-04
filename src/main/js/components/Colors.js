@@ -62,7 +62,7 @@ class Colors extends React.Component {
             {tiles}
           </ul>
         </div>
-        <div >
+        <div style={{'marginLeft': 45}}>
           {this.state.selectedColor !== -1 &&
             <ColorPanel
               color={this.state.colors[this.state.selectedColor]}

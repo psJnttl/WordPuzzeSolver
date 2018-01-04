@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import ColorTile from './ColorTile';
+import ColorPanel from './ColorPanel';
 
 class Colors extends React.Component {
   constructor(props) {
@@ -54,11 +55,19 @@ class Colors extends React.Component {
       </li>
     );
     return (
-      <div style={{'marginLeft': 10}} onClick={this.selectColor}>
-        Color editor<br/>
-        <ul style={{'display': 'flex', 'listStyleType': 'none', 'flexWrap': 'wrap'}}>
-          {tiles}
-        </ul>
+      <div style={{'marginLeft': 10}} >
+        <div onClick={this.selectColor}>
+          Color editor<br/>
+          <ul style={{'display': 'flex', 'listStyleType': 'none', 'flexWrap': 'wrap'}}>
+            {tiles}
+          </ul>
+        </div>
+        <div >
+          {this.state.selectedColor !== -1 &&
+            <ColorPanel
+              color={this.state.colors[this.state.selectedColor]}
+            />}
+        </div>
       </div>
     );
   }

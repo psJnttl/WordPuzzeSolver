@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import ColorTile from './ColorTile';
 
 class Colors extends React.Component {
   constructor(props) {
@@ -26,7 +27,13 @@ class Colors extends React.Component {
 
   render() {
     return (
-      <div style={{'marginLeft': 10}}>Color editor</div>
+      <div style={{'marginLeft': 10}}>
+        Color editor<br/>
+        <ColorTile
+          color={this.state.colors[0]}
+          selected={false}
+        />
+      </div>
     );
   }
 }

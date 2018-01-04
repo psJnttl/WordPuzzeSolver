@@ -44,10 +44,30 @@ class Colors extends React.Component {
     var array = _.take(this.state.colors, 16);
     var color = array[this.state.selectedColor];
     if ("alpha" !== item && value !== "") {
-      color[item] = parseInt(value);
+      var check = parseInt(value);
+      if (check > 255) {
+        check = 255;
+      }
+      else if (check < 0) {
+        check = 0;
+      }
+      color[item] = check;
     }
-    else {
-      color[item] = parseFloat(value);
+    else if ("alpha" !== item && value === "") {
+      color[item] = "";
+    }
+    else if ("alpha" === item && value !== ""){
+      var check = parseFloat(value);
+      if (check > 1) {
+        check = 1;
+      }
+      else if (check < 0) {
+        check = 0;
+      }
+      color[item] = check;
+    }
+    else if ("alpha" === item && value === ""){
+      color[item] = "";
     }
     array[this.state.selectedColor] = color;
     this.setState({colors: array});

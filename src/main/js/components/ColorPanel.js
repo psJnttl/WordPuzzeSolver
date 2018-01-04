@@ -5,12 +5,20 @@ import { Label } from 'semantic-ui-react'
 class ColorPanel extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {}
+    this.state = {
+      inputStyle : {
+        fontFamily: "Lato,'Helvetica Neue',Arial,Helvetica,sans-serif",
+        fontSize: "16px",
+        border: "2px solid rgba(34,36,38,.15)",
+        textAlign: "center",
+        width: "50px" },
+    };
   }
 
   render() {
+    const inputStyle = this.state.inputStyle;
     return (
-      <div>the color panel for adjusting r,g,b and alpha<br />
+      <div><br />
         <table>
           <tbody>
             <tr>
@@ -18,9 +26,9 @@ class ColorPanel extends React.Component {
               <td>
                 <input
                   type="number"
-                  size={2}
                   value={this.props.color.red}
                   onChange={(e) => this.props.changeColor(e, "red")}
+                  style={inputStyle}
                 />
               </td>
             </tr>
@@ -29,9 +37,9 @@ class ColorPanel extends React.Component {
               <td>
                 <input
                   type="number"
-                  size={2}
                   value={this.props.color.green}
                   onChange={(e) => this.props.changeColor(e, "green")}
+                  style={inputStyle}
                 />
               </td>
             </tr>
@@ -40,9 +48,9 @@ class ColorPanel extends React.Component {
               <td>
                 <input
                   type="number"
-                  size={2}
                   value={this.props.color.blue}
                   onChange={(e) => this.props.changeColor(e, "blue")}
+                  style={inputStyle}
                 />
               </td>
             </tr>
@@ -51,9 +59,9 @@ class ColorPanel extends React.Component {
               <td>
                 <input
                   type="number"
-                  size={2}
                   value={this.props.color.alpha}
                   onChange={(e) => this.props.changeColor(e, "alpha")}
+                  style={inputStyle}
                 />
               </td>
             </tr>

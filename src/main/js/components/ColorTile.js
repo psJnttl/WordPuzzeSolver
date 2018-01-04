@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 class ColorTile extends React.Component {
   constructor(props) {
@@ -10,6 +11,18 @@ class ColorTile extends React.Component {
         width: 100,
     },
   };
+  this.onMouseEnter = this.onMouseEnter.bind(this);
+  this.onMouseLeave = this.onMouseLeave.bind(this);
+  }
+
+  onMouseEnter() {
+    const newStyle = _.assign({}, this.state.tileStyle, {'cursor': 'pointer'});
+    this.setState({tileStyle: newStyle});
+  }
+
+  onMouseLeave() {
+    const newStyle = _.omit(this.state.tileStyle, 'cursor');
+    this.setState({tileStyle: newStyle});
   }
 
   render() {
@@ -29,7 +42,10 @@ class ColorTile extends React.Component {
 
     return (
       <div>
-        <div style={styles}></div>
+        <div style={styles}
+          onMouseOver={this.onMouseEnter}
+          onMouseLeave={this.onMouseLeave}
+        ></div>
       </div>
     );
   }

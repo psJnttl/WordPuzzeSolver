@@ -17,7 +17,10 @@ class ColorPanel extends React.Component {
               <td><Label color="red">Red</Label></td>
               <td>
                 <input
+                  type="number"
                   size={2}
+                  value={this.props.color.red}
+                  onChange={(e) => this.props.changeColor(e, "red")}
                 />
               </td>
             </tr>
@@ -25,7 +28,10 @@ class ColorPanel extends React.Component {
               <td><Label color="green">Green</Label></td>
               <td>
                 <input
+                  type="number"
                   size={2}
+                  value={this.props.color.green}
+                  onChange={(e) => this.props.changeColor(e, "green")}
                 />
               </td>
             </tr>
@@ -33,15 +39,21 @@ class ColorPanel extends React.Component {
               <td><Label color="blue">Blue</Label></td>
               <td>
                 <input
+                  type="number"
                   size={2}
+                  value={this.props.color.blue}
+                  onChange={(e) => this.props.changeColor(e, "blue")}
                 />
               </td>
             </tr>
             <tr>
-              <td>ALPHA:</td>
+              <td>Alpha:</td>
               <td>
                 <input
+                  type="number"
                   size={2}
+                  value={this.props.color.alpha}
+                  onChange={(e) => this.props.changeColor(e, "alpha")}
                 />
               </td>
             </tr>
@@ -54,6 +66,7 @@ class ColorPanel extends React.Component {
 }
 ColorPanel.PropTypes = {
   color: PropTypes.object.isRequired,
+  changeColor: PropTypes.func.isRequired,
 }
 ColorPanel.defaultProps = {
   color: {red: 127, green: 127, blue: 127, alpha: 1},

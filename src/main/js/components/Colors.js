@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import ColorTile from './ColorTile';
 import ColorPanel from './ColorPanel';
+import _ from 'lodash';
 
 class Colors extends React.Component {
   constructor(props) {
@@ -11,6 +12,7 @@ class Colors extends React.Component {
     this.selectColor = this.selectColor.bind(this);
     this.mouseOverTile = this.mouseOverTile.bind(this);
     this.mouseOnBackgound = this.mouseOnBackgound.bind(this);
+    this.handleChangeColor = this.handleChangeColor.bind(this);
   }
 
   selectColor() {
@@ -35,6 +37,20 @@ class Colors extends React.Component {
 
   mouseOnBackgound() {
     this.setState({mouseOverColor: -1});
+  }
+
+  handleChangeColor(e, item) {
+    var value = e.target.value;
+    var array = _.take(this.state.colors, 16);
+    var color = array[this.state.selectedColor];
+    if ("alpha" !== item && value !== "") {
+      color[item] = parseInt(value);
+    }
+    else {
+      color[item] = parseFloat(value);
+    }
+    array[this.state.selectedColor] = color;
+    this.setState({colors: array});
   }
 
   componentWillMount() {
@@ -66,6 +82,7 @@ class Colors extends React.Component {
           {this.state.selectedColor !== -1 &&
             <ColorPanel
               color={this.state.colors[this.state.selectedColor]}
+              changeColor={this.handleChangeColor}
             />}
         </div>
       </div>

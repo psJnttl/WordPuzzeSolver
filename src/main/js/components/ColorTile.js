@@ -45,6 +45,7 @@ class ColorTile extends React.Component {
         <div style={styles}
           onMouseOver={this.onMouseEnter}
           onMouseLeave={this.onMouseLeave}
+          onClick={() => this.props.select(this.props.index)}
         ></div>
       </div>
     );
@@ -53,6 +54,8 @@ class ColorTile extends React.Component {
 ColorTile.PropTypes = {
   color: PropTypes.object.isRequired,
   selected: PropTypes.bool.isRequired,
+  index: PropTypes.number.isRequired,
+  select: PropTypes.func.isRequired,
 }
 ColorTile.defaultProps = {
   color: {red: 127, green: 127, blue: 127, alpha: 1},

@@ -6,7 +6,12 @@ import ColorTile from './ColorTile';
 class Colors extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {colors: [], }
+    this.state = {colors: [], selectedColor: -1, }
+    this.selectColor = this.selectColor.bind(this);
+  }
+
+  selectColor(index) {
+    this.setState({selectedColor: index});
   }
 
   loadColors() {
@@ -31,7 +36,9 @@ class Colors extends React.Component {
         Color editor<br/>
         <ColorTile
           color={this.state.colors[0]}
-          selected={false}
+          selected={0 == this.state.selectedColor}
+          index={0}f
+          select={this.selectColor}
         />
       </div>
     );

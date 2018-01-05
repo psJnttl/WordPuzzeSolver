@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Label } from 'semantic-ui-react'
+import { Button, Label } from 'semantic-ui-react'
 
 class ColorPanel extends React.Component {
   constructor(props) {
@@ -65,6 +65,16 @@ class ColorPanel extends React.Component {
                 />
               </td>
             </tr>
+            <tr>
+              <td colSpan={2}>
+                <Button
+                  content="Save"
+                  icon="save"
+                  color="green"
+                  onClick={() => this.props.saveColor()}
+                />
+              </td>
+            </tr>
           </tbody>
         </table>
 
@@ -75,6 +85,7 @@ class ColorPanel extends React.Component {
 ColorPanel.PropTypes = {
   color: PropTypes.object.isRequired,
   changeColor: PropTypes.func.isRequired,
+  saveColor: PropTypes.func.isRequired,
 }
 ColorPanel.defaultProps = {
   color: {red: 127, green: 127, blue: 127, alpha: 1},

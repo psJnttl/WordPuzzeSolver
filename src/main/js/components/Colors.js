@@ -13,6 +13,7 @@ class Colors extends React.Component {
     this.mouseOverTile = this.mouseOverTile.bind(this);
     this.mouseOnBackgound = this.mouseOnBackgound.bind(this);
     this.handleChangeColor = this.handleChangeColor.bind(this);
+    this.saveColor = this.saveColor.bind(this);
   }
 
   selectColor() {
@@ -25,6 +26,20 @@ class Colors extends React.Component {
     axios.get('/api/colors/', config)
          .then(function (response) {
            self.setState({colors: response.data});
+         })
+         .catch(function (error) {
+           console.log("Failed to load colors from server.");
+         });
+  }
+
+  saveColor() {
+    const self = this;
+    const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
+    const command = this.state.colors[this.state.selectedColor];
+    const url = '/api/colors/' + command.id;
+    axios.put(url, command, config)
+         .then(function (response) {
+           console.log("color saved OK");
          })
          .catch(function (error) {
            console.log("Failed to load colors from server.");
@@ -103,6 +118,7 @@ class Colors extends React.Component {
             <ColorPanel
               color={this.state.colors[this.state.selectedColor]}
               changeColor={this.handleChangeColor}
+              saveColor={this.saveColor}
             />}
         </div>
       </div>

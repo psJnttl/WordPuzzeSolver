@@ -4,16 +4,20 @@ import axios from 'axios';
 import ColorTile from './ColorTile';
 import ColorPanel from './ColorPanel';
 import _ from 'lodash';
+import ModalSimpleInformation from './ModalSimpleInformation';
 
 class Colors extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {colors: [], selectedColor: -1, mouseOverColor: -1,}
+    this.state = {colors: [], selectedColor: -1, mouseOverColor: -1,
+      infoModalVisible: false, infoModalData: {},
+    };
     this.selectColor = this.selectColor.bind(this);
     this.mouseOverTile = this.mouseOverTile.bind(this);
     this.mouseOnBackgound = this.mouseOnBackgound.bind(this);
     this.handleChangeColor = this.handleChangeColor.bind(this);
     this.saveColor = this.saveColor.bind(this);
+    this.closeInfoModal = this.closeInfoModal.bind(this);
   }
 
   selectColor() {
@@ -28,7 +32,12 @@ class Colors extends React.Component {
            self.setState({colors: response.data});
          })
          .catch(function (error) {
-           console.log("Failed to load colors from server.");
+           self.setState({infoModalVisible: true,
+               infoModalData: {
+               title:"Loading colors failed",
+              notification: "Failed to load colors from server!",
+              name: ""}
+            });
          });
   }
 
@@ -42,7 +51,12 @@ class Colors extends React.Component {
            console.log("color saved OK");
          })
          .catch(function (error) {
-           console.log("Failed to load colors from server.");
+           self.setState({infoModalVisible: true,
+               infoModalData: {
+               title:"Saving a color failed",
+              notification: "Failed to save a color to server!",
+              name: ""}
+            });
          });
   }
 
@@ -88,6 +102,10 @@ class Colors extends React.Component {
     this.setState({colors: array});
   }
 
+  closeInfoModal() {
+    this.setState({infoModalVisible: false, infoModalData: {}})
+  }
+
   componentWillMount() {
     this.loadColors();
   }
@@ -107,6 +125,14 @@ class Colors extends React.Component {
     );
     return (
       <div style={{'marginLeft': 10}} >
+        <ModalSimpleInformation
+          modalOpen={this.state.infoModalVisible}
+          title={this.state.infoModalData.title}
+          notification={this.state.infoModalData.notification}
+          name={this.state.infoModalData.name}
+          reply={this.closeInfoModal}
+        />
+
         <div onClick={this.selectColor}>
           Color editor<br/>
           <ul style={{'display': 'flex', 'listStyleType': 'none', 'flexWrap': 'wrap'}}>

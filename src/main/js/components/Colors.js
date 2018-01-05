@@ -140,6 +140,9 @@ class Colors extends React.Component {
         />
       </li>
     );
+    const line1 = tiles.filter((item, index) => index >= 0 && index < 8);
+    const line2 = tiles.filter((item, index) => index >= 8 && index < 16);
+
     return (
       <div style={{'marginLeft': 10}} >
         <ModalSimpleInformation
@@ -159,7 +162,10 @@ class Colors extends React.Component {
         <div onClick={this.selectColor}>
           Color editor<br/>
           <ul style={{'display': 'flex', 'listStyleType': 'none', 'flexWrap': 'wrap'}}>
-            {tiles}
+            {line1}
+          </ul>
+          <ul style={{'display': 'flex', 'listStyleType': 'none', 'flexWrap': 'wrap'}}>
+            {line2}
           </ul>
         </div>
         <div style={{'marginLeft': 45}}>

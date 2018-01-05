@@ -13,7 +13,7 @@ class Game extends React.Component {
     super(props);
     this.state = {
       tileValues: ["d", "a", "a", "p", "e", "l", "o", "a", "a", "l", "a", "a", "a", "a", "a", "e"],
-      result: [], selectedWordIndex: '', usedColors: [],
+      result: [], selectedWordIndex: '', usedColors: [], processing: false,
     };
     this.onChangeTileValue = this.onChangeTileValue.bind(this);
     this.sendGameToServer = this.sendGameToServer.bind(this);
@@ -29,17 +29,20 @@ class Game extends React.Component {
   }
 
   sendGameToServer() {
-    this.setState({result: [], selectedWordIndex:'', usedColors: []});
+
+    this.setState({result: [], selectedWordIndex:'', usedColors: [],
+                   processing: true});
     const self = this;
     const command = {gameTiles: _.take(this.state.tileValues, 16)};
     const config = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
     axios.post('/api/games/', command, config)
          .then(function (response) {
            const words = response.data.words;
-           self.setState({result: words});
+           self.setState({result: words, processing: false});
          })
          .catch(function (error) {
            console.log("Failed to solve game.");
+           self.setState({processing: false});
          });
   }
 
@@ -247,6 +250,7 @@ class Game extends React.Component {
           icon="lightning"
           color="green"
           onClick={() => this.sendGameToServer()}
+          disabled={this.state.processing}
         />
         <br />
         <div style={{'overflowY':'auto', 'height': '80px', 'width': '360px',

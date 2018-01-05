@@ -249,8 +249,10 @@ class Game extends React.Component {
           onClick={() => this.sendGameToServer()}
         />
         <br />
-
-        {resultList}
+        <div style={{'overflowY':'auto', 'height': '80px', 'width': '360px',
+        'marginTop':'10px', 'marginLeft':'40px'}}>
+          {resultList}
+        </div>
       </div>
     );
   }

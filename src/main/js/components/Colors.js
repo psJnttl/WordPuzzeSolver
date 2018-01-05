@@ -5,12 +5,14 @@ import ColorTile from './ColorTile';
 import ColorPanel from './ColorPanel';
 import _ from 'lodash';
 import ModalSimpleInformation from './ModalSimpleInformation';
+import ModalSimpleConfirmation from './ModalSimpleConfirmation';
 
 class Colors extends React.Component {
   constructor(props) {
     super(props);
     this.state = {colors: [], selectedColor: -1, mouseOverColor: -1,
       infoModalVisible: false, infoModalData: {},
+      saveConfirmationVisible: false,
     };
     this.selectColor = this.selectColor.bind(this);
     this.mouseOverTile = this.mouseOverTile.bind(this);
@@ -18,6 +20,8 @@ class Colors extends React.Component {
     this.handleChangeColor = this.handleChangeColor.bind(this);
     this.saveColor = this.saveColor.bind(this);
     this.closeInfoModal = this.closeInfoModal.bind(this);
+    this.saveReply = this.saveReply.bind(this);
+    this.setSaveConfirmModalVisible = this.setSaveConfirmModalVisible.bind(this);
   }
 
   selectColor() {
@@ -48,7 +52,7 @@ class Colors extends React.Component {
     const url = '/api/colors/' + command.id;
     axios.put(url, command, config)
          .then(function (response) {
-           console.log("color saved OK");
+           self.loadColors();
          })
          .catch(function (error) {
            self.setState({infoModalVisible: true,
@@ -106,6 +110,19 @@ class Colors extends React.Component {
     this.setState({infoModalVisible: false, infoModalData: {}})
   }
 
+  setSaveConfirmModalVisible() {
+    if (false === this.state.saveConfirmationVisible) {
+      this.setState({saveConfirmationVisible: true});
+    }
+  }
+
+  saveReply(answer) {
+    if (true === answer) {
+      this.saveColor();
+    }
+    this.setState({saveConfirmationVisible: false });
+  }
+
   componentWillMount() {
     this.loadColors();
   }
@@ -132,6 +149,12 @@ class Colors extends React.Component {
           name={this.state.infoModalData.name}
           reply={this.closeInfoModal}
         />
+        <ModalSimpleConfirmation
+          modalOpen={this.state.saveConfirmationVisible}
+          title="Save color"
+          question={"Are you sure you want to over write color '" + this.state.selectedColor + "' ?"}
+          reply={this.saveReply}
+        />
 
         <div onClick={this.selectColor}>
           Color editor<br/>
@@ -144,7 +167,7 @@ class Colors extends React.Component {
             <ColorPanel
               color={this.state.colors[this.state.selectedColor]}
               changeColor={this.handleChangeColor}
-              saveColor={this.saveColor}
+              saveColor={this.setSaveConfirmModalVisible}
             />}
         </div>
       </div>

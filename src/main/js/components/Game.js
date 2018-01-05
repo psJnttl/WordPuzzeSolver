@@ -99,9 +99,7 @@ class Game extends React.Component {
 
     return (
       <div>
-        <PresetGames selectGame={this.setTileValues}/>
         <h4>Game</h4>
-
         <Grid >
           <Grid.Row>
             <Grid.Column width="2">
@@ -135,6 +133,9 @@ class Game extends React.Component {
                 index={3}
                 background={this.state.usedColors[3]}
               />
+            </Grid.Column>
+            <Grid.Column width="4">
+              <PresetGames selectGame={this.setTileValues}/>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>

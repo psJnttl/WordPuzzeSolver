@@ -144,7 +144,7 @@ class Colors extends React.Component {
     const line2 = tiles.filter((item, index) => index >= 8 && index < 16);
 
     return (
-      <div style={{'marginLeft': 10}} >
+      <div style={{'margin': 10}} >
         <ModalSimpleInformation
           modalOpen={this.state.infoModalVisible}
           title={this.state.infoModalData.title}

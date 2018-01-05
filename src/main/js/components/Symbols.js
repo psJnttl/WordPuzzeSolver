@@ -186,7 +186,7 @@ class Symbols extends React.Component {
        </Table.Row>
     );
     return (
-      <div>
+      <div style={{'margin': 10}}>
         <h4>Symbols</h4>
 
         <ModalSimpleInformation

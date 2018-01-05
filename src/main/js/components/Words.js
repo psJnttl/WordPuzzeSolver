@@ -329,7 +329,7 @@ class Words extends React.Component {
         </Table.Cell>
       </Table.Row>);
     return (
-      <div>
+      <div style={{'margin': 10}}>
         <ModalSimpleInformation
           modalOpen={this.state.infoModalVisible}
           title={this.state.infoModalData.title}

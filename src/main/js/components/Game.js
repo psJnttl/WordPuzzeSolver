@@ -98,7 +98,7 @@ class Game extends React.Component {
     }
 
     return (
-      <div>
+      <div style={{'margin': 10}}>
         <h4>Game</h4>
         <Grid >
           <Grid.Row>

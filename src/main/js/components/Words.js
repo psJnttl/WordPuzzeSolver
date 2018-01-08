@@ -14,7 +14,7 @@ class Words extends React.Component {
       visiblePages: [1,2,3], words: [], word:{},
       delConfirmationVisible: false, addModalVisible:false,
       editModalVisible: false, searchValue:"", infoModalVisible: false,
-      infoModalData: {},
+      infoModalData: {}, activePageInput: "1",
     };
     this.handleItemClick = this.handleItemClick.bind(this);
     this.handleBack = this.handleBack.bind(this);
@@ -23,7 +23,7 @@ class Words extends React.Component {
     this.deleteReply = this.deleteReply.bind(this);
     this.getWordPage = this.getWordPage.bind(this);
     this.deleteWord = this.deleteWord.bind(this);
-    this.updateVisibleItems = this.updateVisibleItems.bind(this);
+
     this.openAddModal = this.openAddModal.bind(this);
     this.closeAddModal = this.closeAddModal.bind(this);
     this.addWord = this.addWord.bind(this);
@@ -36,6 +36,8 @@ class Words extends React.Component {
     this.proxyGetPage = this.proxyGetPage.bind(this);
     this.clearSearch = this.clearSearch.bind(this);
     this.closeInfoModal = this.closeInfoModal.bind(this);
+    this.handlePageNbrChange = this.handlePageNbrChange.bind(this);
+    this.handleGoTo = this.handleGoTo.bind(this);
   }
 
   clearSearch() {
@@ -87,43 +89,26 @@ class Words extends React.Component {
 
   handleItemClick(e, { name } ) {
     const number = parseInt(name);
-    this.setState({ activePage: number },
+    this.setState({ activePage: number, activePageInput: name },
       () => this.proxyGetPage());
   }
 
   handleBack(e) {
-    const visible = this.state.visiblePages;
-    const lowest = visible[0] - 1;
-    if (lowest === 0) {
-      return;
+    const previous = this.state.activePage - 1;
+    const numberStr = "" + previous;
+    if (previous > 0 && previous <= this.getPageCount()) {
+      this.setState({activePage: previous, activePageInput: numberStr},
+      () => this.proxyGetPage());
     }
-    const array = _.concat([], lowest, visible[0], visible[1]);
-    this.setState({visiblePages: array});
   }
 
   handleForward(e) {
-    const visible = this.state.visiblePages;
-    const highest = visible[2] + 1;
-    const pageCount = this.getPageCount();
-    if (highest > pageCount) {
-      return;
+    const next = 1 + this.state.activePage;
+    const numberStr = "" + next;
+    if (next > 0 && next <= this.getPageCount()) {
+      this.setState({activePage: next, activePageInput: numberStr},
+      () => this.proxyGetPage());
     }
-    const array = _.concat([], visible[1], visible[2], highest);
-    this.setState({visiblePages: array});
-  }
-
-  updateVisibleItems() {
-    const visible = this.state.visiblePages;
-    const pageCount = this.getPageCount();
-    if (pageCount >= 3 && visible[2] > pageCount) {
-      this.handleBack(null);
-    }
-    const activePage = this.state.activePage;
-    if (pageCount > 0 && activePage > pageCount) {
-      this.setState({activePage: pageCount},
-        () => this.proxyGetPage());
-    }
-
   }
 
   setDeleteConfirmModalVisible(item) {
@@ -187,7 +172,6 @@ class Words extends React.Component {
          .then(function (response) {
            self.setState({wordCount: self.state.wordCount - 1},
              () => self.proxyGetPage());
-           self.updateVisibleItems();
          })
          .catch(function (error) {
            self.setState({infoModalVisible: true,
@@ -267,6 +251,22 @@ class Words extends React.Component {
          });
   }
 
+  handlePageNbrChange(e) {
+    this.setState({activePageInput: e.target.value});
+  }
+
+  handleGoTo() {
+    const regEx = /[0-9]+/;
+    const value  = this.state.activePageInput;
+    if (regEx.test(value)) {
+      const pageNo = parseInt(value);
+      if (pageNo > 0 && pageNo <= this.getPageCount()) {
+        this.setState({activePage: pageNo},
+          () => this.proxyGetPage());
+      }
+    }
+  }
+
   render() {
     let wordModal;
     if (this.state.addModalVisible) {
@@ -328,6 +328,11 @@ class Words extends React.Component {
           />
         </Table.Cell>
       </Table.Row>);
+      const inputStyle = {
+        fontFamily: "Lato,'Helvetica Neue',Arial,Helvetica,sans-serif",
+        fontSize: "14px",
+        border: "1px solid rgba(34,36,38,.15)",
+        textAlign: "center" };
     return (
       <div style={{'margin': 10}}>
         <ModalSimpleInformation
@@ -379,17 +384,35 @@ class Words extends React.Component {
           </Table.Body>
         </Table>
         <Menu pagination>
-          {pageCount > 3 && ( <Menu.Item icon onClick={this.handleBack} >
+          {pageCount > 1 && ( <Menu.Item icon onClick={this.handleBack} >
             <Icon name='chevron left' />
           </Menu.Item> ) }
-          <Menu.Item name={'' + visible[0]} active={activePage === visible[0]} onClick={this.handleItemClick} />
           {pageCount > 1 &&
-            <Menu.Item name={'' + visible[1]} active={activePage === visible[1]} onClick={this.handleItemClick} /> }
-          {pageCount > 2 &&
-            <Menu.Item name={'' + visible[2]} active={activePage === visible[2]} onClick={this.handleItemClick} /> }
-          {pageCount > 3 && <Menu.Item icon onClick={this.handleForward}>
-            <Icon name='chevron right' />
-          </Menu.Item>}
+            (<Menu.Item icon onClick={this.handleForward}>
+              <Icon name='chevron right' />
+            </Menu.Item>)
+          }
+          <Menu.Item>
+            {this.state.activePage}
+          </Menu.Item>
+          <Menu.Item>
+            /
+          </Menu.Item>
+          <Menu.Item>
+            {this.getPageCount()}
+          </Menu.Item>
+          <Menu.Item>
+            <input
+              value={this.state.activePageInput}
+              onChange={this.handlePageNbrChange}
+              autoComplete="off"
+              size={3}
+              style={inputStyle}
+            />
+          </Menu.Item>
+          <Menu.Item>
+            <Button onClick={() => this.handleGoTo()}>Go</Button>
+          </Menu.Item>
         </Menu>
         <br />
         <Menu pagination size="mini">

@@ -11,19 +11,17 @@ class Words extends React.Component {
   constructor(props) {
     super(props);
     this.state = {wordCount:0, itemsPerPage:5, activePage: 1,
-      visiblePages: [1,2,3], words: [], word:{},
+      words: [], word:{},
       delConfirmationVisible: false, addModalVisible:false,
       editModalVisible: false, searchValue:"", infoModalVisible: false,
       infoModalData: {}, activePageInput: "1",
     };
-    this.handleItemClick = this.handleItemClick.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleForward = this.handleForward.bind(this);
     this.setDeleteConfirmModalVisible = this.setDeleteConfirmModalVisible.bind(this);
     this.deleteReply = this.deleteReply.bind(this);
     this.getWordPage = this.getWordPage.bind(this);
     this.deleteWord = this.deleteWord.bind(this);
-
     this.openAddModal = this.openAddModal.bind(this);
     this.closeAddModal = this.closeAddModal.bind(this);
     this.addWord = this.addWord.bind(this);
@@ -53,11 +51,11 @@ class Words extends React.Component {
       this.getWordPage(this.state.activePage, this.state.itemsPerPage);
     }
   }
+
   onChangeSearchValue(e) {
     const value = e.target.value;
     this.setState({searchValue: value, activePage: 1},
       () => this.proxyGetPage());
-
   }
 
   searchWordPaged(pageNumber, count) {
@@ -85,12 +83,6 @@ class Words extends React.Component {
   setItemsPerPage(nbrItems) {
     this.setState({itemsPerPage: nbrItems, activePage: 1},
     ()=> this.proxyGetPage());
-  }
-
-  handleItemClick(e, { name } ) {
-    const number = parseInt(name);
-    this.setState({ activePage: number, activePageInput: name },
-      () => this.proxyGetPage());
   }
 
   handleBack(e) {
@@ -293,7 +285,6 @@ class Words extends React.Component {
     }
     const activePage = this.state.activePage;
     const pageCount = this.getPageCount();
-    const visible = this.state.visiblePages;
     const choices = [5,10,20,40];
     const itemsPer = choices.map( (item, index) =>
       <Menu.Item key={index}
@@ -399,7 +390,7 @@ class Words extends React.Component {
             /
           </Menu.Item>
           <Menu.Item>
-            {this.getPageCount()}
+            {pageCount}
           </Menu.Item>
           <Menu.Item>
             <input
@@ -411,7 +402,11 @@ class Words extends React.Component {
             />
           </Menu.Item>
           <Menu.Item>
-            <Button onClick={() => this.handleGoTo()}>Go</Button>
+            <Button
+              onClick={() => this.handleGoTo()}
+            color="blue">
+              Go
+            </Button>
           </Menu.Item>
         </Menu>
         <br />

@@ -14,12 +14,14 @@ class Game extends React.Component {
     this.state = {
       tileValues: ["d", "a", "a", "p", "e", "l", "o", "a", "a", "l", "a", "a", "a", "a", "a", "e"],
       result: [], selectedWordIndex: '', usedColors: [], processing: false,
+      resultDialogData:{wordCount: 0, time: 0}, resultModalVisible: false,
     };
     this.onChangeTileValue = this.onChangeTileValue.bind(this);
     this.sendGameToServer = this.sendGameToServer.bind(this);
     this.selectResultWord = this.selectResultWord.bind(this);
     this.setTileValues = this.setTileValues.bind(this);
     this.loadColors = this.loadColors.bind(this);
+    this.setupResultDialog = this.setupResultDialog.bind(this);
   }
 
   onChangeTileValue(e, index) {
@@ -29,7 +31,6 @@ class Game extends React.Component {
   }
 
   sendGameToServer() {
-
     this.setState({result: [], selectedWordIndex:'', usedColors: [],
                    processing: true});
     const self = this;
@@ -38,12 +39,18 @@ class Game extends React.Component {
     axios.post('/api/games/', command, config)
          .then(function (response) {
            const words = response.data.words;
-           self.setState({result: words, processing: false});
+           self.setState({result: words, processing: false},
+             () => self.setupResultDialog(response.data));
          })
          .catch(function (error) {
            console.log("Failed to solve game.");
            self.setState({processing: false});
          });
+  }
+
+  setupResultDialog(result) {
+    this.setState({resultDialogData: {wordCount: result.words.length,
+      time: result.time}, resultModalVisible: true });
   }
 
   selectResultWord(e, index) {

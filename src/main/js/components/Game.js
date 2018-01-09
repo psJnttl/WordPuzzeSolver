@@ -7,6 +7,7 @@ import axios from 'axios';
 import FoundWord from './FoundWord';
 import PresetGames from './PresetGames';
 import defaultColors from './defaultColors';
+import ModalResultInformation from './ModalResultInformation';
 
 class Game extends React.Component {
   constructor(props) {
@@ -22,6 +23,7 @@ class Game extends React.Component {
     this.setTileValues = this.setTileValues.bind(this);
     this.loadColors = this.loadColors.bind(this);
     this.setupResultDialog = this.setupResultDialog.bind(this);
+    this.closeResultModal = this.closeResultModal.bind(this);
   }
 
   onChangeTileValue(e, index) {
@@ -86,6 +88,10 @@ class Game extends React.Component {
         });
  }
 
+  closeResultModal() {
+    this.setState({resultModalVisible: false});
+  }
+
   render() {
     const resultData = this.state.result.map( (item, index) =>
       <li key={index}>
@@ -109,6 +115,12 @@ class Game extends React.Component {
 
     return (
       <div style={{'margin': 10}}>
+        <ModalResultInformation
+          modalOpen={this.state.resultModalVisible}
+          reply={this.closeResultModal}
+          count={this.state.resultDialogData.wordCount}
+          time={this.state.resultDialogData.time}
+        />
         <h4>Game</h4>
         <Grid >
           <Grid.Row>

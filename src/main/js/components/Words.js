@@ -81,7 +81,8 @@ class Words extends React.Component {
   }
 
   setItemsPerPage(nbrItems) {
-    this.setState({itemsPerPage: nbrItems, activePage: 1},
+    const numberStr = "" + 1;
+    this.setState({itemsPerPage: nbrItems, activePage: 1, activePageInput: numberStr},
     ()=> this.proxyGetPage());
   }
 

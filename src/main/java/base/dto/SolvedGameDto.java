@@ -6,6 +6,7 @@ import base.service.SolvedWord;
 
 public class SolvedGameDto {
 
+    private long time;
     private List<SolvedWord> words;
     
     public SolvedGameDto() {
@@ -13,6 +14,14 @@ public class SolvedGameDto {
     
     public SolvedGameDto(List<SolvedWord> words) {
         this.words = words;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 
     public List<SolvedWord> getWords() {
@@ -27,6 +36,7 @@ public class SolvedGameDto {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + (int) (time ^ (time >>> 32));
         result = prime * result + ((words == null) ? 0 : words.hashCode());
         return result;
     }
@@ -37,6 +47,7 @@ public class SolvedGameDto {
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
         SolvedGameDto other = (SolvedGameDto) obj;
+        if (time != other.time) return false;
         if (words == null) {
             if (other.words != null) return false;
         }
@@ -46,7 +57,7 @@ public class SolvedGameDto {
 
     @Override
     public String toString() {
-        return "SolvedGameDto [words=" + words + "]";
+        return "SolvedGameDto [time=" + time + ", words=" + words + "]";
     }
     
 }

@@ -42,9 +42,13 @@ public class GameService {
 
     public SolvedGameDto solve(GameReq game) {
         gameArea.setGameArea(game.getGameTiles());
+        long start = System.currentTimeMillis();
         gameArea.solve();
+        long finished = System.currentTimeMillis() - start;
         List<Word> words = gameArea.getResults();
-        return mapWordsToDto(words);
+        SolvedGameDto dto = mapWordsToDto(words);
+        dto.setTime(finished);
+        return dto;
     }
     
     private SolvedGameDto mapWordsToDto(List<Word> words) {

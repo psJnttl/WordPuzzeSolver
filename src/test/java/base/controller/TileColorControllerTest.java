@@ -31,8 +31,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import base.command.TileColorAdd;
 import base.command.TileColorMod;
 import base.domain.TileColor;
+import base.dto.TileColorDto;
 import base.repository.TileColorRepository;
-import base.service.TileColorDto;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import base.command.WordAdd;
 import base.command.WordMod;
 import base.domain.Word;
+import base.dto.WordCountDto;
+import base.dto.WordDto;
 import base.repository.WordRepository;
 
 @Service

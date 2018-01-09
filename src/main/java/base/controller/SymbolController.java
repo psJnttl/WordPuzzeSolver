@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import base.command.SymbolAdd;
 import base.command.SymbolMod;
-import base.service.SymbolDto;
+import base.dto.SymbolDto;
 import base.service.SymbolService;
 
 @RestController

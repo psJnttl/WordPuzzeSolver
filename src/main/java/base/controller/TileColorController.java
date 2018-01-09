@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import base.command.TileColorAdd;
 import base.command.TileColorMod;
-import base.service.TileColorDto;
+import base.dto.TileColorDto;
 import base.service.TileColorService;
 
 @RestController

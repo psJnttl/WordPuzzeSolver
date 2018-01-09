@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import base.command.WordAdd;
 import base.command.WordMod;
-import base.service.WordCountDto;
-import base.service.WordDto;
+import base.dto.WordCountDto;
+import base.dto.WordDto;
 import base.service.WordService;
 
 @RestController

@@ -32,8 +32,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import base.command.SymbolAdd;
 import base.command.SymbolMod;
 import base.domain.Symbol;
+import base.dto.SymbolDto;
 import base.repository.SymbolRepository;
-import base.service.SymbolDto;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

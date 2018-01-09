@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import base.command.GameReq;
-import base.service.SolvedGameDto;
+import base.dto.SolvedGameDto;
 import base.service.SolvedWord;
 
 @RunWith(SpringRunner.class)

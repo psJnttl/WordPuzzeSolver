@@ -1,19 +1,15 @@
-package base.service;
+package base.dto;
 
-public class SymbolDto {
-
+public class WordDto {
     private long id;
     private String value;
-    private int score;
     
-    public SymbolDto() {
-
+    public WordDto() {
     }
-    
-    public SymbolDto(long id, String value, int score) {
+
+    public WordDto(long id, String value) {
         this.id = id;
         this.value = value;
-        this.score = score;
     }
 
     public long getId() {
@@ -32,20 +28,11 @@ public class SymbolDto {
         this.value = value;
     }
 
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + (int) (id ^ (id >>> 32));
-        result = prime * result + score;
         result = prime * result + ((value == null) ? 0 : value.hashCode());
         return result;
     }
@@ -55,9 +42,8 @@ public class SymbolDto {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        SymbolDto other = (SymbolDto) obj;
+        WordDto other = (WordDto) obj;
         if (id != other.id) return false;
-        if (score != other.score) return false;
         if (value == null) {
             if (other.value != null) return false;
         }
@@ -67,7 +53,8 @@ public class SymbolDto {
 
     @Override
     public String toString() {
-        return "SymbolDto [id=" + id + ", value=" + value + ", score=" + score + "]";
+        return "WordDto [id=" + id + ", value=" + value + "]";
     }
+
     
 }

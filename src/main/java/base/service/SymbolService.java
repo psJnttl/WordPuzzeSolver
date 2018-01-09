@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import base.command.SymbolAdd;
 import base.command.SymbolMod;
 import base.domain.Symbol;
+import base.dto.SymbolDto;
 import base.repository.SymbolRepository;
 
 @Service

@@ -35,9 +35,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import base.command.WordAdd;
 import base.command.WordMod;
 import base.domain.Word;
+import base.dto.WordCountDto;
+import base.dto.WordDto;
 import base.repository.WordRepository;
-import base.service.WordCountDto;
-import base.service.WordDto;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

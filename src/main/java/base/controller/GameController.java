@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import base.command.GameReq;
+import base.dto.SolvedGameDto;
 import base.service.GameService;
-import base.service.SolvedGameDto;
 
 @RestController
 public class GameController {

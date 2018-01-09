@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import base.command.TileColorAdd;
 import base.command.TileColorMod;
 import base.domain.TileColor;
+import base.dto.TileColorDto;
 import base.repository.TileColorRepository;
 
 @Service

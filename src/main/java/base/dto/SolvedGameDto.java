@@ -1,6 +1,8 @@
-package base.service;
+package base.dto;
 
 import java.util.List;
+
+import base.service.SolvedWord;
 
 public class SolvedGameDto {
 

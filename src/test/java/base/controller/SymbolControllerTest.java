@@ -333,12 +333,67 @@ public class SymbolControllerTest {
         SymbolDto dto = mapper.readValue(result.getResponse().getContentAsString(), SymbolDto.class);
         assertTrue("Didn't return correct value", dto.getValue().equals(SYMBOL_DIGRAM3));
         assertTrue("Didn't return correct score", dto.getScore() == SCORE3);
-
     }
     
     @Test 
     public void addingSymbolDigramWith4LettersFail() throws Exception {
         String content = symbolAddAsString(SYMBOL_DIGRAM4, SCORE3);
+        mockMvc
+                .perform(
+                        post(PATH)
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .content(content))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test 
+    public void addingSymbolDigramFirstWith2LettersOK() throws Exception {
+        String content = symbolAddAsString(SYMBOL_DIGRAM_FIRST2, SCORE2);
+        MvcResult result = mockMvc
+                                   .perform(
+                                           post(PATH)
+                                           .contentType(MediaType.APPLICATION_JSON_UTF8)
+                                           .content(content))
+                                   .andExpect(status().isCreated())
+                                   .andExpect(header().string("Location", containsString(PATH + "/")))
+                                   .andReturn();
+        ObjectMapper mapper = new ObjectMapper();
+        SymbolDto dto = mapper.readValue(result.getResponse().getContentAsString(), SymbolDto.class);
+        assertTrue("Didn't return correct value", dto.getValue().equals(SYMBOL_DIGRAM_FIRST2));
+        assertTrue("Didn't return correct score", dto.getScore() == SCORE2);
+    }
+    
+    @Test 
+    public void addingSymbolDigramFirstWith3LettersOK() throws Exception {
+        String content = symbolAddAsString(SYMBOL_DIGRAM_FIRST3, SCORE3);
+        MvcResult result = mockMvc
+                                   .perform(
+                                           post(PATH)
+                                           .contentType(MediaType.APPLICATION_JSON_UTF8)
+                                           .content(content))
+                                   .andExpect(status().isCreated())
+                                   .andExpect(header().string("Location", containsString(PATH + "/")))
+                                   .andReturn();
+        ObjectMapper mapper = new ObjectMapper();
+        SymbolDto dto = mapper.readValue(result.getResponse().getContentAsString(), SymbolDto.class);
+        assertTrue("Didn't return correct value", dto.getValue().equals(SYMBOL_DIGRAM_FIRST3));
+        assertTrue("Didn't return correct score", dto.getScore() == SCORE3);
+    }
+    
+    @Test 
+    public void addingSymbolDigramFirstWith1LetterFail() throws Exception {
+        String content = symbolAddAsString(SYMBOL_DIGRAM_FIRST1, SCORE1);
+        mockMvc
+                .perform(
+                        post(PATH)
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .content(content))
+                .andExpect(status().isBadRequest());
+    }
+    
+    @Test 
+    public void addingSymbolDigramFirstWith4LettersFail() throws Exception {
+        String content = symbolAddAsString(SYMBOL_DIGRAM_FIRST4, SCORE3);
         mockMvc
                 .perform(
                         post(PATH)

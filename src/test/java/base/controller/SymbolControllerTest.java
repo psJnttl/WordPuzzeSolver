@@ -44,8 +44,21 @@ public class SymbolControllerTest {
     private static final String PATH = "/api/symbols";
     private static final String SYMBOL1 = "no";
     private static final String SYMBOL2 = "en";
-    private static final String SYMBOL3 = "dis";
-    private static final String SYMBOL4 = "en-";
+    private static final String SYMBOL3 = "ab";
+    private static final String SYMBOL_DIGRAM3 = "ddi";
+    private static final String SYMBOL_DIGRAM4 = "ddin";
+    private static final String SYMBOL_DIGRAM_FIRST1 = "q-";
+    private static final String SYMBOL_DIGRAM_FIRST2 = "en-";
+    private static final String SYMBOL_DIGRAM_FIRST3 = "dis-";
+    private static final String SYMBOL_DIGRAM_FIRST4 = "entw-";
+    private static final String SYMBOL_DIGRAM_LAST1 = "-t";
+    private static final String SYMBOL_DIGRAM_LAST2 = "-ed";
+    private static final String SYMBOL_DIGRAM_LAST3 = "-sed";
+    private static final String SYMBOL_DIGRAM_LAST4 = "-rest";
+    private static final String SYMBOL_DIGRAM_EITHEROR1 = "q/m";
+    private static final String SYMBOL_DIGRAM_EITHEROR1_2 = "q/mo";
+    private static final String SYMBOL_DIGRAM_EITHEROR2_1 = "qu/m";
+    
     private static final String EMPTY_STRING = "";
     private static final int SCORE1 = 1;
     private static final int SCORE2 = 2;
@@ -304,5 +317,34 @@ public class SymbolControllerTest {
         assertTrue("Value changed incorrectly!", dto.getValue().equals(SYMBOL2));
         assertTrue("Score not changed correctly!", dto.getScore() == SCORE3);
     }
+
+    @Test 
+    public void addingSymbolDigramWith3LettersOK() throws Exception {
+        String content = symbolAddAsString(SYMBOL_DIGRAM3, SCORE3);
+        MvcResult result = mockMvc
+                                   .perform(
+                                           post(PATH)
+                                           .contentType(MediaType.APPLICATION_JSON_UTF8)
+                                           .content(content))
+                                   .andExpect(status().isCreated())
+                                   .andExpect(header().string("Location", containsString(PATH + "/")))
+                                   .andReturn();
+        ObjectMapper mapper = new ObjectMapper();
+        SymbolDto dto = mapper.readValue(result.getResponse().getContentAsString(), SymbolDto.class);
+        assertTrue("Didn't return correct value", dto.getValue().equals(SYMBOL_DIGRAM3));
+        assertTrue("Didn't return correct score", dto.getScore() == SCORE3);
+
+    }
     
+    @Test 
+    public void addingSymbolDigramWith4LettersFail() throws Exception {
+        String content = symbolAddAsString(SYMBOL_DIGRAM4, SCORE3);
+        mockMvc
+                .perform(
+                        post(PATH)
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .content(content))
+                .andExpect(status().isBadRequest());
+    }
+
 }

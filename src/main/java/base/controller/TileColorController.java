@@ -2,6 +2,8 @@ package base.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,7 +49,7 @@ public class TileColorController {
     @RequestMapping(value="/api/colors/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<TileColorDto> deleteColor(@PathVariable long id) {
         if (!tileColorService.findTileColor(id).isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ItemNotFoundException(id, "TileColor");
         }
         tileColorService.deleteColor(id);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -58,7 +60,7 @@ public class TileColorController {
             @Valid @RequestBody TileColorMod color, 
             BindingResult result) {
         if (!tileColorService.findTileColor(id).isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ItemNotFoundException(id, "TileColor");
         }
         else if (result.hasErrors()) {
             throw new ItemNotValidException("TileColor", result.getAllErrors());
@@ -71,7 +73,7 @@ public class TileColorController {
     public ResponseEntity<TileColorDto> findColor(@PathVariable long id) {
         Optional<TileColorDto> cDto = tileColorService.findTileColor(id);  
         if (!cDto.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ItemNotFoundException(id, "TileColor");
         }
         return new ResponseEntity<>(cDto.get(), HttpStatus.OK);
     }
@@ -87,5 +89,13 @@ public class TileColorController {
                 .map(m -> m.getDefaultMessage()).collect(Collectors.toList());
         ErrorsDto dto = new ErrorsDto(e.getItemName(), msgs);
         return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(ItemNotFoundException.class)
+    public ResponseEntity<ErrorsDto> colorNotFound(ItemNotFoundException e) {
+        String message = e.getItemName() + " with id " + e.getId() + " not found.";
+        List<String> msgs = new ArrayList<>(Arrays.asList(message));
+        ErrorsDto dto = new ErrorsDto(e.getItemName(), msgs);
+        return new ResponseEntity<>(dto, HttpStatus.NOT_FOUND);
     }
 }

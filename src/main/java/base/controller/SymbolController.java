@@ -2,8 +2,11 @@ package base.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -12,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import base.command.SymbolAdd;
 import base.command.SymbolMod;
 import base.dto.ErrorDto;
+import base.dto.ErrorsDto;
 import base.dto.SymbolDto;
 import base.service.SymbolService;
 
@@ -40,7 +45,7 @@ public class SymbolController {
     public ResponseEntity<SymbolDto> addSymbol(@RequestBody @Valid SymbolAdd symbol,
             BindingResult result) throws URISyntaxException {
         if (result.hasErrors()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new ItemNotValidException("Symbol", result.getAllErrors());
         }
         if (symbolService.doesSymbolExist(symbol)) {
             return new ResponseEntity<>(HttpStatus.LOCKED);
@@ -77,7 +82,7 @@ public class SymbolController {
             throw new ItemNotFoundException(id, "Symbol");
         }
         if (result.hasErrors()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new ItemNotValidException("Symbol", result.getAllErrors());
         }      
         if (symbolService.doesSymbolValueExist(symbol, id)) {
             return new ResponseEntity<>(HttpStatus.LOCKED);
@@ -87,9 +92,18 @@ public class SymbolController {
     }
 
     @ExceptionHandler(ItemNotFoundException.class)
-    public ResponseEntity<ErrorDto> symbolNotFound(ItemNotFoundException e) {
+    public ResponseEntity<ErrorsDto> symbolNotFound(ItemNotFoundException e) {
         String message = e.getItemName() + " with id " + e.getId() + " not found.";
-        ErrorDto dto = new ErrorDto(message);
+        List<String> msgs = new ArrayList<>(Arrays.asList(message));
+        ErrorsDto dto = new ErrorsDto("Symbol", msgs);
         return new ResponseEntity<>(dto, HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(ItemNotValidException.class)
+    public ResponseEntity<ErrorsDto> symbolNotValid(ItemNotValidException e) {
+        List<String> msgs = e.getValidationMessages().stream()
+                             .map(m -> m.getDefaultMessage()).collect(Collectors.toList());
+        ErrorsDto dto = new ErrorsDto("Symbol", msgs);
+        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }
 }

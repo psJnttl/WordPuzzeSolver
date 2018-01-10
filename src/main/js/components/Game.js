@@ -260,10 +260,7 @@ class Game extends React.Component {
           disabled={this.state.processing}
         />
         <br />
-        <div style={{'overflowY':'auto', 'height': '80px', 'width': '360px',
-        'marginTop':'10px', 'marginLeft':'40px'}}>
-          {resultList}
-        </div>
+        {resultList}
       </div>
     );
   }

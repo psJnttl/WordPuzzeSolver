@@ -30,7 +30,8 @@ class GameResults extends React.Component {
       resultList = null;
     }
     return (
-      <div>
+      <div style={{'overflowY':'auto', 'height': '80px', 'width': '360px',
+      'marginTop':'10px', 'marginLeft':'40px'}}>
         {resultList}
       </div>
     );

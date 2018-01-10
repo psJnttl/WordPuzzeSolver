@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import base.command.SymbolAdd;
 import base.command.SymbolMod;
+import base.dto.ErrorDto;
 import base.dto.SymbolDto;
 import base.service.SymbolService;
 
@@ -54,7 +56,7 @@ public class SymbolController {
     public ResponseEntity<SymbolDto> fetchSymbol(@PathVariable long id) {
         Optional<SymbolDto> oSdto = symbolService.findSymbol(id);
         if (!oSdto.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ItemNotFoundException(id, "Symbol");
         }
         return new ResponseEntity<>(oSdto.get(), HttpStatus.OK);
     }
@@ -62,7 +64,7 @@ public class SymbolController {
     @RequestMapping(value = "/api/symbols/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<SymbolDto> deleteSymbol(@PathVariable long id) {
         if (!symbolService.findSymbol(id).isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ItemNotFoundException(id, "Symbol");
         }
         symbolService.deleteSymbol(id);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -72,7 +74,7 @@ public class SymbolController {
     public ResponseEntity<SymbolDto> modifySymbol(@PathVariable long id, 
             @RequestBody @Valid SymbolMod symbol, BindingResult result) {
         if (!symbolService.findSymbol(id).isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ItemNotFoundException(id, "Symbol");
         }
         if (result.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -84,4 +86,10 @@ public class SymbolController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
+    @ExceptionHandler(ItemNotFoundException.class)
+    public ResponseEntity<ErrorDto> symbolNotFound(ItemNotFoundException e) {
+        String message = e.getItemName() + " with id " + e.getId() + " not found.";
+        ErrorDto dto = new ErrorDto(message);
+        return new ResponseEntity<>(dto, HttpStatus.NOT_FOUND);
+    }
 }

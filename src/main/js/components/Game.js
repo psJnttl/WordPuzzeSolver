@@ -94,7 +94,12 @@ class Game extends React.Component {
   }
 
   render() {
-    const resultList = <GameResults results={this.state.result} />
+    const resultList =
+    <GameResults
+      results={this.state.result}
+      selectResultWord={this.selectResultWord}
+      selected={this.state.selectedWordIndex}
+    />
 
     return (
       <div style={{'margin': 10}}>

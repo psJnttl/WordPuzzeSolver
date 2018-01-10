@@ -15,7 +15,7 @@ class GameResults extends React.Component {
         <FoundWord
           points={item.points}
           word={item.value}
-          onClick={this.selectResultWord}
+          onClick={this.props.selectResultWord}
           index={index}
           selected={this.state.selectedWordIndex === index}
         />
@@ -38,8 +38,11 @@ class GameResults extends React.Component {
 }
 GameResults.PropTypes = {
   result: PropTypes.array.isRequired,
+  selectResultWord: PropTypes.array.isRequired,
+  selected: PropTypes.number,
 }
 GameResults.defaultProps = {
   result: [],
+  selected: -1,
 }
 export default GameResults;

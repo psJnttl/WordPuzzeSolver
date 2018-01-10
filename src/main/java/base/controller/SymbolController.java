@@ -69,13 +69,14 @@ public class SymbolController {
     }
     
     @RequestMapping(value = "/api/symbols/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<SymbolDto> modifySymbol(@PathVariable long id, @RequestBody SymbolMod symbol) {
+    public ResponseEntity<SymbolDto> modifySymbol(@PathVariable long id, 
+            @RequestBody @Valid SymbolMod symbol, BindingResult result) {
         if (!symbolService.findSymbol(id).isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if (!symbolService.isSymbolModValid(symbol)) {
+        if (result.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        }      
         if (symbolService.doesSymbolValueExist(symbol, id)) {
             return new ResponseEntity<>(HttpStatus.LOCKED);
         }

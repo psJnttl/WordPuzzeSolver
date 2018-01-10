@@ -8,6 +8,7 @@ import FoundWord from './FoundWord';
 import PresetGames from './PresetGames';
 import defaultColors from './defaultColors';
 import ModalResultInformation from './ModalResultInformation';
+import GameResults from './GameResults';
 
 class Game extends React.Component {
   constructor(props) {
@@ -93,25 +94,7 @@ class Game extends React.Component {
   }
 
   render() {
-    const resultData = this.state.result.map( (item, index) =>
-      <li key={index}>
-        <FoundWord
-          points={item.points}
-          word={item.value}
-          onClick={this.selectResultWord}
-          index={index}
-          selected={this.state.selectedWordIndex === index}
-        />
-      </li>
-    );
-    let resultList;
-    if (this.state.result.length > 0) {
-      resultList =
-      <ul style={{'listStyleType': 'none'}}>{resultData}</ul>
-    }
-    else {
-      resultList = null;
-    }
+    const resultList = <GameResults results={this.state.result} />
 
     return (
       <div style={{'margin': 10}}>

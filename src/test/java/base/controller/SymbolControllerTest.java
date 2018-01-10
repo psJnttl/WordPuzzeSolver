@@ -458,4 +458,41 @@ public class SymbolControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test public void addingSymbolDigramEitherOrOK() throws Exception {
+        String content = symbolAddAsString(SYMBOL_DIGRAM_EITHEROR1, SCORE3);
+        MvcResult result = mockMvc
+                                   .perform(
+                                           post(PATH)
+                                           .contentType(MediaType.APPLICATION_JSON_UTF8)
+                                           .content(content))
+                                   .andExpect(status().isCreated())
+                                   .andExpect(header().string("Location", containsString(PATH + "/")))
+                                   .andReturn();
+        ObjectMapper mapper = new ObjectMapper();
+        SymbolDto dto = mapper.readValue(result.getResponse().getContentAsString(), SymbolDto.class);
+        assertTrue("Didn't return correct value", dto.getValue().equals(SYMBOL_DIGRAM_EITHEROR1));
+        assertTrue("Didn't return correct score", dto.getScore() == SCORE3);
+    }
+    
+    @Test 
+    public void addingSymbolDigramEitherOrWith2EitherFail() throws Exception {
+        String content = symbolAddAsString(SYMBOL_DIGRAM_EITHEROR2_1, SCORE2);
+        mockMvc
+                .perform(
+                        post(PATH)
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .content(content))
+                .andExpect(status().isBadRequest());
+    }
+    
+    @Test 
+    public void addingSymbolDigramEitherOrWith2OrFail() throws Exception {
+        String content = symbolAddAsString(SYMBOL_DIGRAM_EITHEROR1_2, SCORE2);
+        mockMvc
+                .perform(
+                        post(PATH)
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .content(content))
+                .andExpect(status().isBadRequest());
+    }
 }

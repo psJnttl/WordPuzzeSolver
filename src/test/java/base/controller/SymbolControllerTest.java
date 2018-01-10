@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -41,9 +42,10 @@ import base.repository.SymbolRepository;
 public class SymbolControllerTest {
 
     private static final String PATH = "/api/symbols";
-    private static final String SYMBOL1 = "nutrvdtfng";
-    private static final String SYMBOL2 = "glp8kuirey";
-    private static final String SYMBOL3 = "jgefgvedcg";
+    private static final String SYMBOL1 = "no";
+    private static final String SYMBOL2 = "en";
+    private static final String SYMBOL3 = "dis";
+    private static final String SYMBOL4 = "en-";
     private static final String EMPTY_STRING = "";
     private static final int SCORE1 = 1;
     private static final int SCORE2 = 2;
@@ -106,11 +108,16 @@ public class SymbolControllerTest {
                 .findFirst().isPresent());
     }
 
-    @Test
-    public void addingSymbolReturnsLocationHeaderAndDto() throws Exception {
-        SymbolAdd newSymbol = new SymbolAdd(SYMBOL3, SCORE3);
+    private String symbolAddAsString(String symbol, int score) throws JsonProcessingException {
+        SymbolAdd newSymbol = new SymbolAdd(symbol, score);
         ObjectMapper mapper = new ObjectMapper();
         String content = mapper.writeValueAsString(newSymbol);
+        return content;
+    }
+    
+    @Test
+    public void addingSymbolReturnsLocationHeaderAndDto() throws Exception {
+        String content = symbolAddAsString(SYMBOL3, SCORE3);
         MvcResult result = mockMvc
                                    .perform(
                                            post(PATH)
@@ -119,6 +126,7 @@ public class SymbolControllerTest {
                                    .andExpect(status().isCreated())
                                    .andExpect(header().string("Location", containsString(PATH + "/")))
                                    .andReturn();
+        ObjectMapper mapper = new ObjectMapper();
         SymbolDto dto = mapper.readValue(result.getResponse().getContentAsString(), SymbolDto.class);
         assertTrue("Didn't return correct value", dto.getValue().equals(SYMBOL3));
         assertTrue("Didn't return correct score", dto.getScore() == SCORE3);
@@ -126,9 +134,7 @@ public class SymbolControllerTest {
     
     @Test
     public void addingSymbolThatExistsFails() throws Exception {
-        SymbolAdd newSymbol = new SymbolAdd(SYMBOL1, SCORE1);
-        ObjectMapper mapper = new ObjectMapper();
-        String content = mapper.writeValueAsString(newSymbol);
+        String content = symbolAddAsString(SYMBOL1, SCORE1);
         mockMvc
                 .perform(
                         post(PATH)
@@ -139,9 +145,7 @@ public class SymbolControllerTest {
     
     @Test
     public void addingSymbolWithoutValueFails() throws Exception {
-        SymbolAdd newSymbol = new SymbolAdd(EMPTY_STRING, SCORE1);
-        ObjectMapper mapper = new ObjectMapper();
-        String content = mapper.writeValueAsString(newSymbol);
+        String content = symbolAddAsString(EMPTY_STRING, SCORE1);
         mockMvc
                 .perform(
                         post(PATH)
@@ -152,9 +156,7 @@ public class SymbolControllerTest {
 
     @Test
     public void addingSymbolWithZeroScoreFails() throws Exception {
-        SymbolAdd newSymbol = new SymbolAdd(SYMBOL3, ZEROSCORE);
-        ObjectMapper mapper = new ObjectMapper();
-        String content = mapper.writeValueAsString(newSymbol);
+        String content = symbolAddAsString(SYMBOL3, ZEROSCORE);
         mockMvc
                 .perform(
                         post(PATH)
@@ -165,9 +167,7 @@ public class SymbolControllerTest {
     
     @Test
     public void addingSymbolWithNegativeScoreFails() throws Exception {
-        SymbolAdd newSymbol = new SymbolAdd(SYMBOL3, NEGATIVESCORE);
-        ObjectMapper mapper = new ObjectMapper();
-        String content = mapper.writeValueAsString(newSymbol);
+        String content = symbolAddAsString(SYMBOL3, NEGATIVESCORE);
         mockMvc
                 .perform(
                         post(PATH)
@@ -211,11 +211,16 @@ public class SymbolControllerTest {
                 .andExpect(status().isNotFound());
     }
     
-    @Test
-    public void modifySymbolOKandReturnsChangedContent() throws Exception {
-        SymbolMod modSymbol = new SymbolMod(s2.getId(), SYMBOL3, SCORE3);
+    private String symbolModAsString(long id, String symbol, int score) throws JsonProcessingException {
+        SymbolMod newSymbol = new SymbolMod(id, symbol, score);
         ObjectMapper mapper = new ObjectMapper();
-        String content = mapper.writeValueAsString(modSymbol);
+        String content = mapper.writeValueAsString(newSymbol);
+        return content;
+    }
+    
+    @Test
+    public void modifySymbolOKandReturnsChangedContent() throws Exception {   
+        String content = symbolModAsString(s2.getId(), SYMBOL3, SCORE3);
         MvcResult result = mockMvc
                                    .perform(
                                            put(PATH + "/" + s2.getId())
@@ -223,6 +228,7 @@ public class SymbolControllerTest {
                                            .content(content))
                                    .andExpect(status().isOk())
                                    .andReturn();
+        ObjectMapper mapper = new ObjectMapper();
         SymbolDto dto = mapper.readValue(result.getResponse().getContentAsString(), SymbolDto.class);
         assertTrue("Value to changed correctly!", dto.getValue().equals(SYMBOL3));
         assertTrue("Score not changed correctly!", dto.getScore() == SCORE3);
@@ -230,9 +236,7 @@ public class SymbolControllerTest {
     
     @Test
     public void modifyingSymbolWithWrongIdFails() throws Exception {
-        SymbolMod modSymbol = new SymbolMod(s2.getId(), SYMBOL3, SCORE3);
-        ObjectMapper mapper = new ObjectMapper();
-        String content = mapper.writeValueAsString(modSymbol);
+        String content = symbolModAsString(s2.getId(), SYMBOL3, SCORE3);
         mockMvc
                 .perform(
                         put(PATH + "/" + WRONG_ID)
@@ -243,9 +247,7 @@ public class SymbolControllerTest {
 
     @Test
     public void modifyingSymbolWithEmptyContentsFails() throws Exception {
-        SymbolMod modSymbol = new SymbolMod(s2.getId(), EMPTY_STRING, SCORE3);
-        ObjectMapper mapper = new ObjectMapper();
-        String content = mapper.writeValueAsString(modSymbol);
+        String content = symbolModAsString(s2.getId(), EMPTY_STRING, SCORE3);
         mockMvc
                 .perform(
                         put(PATH + "/" + s2.getId())
@@ -256,9 +258,7 @@ public class SymbolControllerTest {
     
     @Test
     public void modifyingSymbolWithZeroScoreFails() throws Exception {
-        SymbolMod modSymbol = new SymbolMod(s2.getId(), SYMBOL3, ZEROSCORE);
-        ObjectMapper mapper = new ObjectMapper();
-        String content = mapper.writeValueAsString(modSymbol);
+        String content = symbolModAsString(s2.getId(), SYMBOL3, ZEROSCORE);
         mockMvc
                 .perform(
                         put(PATH + "/" + s2.getId())
@@ -269,9 +269,7 @@ public class SymbolControllerTest {
     
     @Test
     public void modifyingSymbolWithNegativeScoreFails() throws Exception {
-        SymbolMod modSymbol = new SymbolMod(s2.getId(), SYMBOL3, NEGATIVESCORE);
-        ObjectMapper mapper = new ObjectMapper();
-        String content = mapper.writeValueAsString(modSymbol);
+        String content = symbolModAsString(s2.getId(), SYMBOL3, NEGATIVESCORE);
         mockMvc
                 .perform(
                         put(PATH + "/" + s2.getId())
@@ -282,9 +280,7 @@ public class SymbolControllerTest {
 
     @Test
     public void modifyingSymbolWithExistingValueFails() throws Exception {
-        SymbolMod modSymbol = new SymbolMod(s2.getId(), SYMBOL1, SCORE3);
-        ObjectMapper mapper = new ObjectMapper();
-        String content = mapper.writeValueAsString(modSymbol);
+        String content = symbolModAsString(s2.getId(), SYMBOL1, SCORE3);
         mockMvc
                 .perform(
                         put(PATH + "/" + s2.getId())
@@ -295,9 +291,7 @@ public class SymbolControllerTest {
     
     @Test
     public void modifyingOnlyScoreOK() throws Exception {
-        SymbolMod modSymbol = new SymbolMod(s2.getId(), SYMBOL2, SCORE3);
-        ObjectMapper mapper = new ObjectMapper();
-        String content = mapper.writeValueAsString(modSymbol);
+        String content = symbolModAsString(s2.getId(), SYMBOL2, SCORE3);
         MvcResult result = mockMvc
                                    .perform(
                                            put(PATH + "/" + s2.getId())
@@ -305,6 +299,7 @@ public class SymbolControllerTest {
                                            .content(content))
                                    .andExpect(status().isOk())
                                    .andReturn();
+        ObjectMapper mapper = new ObjectMapper();
         SymbolDto dto = mapper.readValue(result.getResponse().getContentAsString(), SymbolDto.class);
         assertTrue("Value changed incorrectly!", dto.getValue().equals(SYMBOL2));
         assertTrue("Score not changed correctly!", dto.getScore() == SCORE3);

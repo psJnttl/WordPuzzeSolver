@@ -5,10 +5,13 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,8 +35,9 @@ public class SymbolController {
     }
     
     @RequestMapping(value = "/api/symbols", method = RequestMethod.POST)
-    public ResponseEntity<SymbolDto> addSymbol(@RequestBody SymbolAdd symbol) throws URISyntaxException {
-        if (!symbolService.isSymbolAddValid(symbol)) {
+    public ResponseEntity<SymbolDto> addSymbol(@RequestBody @Valid SymbolAdd symbol,
+            BindingResult result) throws URISyntaxException {
+        if (result.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         if (symbolService.doesSymbolExist(symbol)) {

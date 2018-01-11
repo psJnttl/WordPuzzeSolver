@@ -46,13 +46,12 @@ public class SymbolController {
             throw new ItemNotValidException("Symbol", result.getAllErrors());
         }
         if (symbolService.doesSymbolExist(symbol)) {
-            return new ResponseEntity<>(HttpStatus.LOCKED);
+            throw new ItemAlreadyExistsException("Symbol", symbol.getValue());
         }
         SymbolDto dto = symbolService.addSymbol(symbol);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(new URI("/api/symbols/" + dto.getId()));
         return new ResponseEntity<>(dto, headers, HttpStatus.CREATED);
-
     }
     
     @RequestMapping(value = "/api/symbols/{id}", method = RequestMethod.GET) 
@@ -73,7 +72,7 @@ public class SymbolController {
     }
     
     @RequestMapping(value = "/api/symbols/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<SymbolDto> modifySymbol(@PathVariable long id, 
+    public SymbolDto modifySymbol(@PathVariable long id, 
             @RequestBody @Valid SymbolMod symbol, BindingResult result) {
         if (!symbolService.findSymbol(id).isPresent()) {
             throw new ItemNotFoundException(id, "Symbol");
@@ -82,10 +81,10 @@ public class SymbolController {
             throw new ItemNotValidException("Symbol", result.getAllErrors());
         }      
         if (symbolService.doesSymbolValueExist(symbol, id)) {
-            return new ResponseEntity<>(HttpStatus.LOCKED);
+            throw new ItemAlreadyExistsException("Symbol", symbol.getValue());
         }
         SymbolDto dto = symbolService.modifySymbol(id, symbol);
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        return (dto);
     }
 
     @ExceptionHandler(ItemNotFoundException.class)
@@ -102,5 +101,13 @@ public class SymbolController {
                              .map(m -> m.getDefaultMessage()).collect(Collectors.toList());
         ErrorsDto dto = new ErrorsDto("Symbol", msgs);
         return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(ItemAlreadyExistsException.class)
+    public ResponseEntity<ErrorsDto> symbolAlreadyExists(ItemAlreadyExistsException e) {
+        String message = e.getItemName() + " with value '" + e.getValue() + "' already exists.";
+        List<String> msgs = new ArrayList<>(Arrays.asList(message));
+        ErrorsDto dto = new ErrorsDto(e.getItemName(), msgs);
+        return new ResponseEntity<>(dto, HttpStatus.LOCKED);
     }
 }

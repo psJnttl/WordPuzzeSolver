@@ -47,16 +47,15 @@ public class TileColorController {
     }
     
     @RequestMapping(value="/api/colors/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<TileColorDto> deleteColor(@PathVariable long id) {
+    public void deleteColor(@PathVariable long id) {
         if (!tileColorService.findTileColor(id).isPresent()) {
             throw new ItemNotFoundException(id, "TileColor");
         }
         tileColorService.deleteColor(id);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
     
     @RequestMapping(value="/api/colors/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<TileColorDto> modifyColor(@PathVariable long id, 
+    public TileColorDto modifyColor(@PathVariable long id, 
             @Valid @RequestBody TileColorMod color, 
             BindingResult result) {
         if (!tileColorService.findTileColor(id).isPresent()) {
@@ -66,16 +65,16 @@ public class TileColorController {
             throw new ItemNotValidException("TileColor", result.getAllErrors());
         }
         TileColorDto dto = tileColorService.modifyTileColor(id, color);
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        return dto;
     }
     
     @RequestMapping(value="/api/colors/{id}", method = RequestMethod.GET)
-    public ResponseEntity<TileColorDto> findColor(@PathVariable long id) {
+    public TileColorDto findColor(@PathVariable long id) {
         Optional<TileColorDto> cDto = tileColorService.findTileColor(id);  
         if (!cDto.isPresent()) {
             throw new ItemNotFoundException(id, "TileColor");
         }
-        return new ResponseEntity<>(cDto.get(), HttpStatus.OK);
+        return cDto.get();
     }
     
     @RequestMapping(value="/api/colors", method = RequestMethod.GET)

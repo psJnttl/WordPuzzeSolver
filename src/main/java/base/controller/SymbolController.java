@@ -56,21 +56,20 @@ public class SymbolController {
     }
     
     @RequestMapping(value = "/api/symbols/{id}", method = RequestMethod.GET) 
-    public ResponseEntity<SymbolDto> fetchSymbol(@PathVariable long id) {
+    public SymbolDto fetchSymbol(@PathVariable long id) {
         Optional<SymbolDto> oSdto = symbolService.findSymbol(id);
         if (!oSdto.isPresent()) {
             throw new ItemNotFoundException(id, "Symbol");
         }
-        return new ResponseEntity<>(oSdto.get(), HttpStatus.OK);
+        return oSdto.get();
     }
     
     @RequestMapping(value = "/api/symbols/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<SymbolDto> deleteSymbol(@PathVariable long id) {
+    public void deleteSymbol(@PathVariable long id) {
         if (!symbolService.findSymbol(id).isPresent()) {
             throw new ItemNotFoundException(id, "Symbol");
         }
         symbolService.deleteSymbol(id);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
     
     @RequestMapping(value = "/api/symbols/{id}", method = RequestMethod.PUT)

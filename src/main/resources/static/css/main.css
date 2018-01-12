@@ -134,7 +134,7 @@ a {
 }
 .gameResults {
   overflow-y: auto;
-  height: 80px;
+  height: 200px;
   width: 200px;
   margin-top: 10px;
   margin-left: 50px;

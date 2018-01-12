@@ -17,7 +17,7 @@ class GameResults extends React.Component {
           word={item.value}
           onClick={this.props.selectResultWord}
           index={index}
-          selected={this.state.selectedWordIndex === index}
+          selected={this.props.selected === index}
         />
     );
     let resultList;
@@ -33,8 +33,8 @@ class GameResults extends React.Component {
       resultList = null;
     }
     return (
-      <div style={{'overflowY':'auto', 'height': '80px', 'width': '360px',
-      'marginTop':'10px', 'marginLeft':'40px'}}>
+      <div style={{'overflowY':'auto', 'height': '80px', 'width': '200px',
+      'marginTop':'10px', 'marginLeft':'50px'}}>
         {resultList}
       </div>
     );

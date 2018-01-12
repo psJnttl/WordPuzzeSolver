@@ -1,8 +1,16 @@
 package base.command;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
 public class SymbolAdd {
 
+    @NotNull
+    @Pattern(regexp="[a-zA-Z]{1,3}|[a-zA-Z]{2,3}-|-[a-zA-Z]{2,3}|[a-zA-Z]/[a-zA-Z]", message="Symbol not valid.")
     private String value;
+    
+    @Min(value = 1, message = "Points minimum is 1.")
     private int score;
     
     public SymbolAdd() {

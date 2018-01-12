@@ -249,16 +249,17 @@ class Game extends React.Component {
                 background={this.state.usedColors[15]}
               />
             </Grid.Column>
+            <Grid.Column width="4">
+              <Button
+                content="Solve"
+                icon="lightning"
+                color="green"
+                onClick={() => this.sendGameToServer()}
+                disabled={this.state.processing}
+              />
+            </Grid.Column>
           </Grid.Row>
         </Grid>
-        <br />
-        <Button
-          content="Solve"
-          icon="lightning"
-          color="green"
-          onClick={() => this.sendGameToServer()}
-          disabled={this.state.processing}
-        />
         <br />
         {resultList}
       </div>

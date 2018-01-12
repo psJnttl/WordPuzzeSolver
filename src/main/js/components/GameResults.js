@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import FoundWord from './FoundWord';
+import FoundWord2 from './FoundWord2';
 
 class GameResults extends React.Component {
   constructor(props) {
@@ -11,20 +11,23 @@ class GameResults extends React.Component {
   componentWillMount() {}
   render() {
     const resultData = this.props.results.map( (item, index) =>
-      <li key={index}>
-        <FoundWord
+        <FoundWord2
+          key={index}
           points={item.points}
           word={item.value}
           onClick={this.props.selectResultWord}
           index={index}
           selected={this.state.selectedWordIndex === index}
         />
-      </li>
     );
     let resultList;
     if (this.props.results.length > 0) {
       resultList =
-      <ul style={{'listStyleType': 'none'}}>{resultData}</ul>
+      <table>
+        <tbody>
+          {resultData}
+        </tbody>
+      </table>
     }
     else {
       resultList = null;

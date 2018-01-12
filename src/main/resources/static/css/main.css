@@ -118,5 +118,24 @@ a {
   font-size: 32px;
   border: 2px solid rgba(34,36,38,.15);
   text-align: center;
-  };
+}
+
+.resultLineSelected {
+  cursor: pointer;
+  background: #bbdefb;
+}
+.resultLineMouseOver {
+  cursor: pointer;
+  background: #e3f2fd;
+}
+.resultLineDefault {
+  cursor: pointer;
+  background: #e0e0e0;
+}
+.gameResults {
+  overflow-y: auto;
+  height: 80px;
+  width: 200px;
+  margin-top: 10px;
+  margin-left: 50px;
 }

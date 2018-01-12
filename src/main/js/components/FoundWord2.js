@@ -20,18 +20,12 @@ class FoundWord2 extends React.Component {
 
   selectStyle(index) {
     if (this.props.selected) {
-      return {'cursor': 'pointer',
-              'background': '#bbdefb',
-             };
+      return 'resultLineSelected';
     }
     else if (this.state.mouseOver === index) {
-      return {'cursor': 'pointer',
-              'background': '#e3f2fd',
-             };
+      return 'resultLineMouseOver';
     }
-    return {'cursor': 'pointer',
-            'background': '#e0e0e0',
-           };
+    return 'resultLineDefault';
   }
 
   render() {
@@ -39,10 +33,10 @@ class FoundWord2 extends React.Component {
       <tr
         onMouseEnter={() =>  this.onMouseEnter(this.props.index)}
         onMouseLeave={ () => this.onMouseLeave()}
-        style={this.selectStyle(this.props.index) }
+        className={this.selectStyle(this.props.index) }
         onClick={(e) => this.props.onClick(e, this.props.index)} >
         <td>{this.props.index + 1}</td>
-        <td>{this.props.points}</td>
+        <td>{this.props.points}pts</td>
         <td>{this.props.word}</td>
       </tr>
     );

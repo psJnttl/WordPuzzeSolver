@@ -20,7 +20,7 @@ import base.repository.WordRepository;
  *
  * @author Pasi
  */
-@Profile("test")
+@Profile("development")
 @Component
 public class DatabaseLoader implements CommandLineRunner {
 

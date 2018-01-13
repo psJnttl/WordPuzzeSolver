@@ -34,7 +34,7 @@ import base.service.SolvedWord;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("development")
 public class GameControllerTest {
 
     private static final String PATH = "/api/games"; 

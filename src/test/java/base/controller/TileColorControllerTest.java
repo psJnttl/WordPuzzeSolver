@@ -36,7 +36,7 @@ import base.repository.TileColorRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("development")
 public class TileColorControllerTest {
 
     private static final String PATH = "/api/colors";

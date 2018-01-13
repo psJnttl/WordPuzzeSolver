@@ -41,7 +41,7 @@ import base.repository.WordRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("development")
 public class WordControllerTest {
 
     private static final String PATH = "/api/words";

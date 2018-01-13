@@ -38,7 +38,7 @@ import base.repository.SymbolRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("development")
 public class SymbolControllerTest {
 
     private static final String PATH = "/api/symbols";

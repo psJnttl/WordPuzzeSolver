@@ -1,14 +1,15 @@
 # Word puzzle solver
-Motivation for this project was to bring Wordament game solver I created on [Python](https://github.com/psJnttl/RaspberryPI/tree/master/python/wordPuzzleSolver) to the world of web apps. React app is used to input game data and present results created by solver running on Java server.
+Motivation for this project was to bring Wordament game solver I created on Python to the world of web apps. React app is used to input game data and present results created by solver running on Java server.
 
-Also I wanted to use Sematic UI instead of Bootstrap which I've used in my project thus far. On server side Bean Validation with exception handlers was something I picked from the excellent book 'Spring in Action' by Graig Walls.
+Thus far I've used Bootstrap in my projects. I wanted to try out and use Sematic UI which I've heard good things about, how it's better component oriented. On server side Bean Validation with exception handlers was something I picked from the excellent book 'Spring in Action' by Graig Walls.
 
 ##### Profiles
 - development
   - in memory database
   - integration tests
 - test
-  - MySQL
+   - MySQL
+
 ##### Back-end
 - Spring Boot 1.5.8
 - Java Bean Validation (JS-303)
@@ -17,6 +18,7 @@ Also I wanted to use Sematic UI instead of Bootstrap which I've used in my proje
 - React
 - React-Router v4
 - [Semantic-ui](https://react.semantic-ui.com)
+- [axios](https://github.com/axios/axios)
 
 ###### How to use:
 1. install UI, in project directory run commands:
